@@ -41,3 +41,25 @@ class FuzzyGraph( object ):
                 elif not edge.tail in self._V and edge.head in self._V:
                     raise KeyError, ( "Tail and head must be in vertex set" )
         self._E = FuzzySet( eiter )
+
+    def edges( self, tail = None, head = None ):
+        """\
+        Return a fuzzy set of edges with tail and/or head optionally
+        specified.
+
+        @param tail: The tail vertex constraint (optional).
+        @type tail: C{object}
+        @param head: The head vertex constraint (optional).
+        @type head: C{object}
+        @return: The fuzzy set of edges specified.
+        @rtype: L{FuzzySet}
+        """
+        result = FuzzySet()
+        if ( tail is not None and not tail in self._V ) \
+        or ( head is not None and not head in self._V ):
+            raise KeyError, ( "Specified tail/head must be in vertex set" )
+        for edge in self._E:
+            if ( tail is None or edge.tail == tail ) \
+            and ( head is None or edge.head == head ):
+                result.add( edge )
+        return result
