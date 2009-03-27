@@ -36,11 +36,15 @@ class FuzzySet( set ):
     """\
     Basic fuzzy set class.
     """
-    def __init__( self ):
+    def __init__( self, iterable = None ):
         """\
-        Constructor.
+        Construct a fuzzy set from an optional iterable.
+
+        @param iterable: The iterable to construct from (optional).
+        @type iterable: C{object}
         """
-        set.__init__( self )
+        if iterable is not None:
+            self.update( iterable )
 
     _add = set.add
 
@@ -56,6 +60,62 @@ class FuzzySet( set ):
             self._add( element )
         else:
             raise TypeError, ( "Element must be a FuzzyElement." )
+
+    def __or__( self, other ):
+        """\
+        Return the fuzzy union of two fuzzy sets as a new fuzzy set.
+
+        @param other: The other fuzzy set.
+        @type other: L{FuzzySet}
+        @return: The fuzzy union.
+        @rtype: L{FuzzySet}
+        """
+        return self.union( other )
+
+    def union( self, other ):
+        """\
+        Return the fuzzy union of two fuzzy sets as a new fuzzy set.
+
+        @param other: The other fuzzy set.
+        @type other: L{FuzzySet}
+        @return: The fuzzy union.
+        @rtype: L{FuzzySet}
+        """
+        return NotImplemented
+
+    def __and__( self, other ):
+        """\
+        Return the fuzzy intersection of two fuzzy sets as a new fuzzy set.
+
+        @param other: The other fuzzy set.
+        @type other: L{FuzzySet}
+        @return: The fuzzy intersection.
+        @rtype: L{FuzzySet}
+        """
+        return self.intersection( other )
+
+    def intersection( self, other ):
+        """\
+        Return the fuzzy intersection of two fuzzy sets as a new fuzzy set.
+
+        @param other: The other fuzzy set.
+        @type other: L{FuzzySet}
+        @return: The fuzzy intersection.
+        @rtype: L{FuzzySet}
+        """
+        return NotImplemented
+
+    def complement( self ):
+        """\
+        Return the fuzzy complement of this fuzzy set.
+
+        @return: The complement of this fuzzy set.
+        @rtype: L{FuzzySet}
+        """
+        result = self.__class__( self )
+        for element in result:
+            element.mu = 1.0 - element.mu
+        return result
 
     def alpha( self, alpha ):
         """\
