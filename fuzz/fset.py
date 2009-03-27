@@ -50,6 +50,7 @@ class FuzzySet( set ):
             self.update( iterable )
 
     _add = set.add
+    _update = set.update
 
     def add( self, element ):
         """\
@@ -64,6 +65,20 @@ class FuzzySet( set ):
                 self._add( element )
         else:
             raise TypeError, ( "Element to add must be a FuzzyElement" )
+
+    def update( self, iterable ):
+        """\
+        Update the fuzzy set contents from an iterable. Overrides the base
+        class update() function to verify that the iterable contains only
+        FuzzyElement objects.
+        
+        @param iterable: The iterable to update from.
+        @type iterable: C{object}
+        """
+        for element in iterable:
+            if not isinstance( element, FuzzyElement ):
+                raise TypeError, ( "Iterable must consist of FuzzyElements" )
+        self._update( iterable )
 
     def __getitem__( self, key ):
         """\
