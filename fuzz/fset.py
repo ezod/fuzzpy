@@ -412,6 +412,15 @@ class FuzzySet( set ):
                 h = element.mu
         return h
 
+    def normalize( self ):
+        """\
+        Normalize the fuzzy set by scaling all membership degrees by a factor
+        such that the height equals 1.
+        """
+        f = 1.0 / self.height()
+        for element in self:
+            element.mu *= f
+
     @property
     def normal( self ):
         """\
@@ -420,6 +429,4 @@ class FuzzySet( set ):
         @return: True if the set is normal, false otherwise.
         @rtype: C{bool}
         """
-        if self.height() == 1.0:
-            return True
-        return False
+        return self.height() == 1.0
