@@ -44,9 +44,20 @@ class FuzzyGraph( object ):
             for edge in eiter:
                 if not isinstance( edge, GraphEdge ):
                     raise TypeError, ( "Edge set must consist of GraphEdges" )
-                elif not edge.tail in self._V and edge.head in self._V:
+                elif not edge.tail in self.vertices \
+                or not edge.head in self.vertices:
                     raise KeyError, ( "Tail and head must be in vertex set" )
         self._E = FuzzySet( eiter )
+
+    @property
+    def vertices( self ):
+        """\
+        Return a list of vertices in the fuzzy graph. Returns
+
+        @return: A list of vertices.
+        @rtype: C{list}
+        """
+        return self._V.objects
 
     def edges( self, tail = None, head = None ):
         """\
