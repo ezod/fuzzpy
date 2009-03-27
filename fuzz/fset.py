@@ -27,7 +27,7 @@ class FuzzyElement( object ):
         """\
         Return string representation of a fuzzy element.
         """
-        return '%s\%f' % ( self.obj.__repr__(), self.mu )
+        return '%s \ %f' % ( self.obj.__repr__(), self.mu )
 
     __str__ = __repr__
 
