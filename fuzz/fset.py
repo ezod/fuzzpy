@@ -182,6 +182,37 @@ class FuzzySet( set ):
                     result.add( other[ element.obj ] )
         return result
 
+    def __eq__( self, other ):
+        """\
+        Compare two fuzzy sets for equality.
+
+        @param other: The other fuzzy set.
+        @type other: L{FuzzySet}
+        @return: True if equal, false otherwise.
+        @rtype: C{bool}
+        """
+        self._binary_sanity_check( other )
+        if len( self ) != len( other ):
+            return False
+        try:
+            for element in self:
+                if element.mu != other[ element.obj ].mu:
+                    return False
+        except KeyError:
+            return False
+        return True
+
+    def __ne__( self, other ):
+        """\
+        Compare two fuzzy sets for inequality.
+
+        @param other: The other fuzzy set.
+        @type other: L{FuzzySet}
+        @return: True if equal, false otherwise.
+        @rtype: C{bool}
+        """
+        return not self == other
+
     def issubset( self, other ):
         """\
         Report whether another fuzzy set contains this fuzzy set.
@@ -221,6 +252,35 @@ class FuzzySet( set ):
         except KeyError:
             return False
         return True
+
+    __le__ = issubset
+    __ge__ = issuperset
+
+    def __lt__( self, other ):
+        """\
+        Report whether another fuzzy set strictly contains this fuzzy set,
+
+        @param other: The other fuzzy set.
+        @type other: L{FuzzySet}
+        @return: True if a subset, false otherwise.
+        @rtype: C{bool}
+        """
+        if self.issubset( other ) and self != other:
+            return True
+        return False
+
+    def __gt__( self, other ):
+        """\
+        Report whether this fuzzy set strictly contains another fuzzy set.
+
+        @param other: The other fuzzy set.
+        @type other: L{FuzzySet}
+        @return: True if a superset, false otherwise.
+        @rtype: C{bool}
+        """
+        if self.issuperset( other ) and self != other:
+            return True
+        return False
 
     def _binary_sanity_check( self, other ):
         """\
