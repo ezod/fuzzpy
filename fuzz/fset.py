@@ -59,7 +59,19 @@ class FuzzySet( set ):
         if isinstance( element, FuzzyElement ):
             self._add( element )
         else:
-            raise TypeError, ( "Element must be a FuzzyElement." )
+            raise TypeError, ( "Element to add must be a FuzzyElement" )
+
+    def __contains__( self, element ):
+        """\
+        Report whether an element is a member of a set.
+
+        @param element: The element to test for.
+        @type element: C{object}
+        """
+        for felement in self:
+            if felement.obj == element and felement.mu > 0:
+                return True
+        return False
 
     def __or__( self, other ):
         """\
@@ -104,6 +116,14 @@ class FuzzySet( set ):
         @rtype: L{FuzzySet}
         """
         return NotImplemented
+
+    def _binary_sanity_check( self, other ):
+        """\
+        Check that the other argument to a binary operation is also a fuzzy
+        set, raising a TypeError otherwise.
+        """
+        if not isinstance( other, FuzzySet ):
+            raise TypeError, "Binary operation only permitted between fuzzy sets"
 
     def complement( self ):
         """\
