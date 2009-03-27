@@ -73,6 +73,19 @@ class FuzzySet( set ):
                 return True
         return False
 
+    @property
+    def elements( self ):
+        """\
+        Returns a list of objects of elements with non-zero membership.
+        """
+        result = []
+        for felement in self:
+            if felement.mu > 0:
+                result.append( felement.obj )
+        return result
+
+    # Binary fuzzy set operations
+
     def __or__( self, other ):
         """\
         Return the fuzzy union of two fuzzy sets as a new fuzzy set.
@@ -93,6 +106,7 @@ class FuzzySet( set ):
         @return: The fuzzy union.
         @rtype: L{FuzzySet}
         """
+        self._binary_sanity_check( other )
         return NotImplemented
 
     def __and__( self, other ):
@@ -115,6 +129,7 @@ class FuzzySet( set ):
         @return: The fuzzy intersection.
         @rtype: L{FuzzySet}
         """
+        self._binary_sanity_check( other )
         return NotImplemented
 
     def _binary_sanity_check( self, other ):
@@ -124,6 +139,8 @@ class FuzzySet( set ):
         """
         if not isinstance( other, FuzzySet ):
             raise TypeError, "Binary operation only permitted between fuzzy sets"
+
+    # Unary fuzzy set operations
 
     def complement( self ):
         """\
