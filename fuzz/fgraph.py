@@ -33,11 +33,11 @@ class FuzzyGraph( object ):
         @param eiter: The iterable for the edge set (optional).
         @type eiter: C{object}
         """
-        self.V = FuzzySet( viter )
+        self._V = FuzzySet( viter )
         if eiter is not None:
-            for element in eiter:
-                if not isinstance( element, GraphEdge ):
+            for edge in eiter:
+                if not isinstance( edge, GraphEdge ):
                     raise TypeError, ( "Edge set must consist of GraphEdges" )
-                elif not element.tail in self.V or not element.head in self.V:
+                elif not edge.tail in self._V and edge.head in self._V:
                     raise KeyError, ( "Tail and head must be in vertex set" )
-        self.E = FuzzySet( eiter )
+        self._E = FuzzySet( eiter )
