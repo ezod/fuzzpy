@@ -76,15 +76,17 @@ class FuzzySet( set ):
                 return element
         raise KeyError, key
 
-    def __contains__( self, element ):
+    def __contains__( self, obj ):
         """\
-        Report whether an element is a member of a set.
+        Report whether an object is a member of a set.
 
         @param element: The element to test for.
         @type element: C{object}
+        @return: True if member, false otherwise.
+        @rtype: C{bool}
         """
-        for felement in self:
-            if felement.obj == element and felement.mu > 0:
+        for element in self:
+            if element.obj == obj and element.mu > 0:
                 return True
         return False
 
@@ -140,7 +142,15 @@ class FuzzySet( set ):
         @rtype: L{FuzzySet}
         """
         self._binary_sanity_check( other )
-        return NotImplemented
+        result = self.__class__()
+        for element in self:
+            if not element.obj in other \
+            or element.mu >= other[ element.obj ].mu:
+                result.add( element )
+        for element in other:
+            if not element.obj in result:
+                result.add( element )
+        return result
 
     def __and__( self, other ):
         """\
@@ -163,7 +173,14 @@ class FuzzySet( set ):
         @rtype: L{FuzzySet}
         """
         self._binary_sanity_check( other )
-        return NotImplemented
+        result = self.__class__()
+        for element in self:
+            if element.obj in other:
+                if element.mu <= other[ element.obj ].mu:
+                    result.add( element )
+                else:
+                    result.add( other[ element.obj ] )
+        return result
 
     def _binary_sanity_check( self, other ):
         """\
