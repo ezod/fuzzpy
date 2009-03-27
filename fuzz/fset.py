@@ -132,6 +132,18 @@ class FuzzySet( set ):
         """
         return self.union( other )
 
+    def __ior__( self, other ):
+        """\
+        In-place fuzzy union.
+
+        @param other: The other fuzzy set.
+        @type other: L{FuzzySet}
+        @return: The fuzzy union (self).
+        @rtype: L{FuzzySet}
+        """
+        self = self.union( other )
+        return self
+
     def union( self, other ):
         """\
         Return the fuzzy union of two fuzzy sets as a new fuzzy set.
@@ -162,6 +174,18 @@ class FuzzySet( set ):
         @rtype: L{FuzzySet}
         """
         return self.intersection( other )
+
+    def __iand__( self, other ):
+        """\
+        In-place fuzzy intersection.
+
+        @param other: The other fuzzy set.
+        @type other: L{FuzzySet}
+        @return: The fuzzy intersection (self).
+        @rtype: L{FuzzySet}
+        """
+        self = self.intersection( other )
+        return self
 
     def intersection( self, other ):
         """\
