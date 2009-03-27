@@ -10,6 +10,9 @@ Graph module. Contains fuzzy graph class definitions.
 from fset import *
 
 class GraphEdge( object ):
+    """\
+    Graph edge class.
+    """
     def __init__( self, tail, head ):
         """\
         Construct a graph edge directed from tail to head.
@@ -24,6 +27,9 @@ class GraphEdge( object ):
 
 
 class FuzzyGraph( object ):
+    """\
+    Fuzzy graph class.
+    """
     def __init__( self, viter = None, eiter = None ):
         """\
         Construct a fuzzy graph from optional iterables.
