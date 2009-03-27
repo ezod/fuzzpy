@@ -57,9 +57,24 @@ class FuzzySet( set ):
         @type element: L{FuzzySet}
         """
         if isinstance( element, FuzzyElement ):
-            self._add( element )
+            if not element.obj in self.objects:
+                self._add( element )
         else:
             raise TypeError, ( "Element to add must be a FuzzyElement" )
+
+    def __getitem__( self, key ):
+        """\
+        Returns a fuzzy element indexed by its associated object.
+
+        @param key: The object.
+        @type key: C{object}
+        @return: The fuzzy element associated with the object.
+        @rtype: L{FuzzyElement}
+        """
+        for element in self:
+            if element.obj == key:
+                return element
+        raise KeyError, key
 
     def __contains__( self, element ):
         """\
@@ -86,6 +101,20 @@ class FuzzySet( set ):
         for felement in self:
             if felement.mu > 0:
                 result.append( felement.obj )
+        return result
+
+    @property
+    def objects( self ):
+        """\
+        Returns a list of all objects in the fuzzy set (even those with zero
+        membership).
+
+        @return: A list of objects of elements.
+        @rtype: C{list}
+        """
+        result = []
+        for felement in self:
+            result.append( felement.obj )
         return result
 
     # Binary fuzzy set operations
