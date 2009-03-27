@@ -76,7 +76,11 @@ class FuzzySet( set ):
     @property
     def elements( self ):
         """\
-        Returns a list of objects of elements with non-zero membership.
+        Returns a list of objects of elements with non-zero membership in the
+        fuzzy set.
+
+        @return: A list of objects of elements with non-zero membership.
+        @rtype: C{list}
         """
         result = []
         for felement in self:
