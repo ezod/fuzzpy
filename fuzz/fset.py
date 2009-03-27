@@ -182,6 +182,46 @@ class FuzzySet( set ):
                     result.add( other[ element.obj ] )
         return result
 
+    def issubset( self, other ):
+        """\
+        Report whether another fuzzy set contains this fuzzy set.
+
+        @param other: The other fuzzy set.
+        @type other: L{FuzzySet}
+        @return: True if a subset, false otherwise.
+        @rtype: C{bool}
+        """
+        self._binary_sanity_check( other )
+        if len( self ) > len( other ):
+            return False
+        try:
+            for element in self:
+                if element.mu > other[ element.obj ].mu:
+                    return False
+        except KeyError:
+            return False
+        return True
+
+    def issuperset( self, other ):
+        """\
+        Report whether this fuzzy set contains another fuzzy set.
+
+        @param other: The other fuzzy set.
+        @type other: L{FuzzySet}
+        @return: True if a superset, false otherwise.
+        @rtype: C{bool}
+        """
+        self._binary_sanity_check( other )
+        if len( self ) < len( other ):
+            return False
+        try:
+            for element in other:
+                if element.mu > self[ element.obj ].mu:
+                    return False
+        except KeyError:
+            return False
+        return True
+
     def _binary_sanity_check( self, other ):
         """\
         Check that the other argument to a binary operation is also a fuzzy
