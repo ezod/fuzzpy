@@ -23,6 +23,14 @@ class FuzzyElement( object ):
         self.obj = obj
         self.mu = mu
 
+    def __repr__( self ):
+        """\
+        Return string representation of a fuzzy element.
+        """
+        return '%s\%f' % ( self.obj.__repr__(), self.mu )
+
+    __str__ = __repr__
+
 
 class FuzzySet( set ):
     """\
@@ -32,7 +40,9 @@ class FuzzySet( set ):
         """\
         Constructor.
         """
-        super( FuzzySet, self ).__init__()
+        set.__init__( self )
+
+    _add = set.add
 
     def add( self, element ):
         """\
@@ -43,7 +53,7 @@ class FuzzySet( set ):
         @type element: L{FuzzySet}
         """
         if isinstance( element, FuzzyElement ):
-            super( FuzzySet, self ).add( element )
+            self._add( element )
         else:
             raise TypeError, ( "Element must be a FuzzyElement." )
 
