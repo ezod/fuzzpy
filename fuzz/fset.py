@@ -26,6 +26,9 @@ class FuzzyElement( object ):
     def __repr__( self ):
         """\
         Return string representation of a fuzzy element.
+
+        @return: String representation.
+        @rtype: C{string}
         """
         return '%s \ %f' % ( self.obj.__repr__(), self.mu )
 
