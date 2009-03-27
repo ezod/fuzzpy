@@ -235,3 +235,49 @@ class FuzzySet( set ):
             if element.mu > alpha:
                 c.add( element.obj )
         return c
+
+    def supp( self ):
+        """\
+        Support function. Returns the crisp set of all elements with non-zero
+        membership in the fuzzy set.
+
+        @return: The support of the fuzzy set.
+        @rtype: C{set}
+        """
+        return self.salpha( 0.0 )
+
+    def core( self ):
+        """\
+        Core function. Returns the crisp set of all elements with membership
+        degree of exactly 1.
+
+        @return: The core of the fuzzy set.
+        @rtype: C{set}
+        """
+        return self.alpha( 1.0 )
+
+    def height( self ):
+        """\
+        Height function. Returns the maximum membership degree of any element
+        in the fuzzy set.
+
+        @return: The height of the fuzzy set.
+        @rtype: C{float}
+        """
+        h = 0
+        for element in self:
+            if element.mu > h:
+                h = element.mu
+        return h
+
+    @property
+    def normal( self ):
+        """\
+        Returns whether the fuzzy set is normal (height = 1).
+
+        @return: True if the set is normal, false otherwise.
+        @rtype: C{bool}
+        """
+        if self.height() == 1.0:
+            return True
+        return False
