@@ -30,7 +30,7 @@ class FuzzyGraph( object ):
     """\
     Fuzzy graph class.
     """
-    def __init__( self, viter = None, eiter = None ):
+    def __init__( self, viter = None, eiter = None, directed = True ):
         """\
         Construct a fuzzy graph from optional iterables.
 
@@ -38,6 +38,8 @@ class FuzzyGraph( object ):
         @type viter: C{object}
         @param eiter: The iterable for the edge set (optional).
         @type eiter: C{object}
+        @param directed: Defines the graph as directed or undirected.
+        @type directed: C{bool}
         """
         self._V = FuzzySet( viter )
         if eiter is not None:
@@ -48,6 +50,7 @@ class FuzzyGraph( object ):
                 or not edge.head in self.vertices:
                     raise KeyError, ( "Tail and head must be in vertex set" )
         self._E = FuzzySet( eiter )
+        self.directed = directed
 
     @property
     def vertices( self ):
