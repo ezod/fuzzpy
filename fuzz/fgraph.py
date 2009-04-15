@@ -164,6 +164,19 @@ class FuzzyGraph( Graph ):
                 result.add( edge )
         return result
 
+    # Binary fuzzy graph operations
+
+    def _binary_sanity_check( self, other ):
+        """\
+        Check that the other argument to a binary operation is also a fuzzy
+        graph, raising a TypeError otherwise.
+        """
+        if not isinstance( other, FuzzyGraph ):
+            raise TypeError, \
+                ( "Binary operation only permitted between fuzz graphs" )
+
+    # Unary fuzzy graph operations
+
     def alpha( self, alpha ):
         """\
         Alpha cut function. Returns the crisp graph for which both vertex and

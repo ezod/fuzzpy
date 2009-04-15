@@ -330,7 +330,8 @@ class FuzzySet( set ):
         set, raising a TypeError otherwise.
         """
         if not isinstance( other, FuzzySet ):
-            raise TypeError, "Binary operation only permitted between fuzzy sets"
+            raise TypeError, \
+                ( "Binary operation only permitted between fuzzy sets" )
 
     # Unary fuzzy set operations
 
