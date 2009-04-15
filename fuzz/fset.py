@@ -111,30 +111,30 @@ class FuzzySet( set ):
     @property
     def elements( self ):
         """\
-        Returns a list of objects of elements with non-zero membership in the
+        Returns a set of objects of elements with non-zero membership in the
         fuzzy set.
 
-        @return: A list of objects of elements with non-zero membership.
-        @rtype: C{list}
+        @return: A set of objects of elements with non-zero membership.
+        @rtype: C{set}
         """
-        result = []
+        result = set()
         for felement in self:
             if felement.mu > 0:
-                result.append( felement.obj )
+                result.add( felement.obj )
         return result
 
     @property
     def objects( self ):
         """\
-        Returns a list of all objects in the fuzzy set (even those with zero
+        Returns a set of all objects in the fuzzy set (even those with zero
         membership).
 
-        @return: A list of objects of elements.
-        @rtype: C{list}
+        @return: A set of objects of elements.
+        @rtype: C{set}
         """
-        result = []
+        result = set()
         for felement in self:
-            result.append( felement.obj )
+            result.add( felement.obj )
         return result
 
     # Binary fuzzy set operations
