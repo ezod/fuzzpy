@@ -35,6 +35,19 @@ class GraphEdge( object ):
         return '(%s, %s)' % ( self.tail.__repr__(), self.head.__repr__() )
 
     __str__ = __repr__
+
+    def __contains__( self, vertex ):
+        """\
+        Report whether this edge connects to the specified vertex.
+
+        @param vertex: The vertex to test for.
+        @type vertex: C{object}
+        @return: True if connected to the vertex, false otherwise.
+        @rtype: C{bool}
+        """
+        if self.tail == vertex or self.head == vertex:
+            return True
+        return False
     
     def __eq__( self, other ):
         """\
@@ -48,7 +61,7 @@ class GraphEdge( object ):
         if not isinstance( other, GraphEdge ):
             raise TypeError, \
                 ( "Comparison only permitted between graph edges" )
-        if self.head != other.head or self.tail != other.tail:
+        if self.tail != other.tail or self.head != other.head:
             return False
         return True
 
