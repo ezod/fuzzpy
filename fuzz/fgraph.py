@@ -52,6 +52,17 @@ class GraphEdge( object ):
             return False
         return True
 
+    def __ne__( self, other ):
+        """\
+        Compare two graph edges for inequality.
+
+        @param other: The other graph edge.
+        @type other: L{GraphEdge}
+        @return: True if not equal, false otherwise.
+        @rtype: C{bool}
+        """
+        return not self == other
+
 
 class Graph( object ):
     """\
@@ -123,13 +134,39 @@ class Graph( object ):
 
     # Binary graph operations
 
+    def __eq__( self, other ):
+        """\
+        Compare two graphs for equality. Does not recognize isomorphism
+        (vertex identifiers must be the same).
+
+        @param other: The other graph.
+        @type other: L{Graph}
+        @return: True if equal, false otherwise.
+        @rtype: C{bool}
+        """
+        self._binary_sanity_check( other )
+        if self._V != other._V or self._E != other._E:
+            return False
+        return True
+
+    def __ne__( self, other ):
+        """\
+        Compare two graphs for inequality.
+
+        @param other: The other graph.
+        @type other: L{Graph}
+        @return: True if not equal, false otherwise.
+        @rtype: C{bool}
+        """
+        return not self == other
+
     def issubgraph( self, other ):
         """\
         Report whether another graph contains this graph.
 
-        @param other: The other fuzzy graph.
+        @param other: The other graph.
         @type other: L{Graph}
-        @return: True if a subset, false otherwise.
+        @return: True if a subgraph, false otherwise.
         @rtype: C{bool}
         """
         self._binary_sanity_check( other )
@@ -141,9 +178,9 @@ class Graph( object ):
         """\
         Report whether this graph contains another graph.
 
-        @param other: The other fuzzy graph.
+        @param other: The other graph.
         @type other: L{Graph}
-        @return: True if a superset, false otherwise.
+        @return: True if a supergraph, false otherwise.
         @rtype: C{bool}
         """
         self._binary_sanity_check( other )
@@ -153,6 +190,31 @@ class Graph( object ):
 
     __le__ = issubgraph
     __ge__ = issupergraph
+
+    def __lt__( self, other ):
+        """\
+        Report whether another graph strictly contains this graph.
+
+        @param other: The other graph.
+        @type other: L{Graph}
+        @return: True if a strict subgraph, false otherwise.
+        @rtype: C{bool}
+        """
+        if self.issubgraph( other ) and self != other:
+            return True
+        return False
+
+    def __gt__( self, other ):
+        """\
+        Report whether this graph strictly contains another graph.
+
+        @param other: The other graph.
+        @type other: L{Graph}
+        @return: True if a strict supergraph, false otherwise.
+        """
+        if self.issupergraph( other ) and self != other:
+            return True
+        return False
 
     def _binary_sanity_check( self, other ):
         """\

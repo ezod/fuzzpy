@@ -250,7 +250,7 @@ class FuzzySet( set ):
 
         @param other: The other fuzzy set.
         @type other: L{FuzzySet}
-        @return: True if equal, false otherwise.
+        @return: True if not equal, false otherwise.
         @rtype: C{bool}
         """
         return not self == other
@@ -304,7 +304,7 @@ class FuzzySet( set ):
 
         @param other: The other fuzzy set.
         @type other: L{FuzzySet}
-        @return: True if a subset, false otherwise.
+        @return: True if a strict subset, false otherwise.
         @rtype: C{bool}
         """
         if self.issubset( other ) and self != other:
@@ -317,7 +317,7 @@ class FuzzySet( set ):
 
         @param other: The other fuzzy set.
         @type other: L{FuzzySet}
-        @return: True if a superset, false otherwise.
+        @return: True if a strict superset, false otherwise.
         @rtype: C{bool}
         """
         if self.issuperset( other ) and self != other:
