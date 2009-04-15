@@ -1,0 +1,31 @@
+                     FuzzPy - Fuzzy Mathematics for Python
+
+                     Aaron Mavrinac  <mavrin1@uwindsor.ca>
+                  Last Revision: Tue Apr 14 20:27:03 EDT 2009
+
+-------------------------------------------------------------------------------
+
+OVERVIEW
+
+FuzzPy is a library for fuzzy sets, fuzzy graphs, and general fuzzy mathematics
+for Python.
+
+-------------------------------------------------------------------------------
+
+REQUIREMENTS
+
+PyDSSCC requires Python (2.5 or later).
+
+http://www.python.org
+
+Additionally, Epydoc is required for generating documentation.
+
+http://epydoc.sourceforge.net
+
+-------------------------------------------------------------------------------
+
+API DOCUMENTATION
+
+API documentation can be generated with Epydoc using the provided gendoc.sh
+script. This will create a subdirectory 'doc' containing full API documentation
+in HTML format.
