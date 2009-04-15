@@ -1,2 +1,4 @@
-- Possibly need a crisp graph equivalent?
-- Additional fuzzy graph methods
+- Graph vertex and edge adding functions
+
+- Crisp graph methods (Dijkstra shortest path, etc.)
+- Equivalent fuzzy graph methods
