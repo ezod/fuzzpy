@@ -25,6 +25,17 @@ class GraphEdge( object ):
         self.tail = tail
         self.head = head
 
+    def __repr__( self ):
+        """\
+        Return string representation of a graph edge.
+
+        @return: String representation.
+        @rtype: C{string}
+        """
+        return '(%s, %s)' % ( self.tail, self.head )
+
+    __str__ = __repr__
+
 
 class Graph( object ):
     """\
@@ -51,6 +62,17 @@ class Graph( object ):
                     raise KeyError, ( "Tail and head must be in vertex set" )
         self._E = set( eiter )
         self.directed = directed
+
+    def __repr__( self ):
+        """\
+        Return string representation of a fuzzy graph.
+
+        @return: String representation.
+        @rtype: C{string}
+        """
+        return 'V = %s\nE = %s' % ( self._V, self._E )
+
+    __str__ = __repr__
 
     @property
     def vertices( self ):
@@ -84,7 +106,7 @@ class Graph( object ):
         return result
 
 
-class FuzzyGraph( object ):
+class FuzzyGraph( Graph ):
     """\
     Fuzzy graph class.
     """
@@ -141,3 +163,20 @@ class FuzzyGraph( object ):
             and ( head is None or edge.head == head ):
                 result.add( edge )
         return result
+
+    def alpha( self, alpha ):
+        """\
+        Alpha cut function. Returns the crisp graph for which both vertex and
+        edge membership values meet or exceed the alpha value.
+
+        @param alpha: The alpha value for the cut.
+        @type alpha: C{float}
+        @return: The crisp graph result of the alpha cut.
+        @rtype: L{Graph}
+        """
+        Va = self._V.alpha( alpha )
+        Ea = set()
+        for edge in self._E.alpha( alpha ):
+            if edge.tail in Va and edge.head in Va:
+                Ea.add( edge )
+        return Graph( Va, Ea, self.directed )
