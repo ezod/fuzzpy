@@ -227,6 +227,32 @@ class Graph( object ):
                 result.add( edge )
         return result
 
+    # Convenience functions
+
+    def connect( self, tail, head ):
+        """\
+        Connect a pair of vertices with a new edge. Convenience wrapper for
+        add_edge().
+
+        @param tail: The tail vertex.
+        @type tail: C{object}
+        @param head: The head vertex.
+        @type head: C{object}
+        """
+        self.add_edge( GraphEdge( tail, head ) )
+
+    def disconnect( self, tail, head ):
+        """\
+        Disconnect a pair of vertices by removing the edge between them.
+        Convenience wrapper for remove_edge().
+
+        @param tail: The tail vertex.
+        @type tail: C{object}
+        @param head: The head vertex.
+        @type head: C{object}
+        """
+        self.remove_edge( GraphEdge( tail, head ) )
+
     # Binary graph operations
 
     def __eq__( self, other ):
@@ -408,6 +434,46 @@ class FuzzyGraph( Graph ):
             and ( head is None or edge.head == head ):
                 result.add( edge )
         return result
+
+    # Convenience functions
+
+    def add_fuzzy_vertex( self, vertex, mu = 1.0 ):
+        """\
+        Add a fuzzy vertex to the fuzzy graph (without explicitly constructing
+        a FuzzyElement for it). Convenience wrapper for add_vertex().
+
+        @param vertex: The vertex to add.
+        @type vertex: C{object}
+        @param mu: The membership degree of the vertex (optional).
+        @type mu: C{float}
+        """
+        self.add_vertex( FuzzyElement( vertex, mu ) )
+
+    def add_fuzzy_edge( self, edge, mu = 1.0 ):
+        """\
+        Add a fuzzy edge to the fuzzy graph (without explicitly constructing
+        a FuzzyElement for it). Convenience wrapper for add_edge().
+
+        @param vertex: The edge to add.
+        @type vertex: L{GraphEdge}
+        @param mu: The membership degree of the edge (optional).
+        @type mu: C{float}
+        """
+        self.add_edge( FuzzyElement( edge, mu ) )
+
+    def connect( self, tail, head, mu = 1.0 ):
+        """\
+        Connect a pair of vertices with a new edge. Convenience wrapper for
+        add_edge().
+
+        @param tail: The tail vertex.
+        @type tail: C{object}
+        @param head: The head vertex.
+        @type head: C{object}
+        @param mu: The membership degree of the edge (optional).
+        @type mu: C{float}
+        """
+        self.add_edge( FuzzyElement( GraphEdge( tail, head ), mu ) )
 
     # Binary fuzzy graph operations
 
