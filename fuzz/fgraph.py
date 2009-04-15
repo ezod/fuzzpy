@@ -22,12 +22,14 @@ class GraphEdge( object ):
         @param head: The head vertex reference.
         @type head: C{object}
         """
+        if tail == head:
+            raise ValueError, ( "Tail and head must differ" )
         self.tail = tail
         self.head = head
 
     def __repr__( self ):
         """\
-        Return string representation of a graph edge.
+        Return string representation of this graph edge.
 
         @return: String representation.
         @rtype: C{string}
@@ -35,6 +37,16 @@ class GraphEdge( object ):
         return '(%s, %s)' % ( self.tail.__repr__(), self.head.__repr__() )
 
     __str__ = __repr__
+
+    def __hash__( self ):
+        """\
+        Return a hash for this object.
+
+        @return: The hash.
+        @rtype: C{int}
+        """
+        # FIXME: returns same hash for A,B and B,A, but seems to work?
+        return hash( self.tail ) ^ hash( self.head )
 
     def __contains__( self, vertex ):
         """\
@@ -76,6 +88,15 @@ class GraphEdge( object ):
         """
         return not self == other
 
+    def reverse( self ):
+        """\
+        Returns this edge with tail and head reversed.
+
+        @return: The reversed graph edge.
+        @rtype: L{GraphEdge}
+        """
+        return GraphEdge( self.head, self.tail )
+
 
 class Graph( object ):
     """\
@@ -92,27 +113,88 @@ class Graph( object ):
         @param directed: Defines the graph as directed or undirected.
         @type directed: C{bool}
         """
-        self._V = set( viter )
+        self._directed = directed
+        self._V = set()
+        self._E = set()
+        if viter is not None:
+            for vertex in viter:
+                self.add_vertex( vertex )
         if eiter is not None:
             for edge in eiter:
-                if not isinstance( edge, GraphEdge ):
-                    raise TypeError, ( "Edge set must consist of GraphEdges" )
-                elif not edge.tail in self.vertices \
-                or not edge.head in self.vertices:
-                    raise KeyError, ( "Tail and head must be in vertex set" )
-        self._E = set( eiter )
-        self.directed = directed
+                self.add_edge( edge )
 
     def __repr__( self ):
         """\
-        Return string representation of a fuzzy graph.
+        Return string representation of this graph.
 
         @return: String representation.
         @rtype: C{string}
         """
-        return 'V = %s\nE = %s' % ( self._V, self._E )
+        return 'V: %s\nE: %s' % ( self._V, self._E )
 
     __str__ = __repr__
+
+    @property
+    def directed( self ):
+        """\
+        Return whether this graph is directed. This should only be set by the
+        constructor and is read-only afterward.
+
+        @return: True if the graph is directed, false otherwise.
+        @rtype: C{bool}
+        """
+        return self._directed
+
+    def add_vertex( self, vertex ):
+        """\
+        Add a vertex to the graph.
+
+        @param vertex: The vertex to add.
+        @type vertex: C{object}
+        """
+        self._V.add( vertex )
+
+    def remove_vertex( self, vertex ):
+        """\
+        Remove a vertex and all edges connected to it from the graph.
+
+        @param vetex: The vertex to remove.
+        @type vertex: C{object}
+        """
+        if not vertex in self._V:
+            raise KeyError, vertex
+        for edge in self._E:
+            if vertex in edge:
+                self._E.remove( edge )
+        self._V.remove( vertex )
+
+    def add_edge( self, edge ):
+        """\
+        Add an edge to the graph.
+
+        @param edge: The edge to add.
+        @type edge: L{GraphEdge}
+        """
+        if not isinstance( edge, GraphEdge ):
+            raise TypeError, ( "Edge must be a GraphEdge" )
+        if not edge.tail in self.vertices or not edge.head in self.vertices:
+            raise KeyError, ( "Tail and head must be in vertex set" )
+        if edge in self.edges() \
+        or ( not self.directed and edge.reverse() in self.edges() ):
+            raise ValueError, ( "Edge already exists" )
+        self._E.add( edge )
+
+    def remove_edge( self, edge ):
+        """
+        Remove an edge from the graph.
+
+        @param edge: The edge to remove.
+        @type edge: L{GraphEdge}
+        """
+        if not self.directed and edge.reverse() in self.edges():
+            self._E.remove( edge.reverse() )
+        else:
+            self._E.remove( edge )
 
     @property
     def vertices( self ):
@@ -132,7 +214,7 @@ class Graph( object ):
         @type tail: C{object}
         @param head: The head vertex constraint (optional).
         @type head: C{object}
-        @return: The fuzzy set of edges specified.
+        @return: The set of edges specified.
         @rtype: C{set}
         """
         result = set()
@@ -254,16 +336,46 @@ class FuzzyGraph( Graph ):
         @param directed: Defines the graph as directed or undirected.
         @type directed: C{bool}
         """
-        self._V = FuzzySet( viter )
+        self._directed = directed
+        self._V = FuzzySet()
+        self._E = FuzzySet()
+        if viter is not None:
+            for vertex in viter:
+                self.add_vertex( vertex )
         if eiter is not None:
             for edge in eiter:
-                if not isinstance( edge, GraphEdge ):
-                    raise TypeError, ( "Edge set must consist of GraphEdges" )
-                elif not edge.tail in self.vertices \
-                or not edge.head in self.vertices:
-                    raise KeyError, ( "Tail and head must be in vertex set" )
-        self._E = FuzzySet( eiter )
-        self.directed = directed
+                self.add_edge( edge )
+
+    def remove_vertex( self, vertex ):
+        """\
+        Remove a vertex and all edges connected to it from the fuzzy graph.
+
+        @param vetex: The vertex to remove.
+        @type vertex: C{object}
+        """
+        if not vertex in self._V:
+            raise KeyError, vertex
+        for edge in self._E:
+            if vertex in edge.obj:
+                self._E.remove( edge.obj )
+        self._V.remove( vertex )
+
+    def add_edge( self, edge ):
+        """\
+        Add an edge to the fuzzy graph.
+
+        @param edge: The edge to add.
+        @type edge: L{FuzzyElement} of L{GraphEdge}
+        """
+        if not isinstance( edge.obj, GraphEdge ):
+            raise TypeError, ( "Edge must be a GraphEdge" )
+        if not edge.obj.tail in self.vertices \
+        or not edge.obj.head in self.vertices:
+            raise KeyError, ( "Tail and head must be in vertex set" )
+        if edge.obj in self.edges() \
+        or ( not self.directed and edge.obj.reverse() in self.edges() ):
+            raise ValueError, ( "Edge already exists" )
+        self._E.add( edge )
 
     @property
     def vertices( self ):
