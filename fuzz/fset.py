@@ -50,6 +50,7 @@ class FuzzySet( set ):
             self.update( iterable )
 
     _add = set.add
+    _remove = set.remove
     _update = set.update
 
     def add( self, element ):
@@ -65,6 +66,15 @@ class FuzzySet( set ):
                 self._add( element )
         else:
             raise TypeError, ( "Element to add must be a FuzzyElement" )
+
+    def remove( self, key ):
+        """\
+        Remove an element from the fuzzy set indexed by its associated object.
+
+        @param key: The object to remove.
+        @type key: C{object}
+        """
+        self._remove( self[ key ] )
 
     def update( self, iterable ):
         """\
