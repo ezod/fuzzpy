@@ -32,9 +32,25 @@ class GraphEdge( object ):
         @return: String representation.
         @rtype: C{string}
         """
-        return '(%s, %s)' % ( self.tail, self.head )
+        return '(%s, %s)' % ( self.tail.__repr__(), self.head.__repr__() )
 
     __str__ = __repr__
+    
+    def __eq__( self, other ):
+        """\
+        Compare two graph edges for equality.
+
+        @param other: The other graph edge.
+        @type other: L{GraphEdge}
+        @return: True if equal, false otherwise.
+        @rtype: C{bool}
+        """
+        if not isinstance( other, GraphEdge ):
+            raise TypeError, \
+                ( "Comparison only permitted between graph edges" )
+        if self.head != other.head or self.tail != other.tail:
+            return False
+        return True
 
 
 class Graph( object ):
@@ -105,6 +121,48 @@ class Graph( object ):
                 result.add( edge )
         return result
 
+    # Binary graph operations
+
+    def issubgraph( self, other ):
+        """\
+        Report whether another graph contains this graph.
+
+        @param other: The other fuzzy graph.
+        @type other: L{Graph}
+        @return: True if a subset, false otherwise.
+        @rtype: C{bool}
+        """
+        self._binary_sanity_check( other )
+        if self._V <= other._V and self._E <= other._E:
+            return True
+        return False
+
+    def issupergraph( self, other ):
+        """\
+        Report whether this graph contains another graph.
+
+        @param other: The other fuzzy graph.
+        @type other: L{Graph}
+        @return: True if a superset, false otherwise.
+        @rtype: C{bool}
+        """
+        self._binary_sanity_check( other )
+        if self._V >= other._V and self._E >= other._E:
+            return True
+        return False
+
+    __le__ = issubgraph
+    __ge__ = issupergraph
+
+    def _binary_sanity_check( self, other ):
+        """\
+        Check that the other argument to a binary operation is also a graph,
+        raising a TypeError otherwise.
+        """
+        if not isinstance( other, Graph ):
+            raise TypeError, \
+                ( "Binary operation only permitted between graphs" )
+
 
 class FuzzyGraph( Graph ):
     """\
@@ -173,7 +231,7 @@ class FuzzyGraph( Graph ):
         """
         if not isinstance( other, FuzzyGraph ):
             raise TypeError, \
-                ( "Binary operation only permitted between fuzz graphs" )
+                ( "Binary operation only permitted between fuzzy graphs" )
 
     # Unary fuzzy graph operations
 
