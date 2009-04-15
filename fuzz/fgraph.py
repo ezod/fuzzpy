@@ -313,3 +313,20 @@ class FuzzyGraph( Graph ):
             if edge.tail in Va and edge.head in Va:
                 Ea.add( edge )
         return Graph( Va, Ea, self.directed )
+
+    def alpha( self, alpha ):
+        """\
+        Strong alpha cut function. Returns the crisp graph for which both
+        vertex and edge membership values exceed the alpha value.
+
+        @param alpha: The alpha value for the cut.
+        @type alpha: C{float}
+        @return: The crisp graph result of the strong alpha cut.
+        @rtype: L{Graph}
+        """
+        Va = self._V.salpha( alpha )
+        Ea = set()
+        for edge in self._E.salpha( alpha ):
+            if edge.tail in Va and edge.head in Va:
+                Ea.add( edge )
+        return Graph( Va, Ea, self.directed )
