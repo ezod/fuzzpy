@@ -346,6 +346,25 @@ class Graph( object ):
             raise TypeError, \
                 ( "Binary operation only permitted between graphs" )
 
+    # Connectivity-related functions
+
+    def adjacent( self, u, v ):
+        """\
+        Report whether two vertices are adjacent (directly connected by an
+        edge).
+
+        @param u: The first vertex.
+        @type u: C{object}
+        @oaram v: The second vertex.
+        @type v: C{object}
+        @return: True if adjacent, false otherwise.
+        @rtype: C{bool}
+        """
+        if GraphEdge( u, v ) in self.edges() \
+        or GraphEdge( v, u ) in self.edges():
+            return True
+        return False
+
 
 class FuzzyGraph( Graph ):
     """\
