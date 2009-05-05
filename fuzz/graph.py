@@ -346,19 +346,19 @@ class Graph( object ):
 
     # Connectivity-related functions
 
-    def adjacent( self, u, v ):
+    def adjacent( self, tail, head ):
         """\
         Report whether two vertices are adjacent (directly connected by an
         edge).
 
-        @param u: The first vertex.
-        @type u: C{object}
-        @oaram v: The second vertex.
-        @type v: C{object}
+        @param tail: The tail vertex.
+        @type tail: C{object}
+        @oaram head: The head vertex.
+        @type head: C{object}
         @return: True if adjacent, false otherwise.
         @rtype: C{bool}
         """
-        if GraphEdge( u, v ) in self.edges() \
-        or GraphEdge( v, u ) in self.edges():
+        if GraphEdge( tail, head ) in self.edges() \
+        or ( not self.directed and GraphEdge( head, tail ) in self.edges() ):
             return True
         return False
