@@ -32,7 +32,10 @@ class FuzzyGraph( Graph ):
         self._E = FuzzySet()
         if viter is not None:
             for vertex in viter:
-                self.add_vertex( vertex )
+                if isinstance( vertex, FuzzyElement ):
+                    self.add_vertex( vertex )
+                else:
+                    self.add_vertex( FuzzyElement( vertex, 1.0 ) )
         if eiter is not None:
             for edge in eiter:
                 self.add_edge( edge )
