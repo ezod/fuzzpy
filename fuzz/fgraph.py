@@ -38,7 +38,10 @@ class FuzzyGraph( Graph ):
                     self.add_vertex( FuzzyElement( vertex, 1.0 ) )
         if eiter is not None:
             for edge in eiter:
-                self.add_edge( edge )
+                if isinstance( edge, FuzzyElement ):
+                    self.add_edge( edge )
+                else:
+                    self.add_edge( FuzzyElement( edge, 1.0 ) )
 
     def remove_vertex( self, vertex ):
         """\
