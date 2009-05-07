@@ -189,3 +189,10 @@ class FuzzyGraph( Graph ):
             if edge.tail in Va and edge.head in Va:
                 Ea.add( edge )
         return Graph( Va, Ea, self.directed )
+
+    def normalize( self ):
+        """\
+        Normalize the fuzzy graph by normalizing its vertex and edge sets.
+        """
+        self._V.normalize()
+        self._E.normalize()
