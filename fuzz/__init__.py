@@ -7,5 +7,5 @@ FuzzPy: Fuzzy sets for Python
 @license: GPL-3
 """
 
-__import__('pkg_resources').declare_namespace(__name__)
-__version__ = (0, 0, 0)
+__import__( 'pkg_resources' ).declare_namespace( __name__ )
+__version__ = ( 0, 0, 1 )
