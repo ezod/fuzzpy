@@ -428,9 +428,10 @@ class FuzzySet( set ):
         Normalize the fuzzy set by scaling all membership degrees by a factor
         such that the height equals 1.
         """
-        f = 1.0 / self.height()
-        for element in self:
-            element.mu *= f
+        if self.height() > 0:
+            f = 1.0 / self.height()
+            for element in self:
+                element.mu *= f
 
     @property
     def normal( self ):
