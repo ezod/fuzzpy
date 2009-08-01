@@ -1,5 +1,6 @@
 """\
-Set module. Contains basic fuzzy set and element class definitions.
+Discrete fuzzy set module. Contains basic fuzzy set and element class
+definitions.
 
 @author: Aaron Mavrinac
 @organization: University of Windsor
@@ -37,7 +38,7 @@ class FuzzyElement( object ):
 
 class FuzzySet( set ):
     """\
-    Basic fuzzy set class.
+    Discrete fuzzy set class.
     """
     def __init__( self, iterable = None ):
         """\
