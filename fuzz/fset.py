@@ -35,6 +35,15 @@ class FuzzyElement( object ):
 
     __str__ = __repr__
 
+    def __hash__( self ):
+        """\
+        Return a hash for the fuzzy element which is the hash of its object.
+
+        @return: The hash.
+        @rtype: C{int}
+        """
+        return hash( self.obj )
+
 
 class FuzzySet( set ):
     """\

@@ -150,6 +150,10 @@ class Graph( object ):
         @param vertex: The vertex to add.
         @type vertex: C{object}
         """
+        try:
+            hash( vertex )
+        except TypeError:
+            raise TypeError, ( "Vertex must be a hashable object" )
         self._V.add( vertex )
 
     def remove_vertex( self, vertex ):
