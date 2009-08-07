@@ -1,5 +1,4 @@
-- Crisp graph methods (Dijkstra shortest path, etc.)
-- Equivalent fuzzy graph methods
+- Fuzzy shortest path algorithm(s)
 
 - Implement fuzzy numbers
 

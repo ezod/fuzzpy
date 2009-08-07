@@ -358,7 +358,79 @@ class Graph( object ):
         @return: True if adjacent, false otherwise.
         @rtype: C{bool}
         """
+        if tail == head:
+            return False
         if GraphEdge( tail, head ) in self.edges() \
         or ( not self.directed and GraphEdge( head, tail ) in self.edges() ):
             return True
         return False
+
+    def neighbors( self, vertex ):
+        """\
+        Return a set of vertices which are adjacent to the specified vertex.
+
+        @param vertex: The vertex.
+        @type vertex: C{object}
+        @return: The set of vertices adjacent to vertex.
+        @rtype: C{set}
+        """
+        n = set()
+        for other in self.vertices:
+            if self.adjacent( vertex, other ):
+                n.add( other )
+        return n
+
+    # Shortest path algorithm
+
+    def dijkstra( self, start ):
+        """\
+        Dijkstra's algorithm (shortest paths from start vertex to all other
+        vertices).
+
+        @param start: The start vertex.
+        @type start: C{object}
+        @return: The 'previous" array of Dijkstra's algorithm.
+        @rtype: C{list}
+        """
+        dist = {}
+        prev = {}
+        Q = set( self._V )
+        for vertex in self._V:
+            dist[ vertex ] = 1e308
+            prev[ vertex ] = None
+        dist[ start ] = 0
+        while len( Q ):
+            u = None
+            for vertex in Q:
+                if not u or dist[ vertex ] < dist[ u ]:
+                    u = vertex
+            Q.remove( u )
+            for vertex in self.neighbors( u ):
+                alt = dist[ u ] + 1
+                if alt < dist[ vertex ]:
+                    dist[ vertex ] = alt
+                    prev[ vertex ] = u
+        return prev
+
+    def shortest_path( self, start, end ):
+        """\
+        Find the shortest path from the start vertex to the end vertex using
+        Dijkstra's algorithm.
+
+        @param start: The start vertex.
+        @type start: C{object}
+        @param end: The end vertex.
+        @type end: C{object}
+        @return Shortest path vertex list and total distance.
+        @rtype: C{list}, C{float}
+        """
+        path = []
+        u = end
+        prev = self.dijkstra( start )
+        dist = 0
+        while u in prev.keys():
+            path.insert( 0, u )
+            if prev[ u ]:
+                dist += 1
+            u = prev[ u ]
+        return path, dist
