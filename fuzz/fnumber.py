@@ -11,4 +11,5 @@ class FuzzyNumber( object ):
     """\
     Fuzzy number class.
     """
-    pass
+    def __init__( self ):
+        raise NotImplementedError, ( "Fuzzy numbers are not yet implemented" )
