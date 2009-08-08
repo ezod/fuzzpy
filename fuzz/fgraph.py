@@ -96,15 +96,12 @@ class FuzzyGraph( Graph ):
         @return: The fuzzy set of edges specified.
         @rtype: L{FuzzySet}
         """
-        result = FuzzySet()
         if ( tail is not None and not tail in self._V ) \
         or ( head is not None and not head in self._V ):
             raise KeyError, ( "Specified tail/head must be in vertex set" )
-        for edge in self._E:
+        return FuzzySet( [ edge for edge in self._E \
             if ( tail is None or edge.obj.tail == tail ) \
-            and ( head is None or edge.obj.head == head ):
-                result.add( edge )
-        return result
+            and ( head is None or edge.obj.head == head ) ] )
 
     def weight( self, tail, head ):
         """\
