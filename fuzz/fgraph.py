@@ -74,6 +74,21 @@ class FuzzyGraph( Graph ):
             raise ValueError, ( "Edge already exists" )
         self._E.add( edge )
 
+    def remove_edge( self, tail, head ):
+        """\
+        Remove an edge from the graph by tail and head.
+
+        @param tail: The tail vertex of the edge.
+        @type tail: C{object}
+        @param head: The head vertex of the edge.
+        @type head: C{object}
+        """
+        for edge in self.edges( tail, head ):
+            self._E.remove( edge.obj )
+        if not self.directed:
+            for edge in self.edges( head, tail ):
+                self._E.remove( edge.obj )
+
     @property
     def vertices( self ):
         """\

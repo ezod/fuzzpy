@@ -189,17 +189,20 @@ class Graph( object ):
             raise ValueError, ( "Edge already exists" )
         self._E.add( edge )
 
-    def remove_edge( self, edge ):
-        """
-        Remove an edge from the graph.
+    def remove_edge( self, tail, head ):
+        """\
+        Remove an edge from the graph by tail and head.
 
-        @param edge: The edge to remove.
-        @type edge: L{GraphEdge}
+        @param tail: The tail vertex of the edge.
+        @type tail: C{object}
+        @param head: The head vertex of the edge.
+        @type head: C{object}
         """
-        if not self.directed and edge.reverse() in self.edges():
-            self._E.remove( edge.reverse() )
-        else:
+        for edge in self.edges( tail, head ):
             self._E.remove( edge )
+        if not self.directed:
+            for edge in self.edges( head, tail ):
+                self._E.remove( edge )
 
     @property
     def vertices( self ):
