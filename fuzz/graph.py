@@ -232,6 +232,23 @@ class Graph( object ):
                 result.add( edge )
         return result
 
+    def weight( self, tail, head ):
+        """\
+        Return the weight of an edge. Returns 1 for the base unweighted graph.
+
+        @param tail: The tail vertex.
+        @type tail: C{object}
+        @param head: The head vertex.
+        @type head: C{object}
+        @return: The weight of the edge from tail to head.
+        @rtype: C{float}
+        """
+        if GraphEdge( tail, head ) in self.edges() \
+        or ( not self.directed and GraphEdge( head, tail ) in self.edges() ):
+            return 1.
+        else:
+            return float( 'inf' ) 
+
     # Convenience functions
 
     def connect( self, tail, head ):
@@ -403,7 +420,7 @@ class Graph( object ):
         prev = {}
         Q = set( self._V )
         for vertex in self._V:
-            dist[ vertex ] = maxint
+            dist[ vertex ] = float( 'inf' )
             prev[ vertex ] = None
         dist[ start ] = 0
         while len( Q ):
@@ -413,7 +430,7 @@ class Graph( object ):
                     u = vertex
             Q.remove( u )
             for vertex in self.neighbors( u ):
-                alt = dist[ u ] + 1
+                alt = dist[ u ] + self.weight( u, vertex )
                 if alt < dist[ vertex ]:
                     dist[ vertex ] = alt
                     prev[ vertex ] = u
@@ -434,10 +451,10 @@ class Graph( object ):
         path = []
         u = end
         prev = self.dijkstra( start )
-        dist = 0
+        dist = 0.
         while u in prev.keys():
             path.insert( 0, u )
             if prev[ u ]:
-                dist += 1
+                dist += self.weight( prev[ u ], u )
             u = prev[ u ]
         return path, dist

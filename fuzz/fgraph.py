@@ -101,11 +101,34 @@ class FuzzyGraph( Graph ):
         or ( head is not None and not head in self._V ):
             raise KeyError, ( "Specified tail/head must be in vertex set" )
         for edge in self._E:
-            if ( tail is None or edge.tail == tail ) \
-            and ( head is None or edge.head == head ):
+            if ( tail is None or edge.obj.tail == tail ) \
+            and ( head is None or edge.obj.head == head ):
                 result.add( edge )
         return result
 
+    def weight( self, tail, head ):
+        """\
+        Return the weight of an edge. Returns the inverse of the membership
+        degree for a fuzzy graph.
+
+        @param tail: The tail vertex.
+        @type tail: C{object}
+        @param head: The head vertex.
+        @type head: C{object}
+        @return: The weight of the edge from tail to head.
+        @rtype: C{float}
+        """
+        mu = lambda t, h : self.edges( t, h ).pop().mu
+        try:
+            return 1. / mu( tail, head )
+        except KeyError:
+            if not self.directed:
+                try:
+                    return 1. / mu( head, tail )
+                except KeyError:
+                    pass
+        return float( 'inf ' )
+                
     # Convenience functions
 
     def add_fuzzy_vertex( self, vertex, mu = 1.0 ):
