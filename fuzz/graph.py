@@ -400,7 +400,7 @@ class Graph( object ):
         prev = {}
         Q = set( self._V )
         for vertex in self._V:
-            dist[ vertex ] = 1e308
+            dist[ vertex ] = float( 'inf' )
             prev[ vertex ] = None
         dist[ start ] = 0
         while len( Q ):
