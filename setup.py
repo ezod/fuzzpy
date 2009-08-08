@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from fuzz import __version__
-version = "%s.%s.%s" % __version__[0:3]
+version = "%s.%s.%s" % __version__[ 0 : 3 ]
 
 from setuptools import setup
 
@@ -13,7 +13,7 @@ setup(
     author = "Aaron Mavrinac",
     author_email = "mavrin1@uwindsor.ca",
     url = "http://code.google.com/p/fuzzpy",
-    download_url = "http://fuzzpy.googlecode.com/files/fuzzpy-0.0.2.tar.bz2",
+    download_url = "http://fuzzpy.googlecode.com/files/fuzzpy-%s.tar.bz2" % version,
     keywords = "fuzzy set graph math",
     packages = ['fuzz'],
     zip_safe = False,
