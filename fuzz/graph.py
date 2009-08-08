@@ -7,9 +7,6 @@ Graph module. Contains crisp graph class definitions.
 @license: GPL-3
 """
 
-from sys import maxint
-
-
 class GraphEdge( object ):
     """\
     Graph edge class.
