@@ -222,15 +222,12 @@ class Graph( object ):
         @return: The set of edges specified.
         @rtype: C{set}
         """
-        result = set()
         if ( tail is not None and not tail in self._V ) \
         or ( head is not None and not head in self._V ):
             raise KeyError, ( "Specified tail/head must be in vertex set" )
-        for edge in self._E:
+        return set( [ edge for edge in self._E \
             if ( tail is None or edge.tail == tail ) \
-            and ( head is None or edge.head == head ):
-                result.add( edge )
-        return result
+            and ( head is None or edge.head == head ) ] )
 
     def weight( self, tail, head ):
         """\
