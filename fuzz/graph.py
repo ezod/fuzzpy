@@ -398,11 +398,8 @@ class Graph( object ):
         @return: The set of vertices adjacent to vertex.
         @rtype: C{set}
         """
-        n = set()
-        for other in self.vertices:
-            if self.adjacent( vertex, other ):
-                n.add( other )
-        return n
+        return set( [ v for v in self.vertices \
+            if self.adjacent( vertex, v ) ] )
 
     # Shortest path algorithm
 
