@@ -412,11 +412,11 @@ class Graph( object ):
         """
         dist = {}
         prev = {}
-        Q = set( self._V )
-        for vertex in self._V:
+        Q = set( self.vertices )
+        for vertex in self.vertices:
             dist[ vertex ] = float( 'inf' )
             prev[ vertex ] = None
-        dist[ start ] = 0
+        dist[ start ] = 0.
         while len( Q ):
             u = None
             for vertex in Q:
