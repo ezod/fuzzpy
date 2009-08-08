@@ -141,7 +141,6 @@ class Graph( object ):
         Return whether this graph is directed. This should only be set by the
         constructor and is read-only afterward.
 
-        @return: True if the graph is directed, false otherwise.
         @rtype: C{bool}
         """
         return self._directed
@@ -163,7 +162,7 @@ class Graph( object ):
         """\
         Remove a vertex and all edges connected to it from the graph.
 
-        @param vetex: The vertex to remove.
+        @param vertex: The vertex to remove.
         @type vertex: C{object}
         """
         if not vertex in self._V:
@@ -209,7 +208,6 @@ class Graph( object ):
         """\
         Return a set of vertices in the graph.
 
-        @return: A set of vertices.
         @rtype: C{set}
         """
         return self._V
@@ -377,7 +375,7 @@ class Graph( object ):
 
         @param tail: The tail vertex.
         @type tail: C{object}
-        @oaram head: The head vertex.
+        @param head: The head vertex.
         @type head: C{object}
         @return: True if adjacent, false otherwise.
         @rtype: C{bool}

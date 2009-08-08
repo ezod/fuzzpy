@@ -47,7 +47,7 @@ class FuzzyGraph( Graph ):
         """\
         Remove a vertex and all edges connected to it from the fuzzy graph.
 
-        @param vetex: The vertex to remove.
+        @param vertex: The vertex to remove.
         @type vertex: C{object}
         """
         if not vertex in self._V:
@@ -94,7 +94,6 @@ class FuzzyGraph( Graph ):
         """\
         Return a set of vertices in the fuzzy graph.
 
-        @return: A set of vertices.
         @rtype: C{set}
         """
         return self._V.objects
@@ -160,8 +159,8 @@ class FuzzyGraph( Graph ):
         Add a fuzzy edge to the fuzzy graph (without explicitly constructing
         a FuzzyElement for it). Convenience wrapper for add_edge().
 
-        @param vertex: The edge to add.
-        @type vertex: L{GraphEdge}
+        @param edge: The edge to add.
+        @type edge: L{GraphEdge}
         @param mu: The membership degree of the edge (optional).
         @type mu: C{float}
         """

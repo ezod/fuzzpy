@@ -118,8 +118,8 @@ class FuzzySet( set ):
         """\
         Report whether an object is a member of a set.
 
-        @param element: The element to test for.
-        @type element: C{object}
+        @param obj: The element to test for.
+        @type obj: C{object}
         @return: True if member, false otherwise.
         @rtype: C{bool}
         """
@@ -134,7 +134,6 @@ class FuzzySet( set ):
         Returns a set of objects of elements with non-zero membership in the
         fuzzy set.
 
-        @return: A set of objects of elements with non-zero membership.
         @rtype: C{set}
         """
         result = set()
@@ -149,7 +148,6 @@ class FuzzySet( set ):
         Returns a set of all objects in the fuzzy set (even those with zero
         membership).
 
-        @return: A set of objects of elements.
         @rtype: C{set}
         """
         result = set()
@@ -448,7 +446,6 @@ class FuzzySet( set ):
         """\
         Returns whether the fuzzy set is normal (height = 1).
 
-        @return: True if the set is normal, false otherwise.
         @rtype: C{bool}
         """
         return self.height() == 1.0
