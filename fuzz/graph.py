@@ -7,6 +7,9 @@ Graph module. Contains crisp graph class definitions.
 @license: GPL-3
 """
 
+from sys import maxint
+
+
 class GraphEdge( object ):
     """\
     Graph edge class.
@@ -400,7 +403,7 @@ class Graph( object ):
         prev = {}
         Q = set( self._V )
         for vertex in self._V:
-            dist[ vertex ] = float( 'inf' )
+            dist[ vertex ] = maxint
             prev[ vertex ] = None
         dist[ start ] = 0
         while len( Q ):
