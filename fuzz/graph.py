@@ -244,6 +244,26 @@ class Graph( object ):
         else:
             return float( 'inf' ) 
 
+    def edges_by_weight( self, tail = None, head = None ):
+        """\
+        Return a list of edges, sorted in ascending order by weight, with tail
+        and/or head optionally specified.
+
+        @param tail: The tail vertex constraint (optional).
+        @type tail: C{object}
+        @param head: The head vertex constraint (optional).
+        @type head: C{object}
+        @return: The list of edges sorted by weight.
+        @rtype: C{list}
+        """
+        ebw = []
+        for edge in self.edges():
+            ebw.append( ( edge, self.weight( edge.tail, edge.head ) ) )
+        ebw.sort( cmp = lambda a, b : cmp( a[ 1 ], b[ 1 ] ) )
+        for i in range( len( ebw ) ):
+            ebw[ i ] = ebw[ i ][ 0 ]
+        return ebw
+
     # Convenience functions
 
     def connect( self, tail, head ):
@@ -395,6 +415,34 @@ class Graph( object ):
         """
         return set( [ v for v in self.vertices \
             if self.adjacent( vertex, v ) ] )
+            
+    def connected( self, tail, head ):
+        """\
+        Report whether two vertices are connected.
+
+        @param tail: The tail vertex.
+        @type tail: C{object}
+        @param head: The head vertex.
+        @type head: C{object}
+        @return: True if adjacent, false otherwise.
+        @rtype: C{bool}
+        """
+        if tail == head:
+            return False
+        D = set()
+        N = self.neighbors( tail ) - D
+        while True:
+            if head in N:
+                return True
+            D |= N
+            P = set()
+            for vertex in N:
+                P |= self.neighbors( vertex )
+            P -= D
+            if not len( P ):
+                break
+            N = P.copy()
+        return False
 
     # Shortest path algorithm
 
@@ -450,3 +498,24 @@ class Graph( object ):
                 dist += self.weight( prev[ u ], u )
             u = prev[ u ]
         return path, dist
+
+    def minimum_spanning_tree( self ):
+        """\
+        Minimum spanning tree (Kruskal's algorithm).
+
+        @return The minimum spanning tree.
+        @rtype: L{Graph}
+        """
+        if self.directed:
+            raise NotImplementedError, \
+                ( "Kruskal's algorithm is for undirected graphs only" )
+        # create a list of edges sorted by weight
+        Q = self.edges_by_weight()
+        # initialize the minimum spanning tree
+        T = self.__class__( viter = self.vertices, directed = False )
+        # construct the tree
+        while len( Q ) and len( T.edges() ) < len( self.edges() ):
+            edge = Q.pop( 0 )
+            if not T.connected( edge.tail, edge.head ):
+                T.add_edge( edge )
+        return T
