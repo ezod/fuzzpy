@@ -238,7 +238,9 @@ class Graph( object ):
         @return: The weight of the edge from tail to head.
         @rtype: C{float}
         """
-        if GraphEdge( tail, head ) in self.edges() \
+        if tail == head:
+            return 0.
+        elif GraphEdge( tail, head ) in self.edges() \
         or ( not self.directed and GraphEdge( head, tail ) in self.edges() ):
             return 1.
         else:
@@ -445,7 +447,7 @@ class Graph( object ):
             N = P.copy()
         return False
 
-    # Shortest path algorithm
+    # Shortest path algorithms
 
     def dijkstra( self, start ):
         """\
@@ -499,6 +501,28 @@ class Graph( object ):
                 dist += self.weight( prev[ u ], u )
             u = prev[ u ]
         return path, dist
+
+    def floyd_warshall( self ):
+        """\
+        Floyd-Warshall algorithm (shortest path length between all pairs of
+        vertices).
+
+        @return A 2D dictionary of pairwise shortest path lengths.
+        @rtype: C{dict} of C{dict} of C{double}
+        """
+        path = {}
+        for i in self.vertices:
+            path[ i ] = {}
+            for j in self.vertices:
+                path[ i ][ j ] = self.weight( i, j )
+        for k in self.vertices:
+            for i in self.vertices:
+                for j in self.vertices:
+                    path[ i ][ j ] = min( path[ i ][ j ], path[ i ][ k ] + \
+                                     path[ k ][ j ] )
+        return path
+    
+    # Minimum spanning tree
 
     def minimum_spanning_tree( self ):
         """\
