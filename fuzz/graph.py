@@ -164,9 +164,9 @@ class Graph( object ):
         """
         if not vertex in self._V:
             raise KeyError, vertex
-        for edge in self._E:
+        for edge in self.edges():
             if vertex in edge:
-                self._E.remove( edge )
+                self.remove_edge( edge.tail, edge.head )
         self._V.remove( vertex )
 
     def add_edge( self, edge ):
@@ -180,8 +180,7 @@ class Graph( object ):
             raise TypeError, ( "Edge must be a GraphEdge" )
         if not edge.tail in self.vertices or not edge.head in self.vertices:
             raise KeyError, ( "Tail and head must be in vertex set" )
-        if edge in self.edges() \
-        or ( not self.directed and edge.reverse() in self.edges() ):
+        if edge in self.edges():
             raise ValueError, ( "Edge already exists" )
         self._E.add( edge )
 
@@ -196,9 +195,6 @@ class Graph( object ):
         """
         for edge in self.edges( tail, head ):
             self._E.remove( edge )
-        if not self.directed:
-            for edge in self.edges( head, tail ):
-                self._E.remove( edge )
 
     @property
     def vertices( self ):
@@ -220,12 +216,17 @@ class Graph( object ):
         @return: The set of edges specified.
         @rtype: C{set}
         """
-        if ( tail is not None and not tail in self._V ) \
-        or ( head is not None and not head in self._V ):
+        if ( tail is not None and not tail in self.vertices ) \
+        or ( head is not None and not head in self.vertices ):
             raise KeyError, ( "Specified tail/head must be in vertex set" )
-        return set( [ edge for edge in self._E \
+        eset = set( [ edge for edge in self._E \
             if ( tail is None or edge.tail == tail ) \
             and ( head is None or edge.head == head ) ] )
+        if not self.directed:
+            eset |= set( [ edge for edge in self._E \
+                if ( tail is None or edge.head == tail ) \
+                and ( head is None or edge.tail == head ) ] )
+        return eset
 
     def weight( self, tail, head ):
         """\
@@ -240,8 +241,7 @@ class Graph( object ):
         """
         if tail == head:
             return 0.
-        elif GraphEdge( tail, head ) in self.edges() \
-        or ( not self.directed and GraphEdge( head, tail ) in self.edges() ):
+        elif GraphEdge( tail, head ) in self.edges():
             return 1.
         else:
             return float( 'inf' ) 
@@ -537,7 +537,7 @@ class Graph( object ):
         # create a list of edges sorted by weight
         Q = self.edges_by_weight()
         # initialize the minimum spanning tree
-        T = self.__class__( viter = self.vertices, directed = False )
+        T = Graph( viter = self.vertices, directed = False )
         # construct the tree
         while len( Q ) and len( T.edges() ) < len( self.edges() ):
             edge = Q.pop( 0 )
@@ -554,8 +554,7 @@ class Graph( object ):
         @rtype: L{Graph}
         """
         # initialize the shortest path subgraph
-        G = self.__class__( viter = self.vertices, eiter = self.edges(), \
-                            directed = self.directed )
+        G = Graph( self.vertices, self.edges(), self.directed )
         # compute all-pairs shortest paths
         path = self.floyd_warshall()
         # remove all non-strong edges

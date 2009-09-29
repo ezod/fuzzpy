@@ -43,20 +43,6 @@ class FuzzyGraph( Graph ):
                 else:
                     self.add_edge( FuzzyElement( edge, 1.0 ) )
 
-    def remove_vertex( self, vertex ):
-        """\
-        Remove a vertex and all edges connected to it from the fuzzy graph.
-
-        @param vertex: The vertex to remove.
-        @type vertex: C{object}
-        """
-        if not vertex in self._V:
-            raise KeyError, vertex
-        for edge in self._E:
-            if vertex in edge.obj:
-                self._E.remove( edge.obj )
-        self._V.remove( vertex )
-
     def add_edge( self, edge ):
         """\
         Add an edge to the fuzzy graph.
@@ -69,25 +55,9 @@ class FuzzyGraph( Graph ):
         if not edge.obj.tail in self.vertices \
         or not edge.obj.head in self.vertices:
             raise KeyError, ( "Tail and head must be in vertex set" )
-        if edge.obj in self.edges() \
-        or ( not self.directed and edge.obj.reverse() in self.edges() ):
+        if edge.obj in self.edges():
             raise ValueError, ( "Edge already exists" )
         self._E.add( edge )
-
-    def remove_edge( self, tail, head ):
-        """\
-        Remove an edge from the graph by tail and head.
-
-        @param tail: The tail vertex of the edge.
-        @type tail: C{object}
-        @param head: The head vertex of the edge.
-        @type head: C{object}
-        """
-        for edge in self.edges( tail, head ):
-            self._E.remove( edge.obj )
-        if not self.directed:
-            for edge in self.edges( head, tail ):
-                self._E.remove( edge.obj )
 
     @property
     def vertices( self ):
@@ -110,12 +80,37 @@ class FuzzyGraph( Graph ):
         @return: The fuzzy set of edges specified.
         @rtype: L{FuzzySet}
         """
-        if ( tail is not None and not tail in self._V ) \
-        or ( head is not None and not head in self._V ):
+        if ( tail is not None and not tail in self.vertices ) \
+        or ( head is not None and not head in self.vertices ):
             raise KeyError, ( "Specified tail/head must be in vertex set" )
-        return FuzzySet( [ edge for edge in self._E \
+        eset = set( [ edge.obj for edge in self._E \
             if ( tail is None or edge.obj.tail == tail ) \
             and ( head is None or edge.obj.head == head ) ] )
+        if not self.directed:
+            eset |= set( [ edge.obj for edge in self._E \
+                if ( tail is None or edge.obj.head == tail ) \
+                and ( head is None or edge.obj.tail == head ) ] )
+        return eset
+
+    def mu( self, tail, head ):
+        """\
+        Return the membership degree of an edge.
+
+        @param tail: The tail vertex.
+        @type tail: C{object}
+        @param head: The head vertex.
+        @type head: C{object}
+        @return: The weight of the edge from tail to head.
+        @rtype: C{float}
+        """
+        try:
+            edge = self.edges( tail, head ).pop()
+        except KeyError:
+            return 0.
+        for e in self._E:
+            if e.obj == edge:
+                return e.mu
+        return 0.
 
     def weight( self, tail, head ):
         """\
@@ -129,16 +124,12 @@ class FuzzyGraph( Graph ):
         @return: The weight of the edge from tail to head.
         @rtype: C{float}
         """
-        mu = lambda t, h : self.edges( t, h ).pop().mu
+        if tail == head:
+            return 0.
         try:
-            return 1. / mu( tail, head )
-        except KeyError:
-            if not self.directed:
-                try:
-                    return 1. / mu( head, tail )
-                except KeyError:
-                    pass
-        return float( 'inf ' )
+            return 1. / self.mu( tail, head )
+        except ZeroDivisionError:
+            return float( 'inf' )
                 
     # Convenience functions
 
@@ -232,4 +223,4 @@ class FuzzyGraph( Graph ):
         Normalize the fuzzy graph by normalizing its vertex and edge sets.
         """
         self._V.normalize()
-        self._E.normalize()
+        SELF._e.Normalize()
