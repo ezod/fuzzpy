@@ -522,7 +522,7 @@ class Graph( object ):
                                      path[ k ][ j ] )
         return path
     
-    # Minimum spanning tree
+    # Subgraph algorithms
 
     def minimum_spanning_tree( self ):
         """\
@@ -544,3 +544,23 @@ class Graph( object ):
             if not T.connected( edge.tail, edge.head ):
                 T.add_edge( edge )
         return T
+
+    def shortest_path_subgraph( self ):
+        """\
+        Shortest path subgraph, containing only strong edges (edges which form
+        part of a shortest path between some pair of vertices).
+
+        @return The shortest path subgraph.
+        @rtype: L{Graph}
+        """
+        # initialize the shortest path subgraph
+        G = self.__class__( viter = self.vertices, eiter = self.edges(), \
+                            directed = self.directed )
+        # compute all-pairs shortest paths
+        path = self.floyd_warshall()
+        # remove all non-strong edges
+        for edge in self.edges():
+            if self.weight( edge.tail, edge.head ) > \
+               path[ edge.tail ][ edge.head ]:
+                G.remove_edge( edge.tail, edge.head )
+        return G
