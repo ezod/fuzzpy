@@ -8,3 +8,10 @@ FuzzPy: Fuzzy sets for Python
 """
 
 __version__ = ( 0, 0, 3 )
+
+__all__ = [ 'fset', 'fnumber', 'graph', 'fgraph' ]
+
+from fset import *
+from fnumber import *
+from graph import *
+from fgraph import *
