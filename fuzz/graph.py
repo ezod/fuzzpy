@@ -418,7 +418,8 @@ class Graph( object ):
             
     def connected( self, tail, head ):
         """\
-        Report whether two vertices are connected.
+        Report whether two vertices are connected. Uses a breadth-first search
+        algorithm.
 
         @param tail: The tail vertex.
         @type tail: C{object}
