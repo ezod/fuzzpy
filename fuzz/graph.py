@@ -401,8 +401,7 @@ class Graph( object ):
         """
         if tail == head:
             return False
-        if GraphEdge( tail, head ) in self.edges() \
-        or ( not self.directed and GraphEdge( head, tail ) in self.edges() ):
+        if self.edges( tail, head ):
             return True
         return False
 
