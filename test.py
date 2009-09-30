@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 
 """\
-Unit tests for FuzzPy.
+Unit tests for FuzzPy. These tests are currently not exhaustive, and are
+primarily used as a development tool to make sure changes in one place aren't
+breaking things in another.
 
 @author: Aaron Mavrinac
 @organization: University of Windsor
