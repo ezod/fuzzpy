@@ -2,4 +2,3 @@
 *.swp
 doc/*
 *.egg-info
-test.py
