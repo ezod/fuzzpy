@@ -487,7 +487,7 @@ class Graph( object ):
         @type start: C{object}
         @param end: The end vertex.
         @type end: C{object}
-        @return Shortest path vertex list and total distance.
+        @return: Shortest path vertex list and total distance.
         @rtype: C{list}, C{float}
         """
         path = []
@@ -506,7 +506,7 @@ class Graph( object ):
         Floyd-Warshall algorithm (shortest path length between all pairs of
         vertices).
 
-        @return A 2D dictionary of pairwise shortest path lengths.
+        @return: A 2D dictionary of pairwise shortest path lengths.
         @rtype: C{dict} of C{dict} of C{double}
         """
         path = {}
@@ -527,7 +527,7 @@ class Graph( object ):
         """\
         Minimum spanning tree (Kruskal's algorithm).
 
-        @return The minimum spanning tree.
+        @return: The minimum spanning tree.
         @rtype: L{Graph}
         """
         if self.directed:
@@ -549,7 +549,7 @@ class Graph( object ):
         Shortest path subgraph, containing only strong edges (edges which form
         part of a shortest path between some pair of vertices).
 
-        @return The shortest path subgraph.
+        @return: The shortest path subgraph.
         @rtype: L{Graph}
         """
         # initialize the shortest path subgraph
