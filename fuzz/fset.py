@@ -75,7 +75,7 @@ class FuzzySet( set ):
             if not element.obj in self.objects:
                 self._add( element )
         else:
-            raise TypeError, ( "Element to add must be a FuzzyElement" )
+            raise TypeError, ( "element to add must be a FuzzyElement" )
 
     def remove( self, key ):
         """\
@@ -97,7 +97,7 @@ class FuzzySet( set ):
         """
         for element in iterable:
             if not isinstance( element, FuzzyElement ):
-                raise TypeError, ( "Iterable must consist of FuzzyElements" )
+                raise TypeError, ( "iterable must consist of FuzzyElements" )
         self._update( iterable )
 
     def __getitem__( self, key ):
@@ -349,7 +349,7 @@ class FuzzySet( set ):
         """
         if not isinstance( other, FuzzySet ):
             raise TypeError, \
-                ( "Binary operation only permitted between fuzzy sets" )
+                ( "binary operation only permitted between fuzzy sets" )
 
     # Unary fuzzy set operations
 

@@ -21,7 +21,7 @@ class GraphEdge( object ):
         @type head: C{object}
         """
         if tail == head:
-            raise ValueError, ( "Tail and head must differ" )
+            raise ValueError, ( "tail and head must differ" )
         self.tail = tail
         self.head = head
 
@@ -70,7 +70,7 @@ class GraphEdge( object ):
         """
         if not isinstance( other, GraphEdge ):
             raise TypeError, \
-                ( "Comparison only permitted between graph edges" )
+                ( "comparison only permitted between graph edges" )
         if self.tail != other.tail or self.head != other.head:
             return False
         return True
@@ -152,7 +152,7 @@ class Graph( object ):
         try:
             hash( vertex )
         except TypeError:
-            raise TypeError, ( "Vertex must be a hashable object" )
+            raise TypeError, ( "vertex must be a hashable object" )
         self._V.add( vertex )
 
     def remove_vertex( self, vertex ):
@@ -177,11 +177,11 @@ class Graph( object ):
         @type edge: L{GraphEdge}
         """
         if not isinstance( edge, GraphEdge ):
-            raise TypeError, ( "Edge must be a GraphEdge" )
+            raise TypeError, ( "edge must be a GraphEdge" )
         if not edge.tail in self.vertices or not edge.head in self.vertices:
-            raise KeyError, ( "Tail and head must be in vertex set" )
+            raise KeyError, ( "tail and head must be in vertex set" )
         if edge in self.edges():
-            raise ValueError, ( "Edge already exists" )
+            raise ValueError, ( "edge already exists" )
         self._E.add( edge )
 
     def remove_edge( self, tail, head ):
@@ -218,7 +218,7 @@ class Graph( object ):
         """
         if ( tail is not None and not tail in self.vertices ) \
         or ( head is not None and not head in self.vertices ):
-            raise KeyError, ( "Specified tail/head must be in vertex set" )
+            raise KeyError, ( "specified tail/head must be in vertex set" )
         eset = set( [ edge for edge in self._E \
             if ( tail is None or edge.tail == tail ) \
             and ( head is None or edge.head == head ) ] )
@@ -383,7 +383,7 @@ class Graph( object ):
         """
         if not isinstance( other, Graph ):
             raise TypeError, \
-                ( "Binary operation only permitted between graphs" )
+                ( "binary operation only permitted between graphs" )
 
     # Connectivity-related functions
 
