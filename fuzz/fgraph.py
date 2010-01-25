@@ -7,9 +7,8 @@ Graph module. Contains fuzzy graph class definitions.
 @license: GPL-3
 """
 
-# Local imports
-from fset import *
-from graph import *
+from fset import FuzzyElement, FuzzySet 
+from graph import GraphEdge, Graph
 
 
 class FuzzyGraph( Graph ):
