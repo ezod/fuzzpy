@@ -14,13 +14,10 @@ class RealRange( tuple ):
     """\
     Real range class.
     """
-    def __init__( self, arg ):
+    def __new__( cls, arg = ( 0.0, 0.0 ) ):
         """\
-        Constructor. Initializes like a tuple, but must have exactly two
-        numeric values, the first being less than or equal to the second.
-
-        @param arg: Initialization argument.
-        @type arg: C{object}
+        Instatiation method. Verifies the validity of the range argument
+        before returning the range object.
         """
         if not len( arg ) == 2 :
             raise ValueError, ( "range must consist of two values" )
@@ -29,6 +26,7 @@ class RealRange( tuple ):
             raise TypeError, ( "range values must be numeric" )
         if arg[ 0 ] > arg[ 1 ]:
             raise ValueError, ( "range may not have negative size" )
+        return tuple.__new__( cls, arg )
 
     @property
     def size( self ):
