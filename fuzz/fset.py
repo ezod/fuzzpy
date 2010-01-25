@@ -325,9 +325,7 @@ class FuzzySet( set ):
         @return: True if a strict subset, false otherwise.
         @rtype: C{bool}
         """
-        if self.issubset( other ) and self != other:
-            return True
-        return False
+        return self.issubset( other ) and self != other
 
     def __gt__( self, other ):
         """\
@@ -338,9 +336,7 @@ class FuzzySet( set ):
         @return: True if a strict superset, false otherwise.
         @rtype: C{bool}
         """
-        if self.issuperset( other ) and self != other:
-            return True
-        return False
+        return self.issuperset( other ) and self != other
 
     def _binary_sanity_check( self, other ):
         """\
