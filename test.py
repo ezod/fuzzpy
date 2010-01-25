@@ -17,6 +17,24 @@ import fuzz
 print "FuzzPy imported from '%s'" % fuzz.__path__[ 0 ]
 
 
+class TestFuzzyNumber( unittest.TestCase ):
+
+    def setUp( self ):
+        K = fuzz.RealRange( ( 3.0, 5.5 ) )
+        S = fuzz.RealRange( ( 0.0, 6.5 ) )
+        self.N = fuzz.TrapezoidalFuzzyNumber( K, S )
+
+    def test_mu( self ):
+        exp = [ 0., 1./3., 1., 1., 0.5, 0. ]
+        act = [ self.N.mu( 0. ),
+                self.N.mu( 1. ),
+                self.N.mu( 3. ),
+                self.N.mu( 5. ),
+                self.N.mu( 6. ),
+                self.N.mu( 7. ) ]
+        self.assertEqual( act, exp )
+
+
 class TestFuzzyGraph( unittest.TestCase ):
     
     def setUp( self ):
