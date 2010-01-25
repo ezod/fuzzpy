@@ -141,7 +141,7 @@ class TrapezoidalFuzzyNumber( FuzzyNumber ):
         @param x: A point in the universal set.
         @type x: C{float}
         """
-        if x in kernel:
+        if x in self.kernel:
             return 1.
         elif x > self.support[ 0 ] and x < self.kernel[ 0 ]:
             return ( x - self.support[ 0 ] ) / ( self.kernel[ 0 ] - self.support[ 0 ] )
