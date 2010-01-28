@@ -117,7 +117,7 @@ class TrapezoidalFuzzyNumber( FuzzyNumber ):
     """\
     Trapezoidal fuzzy number class.
     """
-    def __init__( self, kernel, support ):
+    def __init__( self, kern, support ):
         """\
         Constructor.
 
@@ -133,7 +133,7 @@ class TrapezoidalFuzzyNumber( FuzzyNumber ):
 
     def mu( self, x ):
         """\
-        Return the membership degree of a point in the universal set domain of
+        Return the membership level of a point in the universal set domain of
         the fuzzy number.
 
         @param x: A point in the universal set.
@@ -149,3 +149,17 @@ class TrapezoidalFuzzyNumber( FuzzyNumber ):
                    ( self.support[ 1 ] - self.kernel[ 1 ] )
         else:
             return 0.
+
+    def alpha( self, alpha ):
+        """\
+        Alpha cut function. Returns the interval within the fuzzy number whose
+        membership levels meet or exceed the alpha value.
+
+        @param alpha: The alpha value for the cut in [0, 1].
+        @type alpha: C{float}
+        @return: The alpha cut interval.
+        @rtype: L{RealRange}
+        """
+        return RealRange( ( ( self.kernel[ 0 ] - self.support[ 0 ] ) * alpha \
+                          + self.support[ 0 ], self.support[ 1 ] - \
+                          ( self.support[ 1 ] - self.kernel[ 1 ] ) * alpha ) )
