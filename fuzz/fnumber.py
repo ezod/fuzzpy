@@ -117,7 +117,7 @@ class TrapezoidalFuzzyNumber( FuzzyNumber ):
     """\
     Trapezoidal fuzzy number class.
     """
-    def __init__( self, kern, support ):
+    def __init__( self, kernel, support ):
         """\
         Constructor.
 
