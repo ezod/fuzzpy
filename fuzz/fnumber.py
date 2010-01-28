@@ -142,8 +142,10 @@ class TrapezoidalFuzzyNumber( FuzzyNumber ):
         if x in self.kernel:
             return 1.
         elif x > self.support[ 0 ] and x < self.kernel[ 0 ]:
-            return ( x - self.support[ 0 ] ) / ( self.kernel[ 0 ] - self.support[ 0 ] )
+            return ( x - self.support[ 0 ] ) / \
+                   ( self.kernel[ 0 ] - self.support[ 0 ] )
         elif x < self.support[ 1 ] and x > self.kernel[ 1 ]:
-            return ( self.support[ 1 ] - x ) / ( self.support[ 1 ] - self.kernel[ 1 ] )
+            return ( self.support[ 1 ] - x ) / \
+                   ( self.support[ 1 ] - self.kernel[ 1 ] )
         else:
             return 0.
