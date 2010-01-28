@@ -188,7 +188,7 @@ class FuzzyGraph( Graph ):
         Alpha cut function. Returns the crisp graph for which both vertex and
         edge membership values meet or exceed the alpha value.
 
-        @param alpha: The alpha value for the cut.
+        @param alpha: The alpha value for the cut in [0, 1].
         @type alpha: C{float}
         @return: The crisp graph result of the alpha cut.
         @rtype: L{Graph}
@@ -205,7 +205,7 @@ class FuzzyGraph( Graph ):
         Strong alpha cut function. Returns the crisp graph for which both
         vertex and edge membership values exceed the alpha value.
 
-        @param alpha: The alpha value for the cut.
+        @param alpha: The alpha value for the cut in [0, 1].
         @type alpha: C{float}
         @return: The crisp graph result of the strong alpha cut.
         @rtype: L{Graph}

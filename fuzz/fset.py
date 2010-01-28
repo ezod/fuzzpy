@@ -366,7 +366,7 @@ class FuzzySet( set ):
         Alpha cut function. Returns the crisp set of members whose membership
         levels meet or exceed the alpha value.
 
-        @param alpha: The alpha value for the cut.
+        @param alpha: The alpha value for the cut in [0, 1].
         @type alpha: C{float}
         @return: The crisp set result of the alpha cut.
         @rtype: C{set}
@@ -382,7 +382,7 @@ class FuzzySet( set ):
         Strong alpha cut function. Returns the crisp set of members whose
         membership levels exceed the alpha value.
 
-        @param alpha: The alpha value for the cut.
+        @param alpha: The alpha value for the cut in [0, 1].
         @type alpha: C{float}
         @return: The crisp set result of the strong alpha cut.
         @rtype: C{set}
