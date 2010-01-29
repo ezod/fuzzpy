@@ -38,6 +38,28 @@ class RealRange( tuple ):
         """
         return float( self[ 1 ] - self[ 0 ] )
 
+    def __add__( self, other ):
+        """\
+        Addition operation.
+   
+        @param other: The other operand.
+        @type other: L{RealRange}
+        @return: Sum of ranges.
+        @rtype: L{RealRange}
+        """
+        return RealRange( ( self[ 0 ] + other[ 0 ], self[ 1 ] + other[ 1 ] ) )
+
+    def __sub__( self, other ):
+        """\
+        Subtraction operation.
+   
+        @param other: The other operand.
+        @type other: L{RealRange}
+        @return: Difference of ranges.
+        @rtype: L{RealRange}
+        """
+        return RealRange( ( self[ 0 ] - other[ 1 ], self[ 1 ] - other[ 0 ] ) )
+
     def __contains__( self, value ):
         """\
         Report whether a given value is within this range.
@@ -130,6 +152,59 @@ class TrapezoidalFuzzyNumber( FuzzyNumber ):
             raise ValueError, ( "kernel range must be within support range" )
         self.kernel = kernel
         self.support = support
+
+    @property
+    def triangular( self ):
+        """\
+        Report if this is a triangular fuzzy number (kernel has zero size).
+
+        @return: True if a triangular fuzzy number.
+        @rtype: C{bool}
+        """
+        return self.kernel.size == 0
+
+    def _binary_sanity_check( self, other ):
+        """\
+        Check that the other argument to a binary operation is also a
+        trapezoidal fuzzy number, raising a TypeError otherwise.
+
+        @param other: The other argument.
+        @type other: L{TrapezoidalFuzzyNumber}
+        """
+        if not isinstance( other, TrapezoidalFuzzyNumber ):
+            raise TypeError, \
+                ( "binary operation only permitted between trapezoidal fuzzy \
+                   numbers" )
+
+    # Binary trapezoidal fuzzy number operations
+
+    def __add__( self, other ):
+        """\
+        Addition operation.
+
+        @param other: The other trapezoidal fuzzy number.
+        @type other: L{TrapezoidalFuzzyNumber}
+        @return: Sum of the trapezoidal fuzzy numbers.
+        @rtype: L{TrapezoidalFuzzyNumber}
+        """
+        self._binary_sanity_check( other )
+        return TrapezoidalFuzzyNumber( self.kernel + other.kernel,
+                                       self.support + other.support )
+
+    def __sub__( self, other ):
+        """\
+        Subtraction operation.
+
+        @param other: The other trapezoidal fuzzy number.
+        @type other: L{TrapezoidalFuzzyNumber}
+        @return: Difference of the trapezoidal fuzzy numbers.
+        @rtype: L{TrapezoidalFuzzyNumber}
+        """
+        self._binary_sanity_check( other )
+        return TrapezoidalFuzzyNumber( self.kernel - other.kernel,
+                                       self.support - other.support )
+
+    # Unary trapezoidal fuzzy number operations
 
     def mu( self, x ):
         """\
