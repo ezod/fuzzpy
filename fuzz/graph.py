@@ -43,8 +43,7 @@ class GraphEdge( object ):
         @return: The hash.
         @rtype: C{int}
         """
-        # FIXME: returns same hash for A,B and B,A, but seems to work?
-        return hash( self.tail ) ^ hash( self.head )
+        return ( hash( self.tail ) + 1 ) ^ hash( self.head )
 
     def __contains__( self, vertex ):
         """\
