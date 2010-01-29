@@ -17,6 +17,39 @@ import fuzz
 print "FuzzPy imported from '%s'" % fuzz.__path__[ 0 ]
 
 
+class TestFuzzySet( unittest.TestCase ):
+
+    def setUp( self ):
+        self.A = fuzz.FuzzySet()
+        self.B = fuzz.FuzzySet()
+        self.A.add( fuzz.FuzzyElement( 'a', 1.0 ) )
+        self.A.add( fuzz.FuzzyElement( 'b', 0.5 ) )
+        self.A.add( fuzz.FuzzyElement( 'c', 0.8 ) )
+        self.B.add( fuzz.FuzzyElement( 'b', 0.8 ) )
+        self.B.add( fuzz.FuzzyElement( 'c', 0.2 ) )
+        self.B.add( fuzz.FuzzyElement( 'd', 0.6 ) )
+
+    def test_union( self ):
+        C = fuzz.FuzzySet()
+        C.add( fuzz.FuzzyElement( 'a', 1.0 ) )
+        C.add( fuzz.FuzzyElement( 'b', 0.8 ) )
+        C.add( fuzz.FuzzyElement( 'c', 0.8 ) )
+        C.add( fuzz.FuzzyElement( 'd', 0.6 ) )
+        self.assertEqual( self.A.union( self.B ), C )
+
+    def test_intersection( self ):
+        C = fuzz.FuzzySet()
+        C.add( fuzz.FuzzyElement( 'b', 0.5 ) )
+        C.add( fuzz.FuzzyElement( 'c', 0.2 ) )
+        self.assertEqual( self.A.intersection( self.B ), C )
+
+    def test_normalize( self ):
+        self.B.normalize()
+        self.assertTrue( self.B.normal )
+        self.assertEqual( self.B[ 'c' ].mu, 0.25 )
+        self.assertEqual( self.B[ 'd' ].mu, 0.75 )
+
+
 class TestFuzzyNumber( unittest.TestCase ):
 
     def setUp( self ):
