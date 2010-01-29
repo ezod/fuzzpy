@@ -376,7 +376,8 @@ class Graph( object ):
             return True
         return False
 
-    def _binary_sanity_check( self, other ):
+    @staticmethod
+    def _binary_sanity_check( other ):
         """\
         Check that the other argument to a binary operation is also a graph,
         raising a TypeError otherwise.

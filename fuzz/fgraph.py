@@ -172,7 +172,8 @@ class FuzzyGraph( Graph ):
 
     # Binary fuzzy graph operations
 
-    def _binary_sanity_check( self, other ):
+    @staticmethod
+    def _binary_sanity_check( other ):
         """\
         Check that the other argument to a binary operation is also a fuzzy
         graph, raising a TypeError otherwise.
@@ -203,7 +204,7 @@ class FuzzyGraph( Graph ):
                 Ea.add( edge )
         return Graph( Va, Ea, self.directed )
 
-    def alpha( self, alpha ):
+    def salpha( self, alpha ):
         """\
         Strong alpha cut function. Returns the crisp graph for which both
         vertex and edge membership values exceed the alpha value.
@@ -225,4 +226,4 @@ class FuzzyGraph( Graph ):
         Normalize the fuzzy graph by normalizing its vertex and edge sets.
         """
         self._V.normalize()
-        SELF._e.Normalize()
+        self._E.normalize()

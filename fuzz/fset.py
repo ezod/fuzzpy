@@ -338,7 +338,8 @@ class FuzzySet( set ):
         """
         return self.issuperset( other ) and self != other
 
-    def _binary_sanity_check( self, other ):
+    @staticmethod
+    def _binary_sanity_check( other ):
         """\
         Check that the other argument to a binary operation is also a fuzzy
         set, raising a TypeError otherwise.
