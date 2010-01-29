@@ -35,8 +35,8 @@ class TestFuzzyNumber( unittest.TestCase ):
         self.assertEqual( act, exp )
     
     def test_alpha( self ):
-        exp = RealRange( ( 1.5, 6.0 ) )
-        act = N.alpha( 0.5 )
+        exp = fuzz.RealRange( ( 1.5, 6.0 ) )
+        act = self.N.alpha( 0.5 )
         self.assertEqual( act, exp )
 
 
