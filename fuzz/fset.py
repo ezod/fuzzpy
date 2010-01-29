@@ -438,9 +438,9 @@ class FuzzySet( set ):
         such that the height equals 1.
         """
         if self.height > 0:
-            f = 1.0 / self.height
+            scale = 1.0 / self.height
             for element in self:
-                element.mu *= f
+                element.mu *= scale
 
     @property
     def normal( self ):
