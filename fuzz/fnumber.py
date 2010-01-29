@@ -33,7 +33,6 @@ class RealRange( tuple ):
         """\
         Return the size of the range.
 
-        @return: The size of the range.
         @rtype: C{float}
         """
         return float( self[ 1 ] - self[ 0 ] )
@@ -158,7 +157,6 @@ class TrapezoidalFuzzyNumber( FuzzyNumber ):
         """\
         Report if this is a triangular fuzzy number (kernel has zero size).
 
-        @return: True if a triangular fuzzy number.
         @rtype: C{bool}
         """
         return self.kernel.size == 0
