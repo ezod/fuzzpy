@@ -131,7 +131,8 @@ class FuzzyNumber( object ):
     Fuzzy number class.
     """
     def __init__( self ):
-        raise NotImplementedError, ( "please use one of the subclasses" )
+        if self.__class__ is FuzzyNumber:
+            raise NotImplementedError, ( "please use one of the subclasses" )
 
 
 class TrapezoidalFuzzyNumber( FuzzyNumber ):
@@ -147,10 +148,14 @@ class TrapezoidalFuzzyNumber( FuzzyNumber ):
         @param support: The support of the fuzzy number.
         @type support: L{RealRange}
         """
+        if not isinstance( kernel, RealRange ) \
+        or not isinstance( support, RealRange ):
+            raise TypeError, ( "kernel and support must be RealRange objects" )
         if not kernel <= support:
             raise ValueError, ( "kernel range must be within support range" )
         self.kernel = kernel
         self.support = support
+        FuzzyNumber.__init__( self )
 
     @property
     def triangular( self ):
@@ -205,21 +210,21 @@ class TrapezoidalFuzzyNumber( FuzzyNumber ):
 
     # Unary trapezoidal fuzzy number operations
 
-    def mu( self, x ):
+    def mu( self, value ):
         """\
-        Return the membership level of a point in the universal set domain of
+        Return the membership level of a value in the universal set domain of
         the fuzzy number.
 
-        @param x: A point in the universal set.
-        @type x: C{float}
+        @param value: A value in the universal set.
+        @type value: C{float}
         """
-        if x in self.kernel:
+        if value in self.kernel:
             return 1.
-        elif x > self.support[ 0 ] and x < self.kernel[ 0 ]:
-            return ( x - self.support[ 0 ] ) / \
+        elif value > self.support[ 0 ] and value < self.kernel[ 0 ]:
+            return ( value - self.support[ 0 ] ) / \
                    ( self.kernel[ 0 ] - self.support[ 0 ] )
-        elif x < self.support[ 1 ] and x > self.kernel[ 1 ]:
-            return ( self.support[ 1 ] - x ) / \
+        elif value < self.support[ 1 ] and value > self.kernel[ 1 ]:
+            return ( self.support[ 1 ] - value ) / \
                    ( self.support[ 1 ] - self.kernel[ 1 ] )
         else:
             return 0.
