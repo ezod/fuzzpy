@@ -380,6 +380,9 @@ class Graph( object ):
         """\
         Check that the other argument to a binary operation is also a graph,
         raising a TypeError otherwise.
+
+        @param other: The other argument.
+        @type other: L{Graph}
         """
         if not isinstance( other, Graph ):
             raise TypeError, \

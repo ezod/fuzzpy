@@ -176,6 +176,9 @@ class FuzzyGraph( Graph ):
         """\
         Check that the other argument to a binary operation is also a fuzzy
         graph, raising a TypeError otherwise.
+
+        @param other: The other argument.
+        @type other: L{FuzzyGraph}
         """
         if not isinstance( other, FuzzyGraph ):
             raise TypeError, \

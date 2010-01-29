@@ -342,6 +342,9 @@ class FuzzySet( set ):
         """\
         Check that the other argument to a binary operation is also a fuzzy
         set, raising a TypeError otherwise.
+
+        @param other: The other argument.
+        @type other: L{FuzzySet}
         """
         if not isinstance( other, FuzzySet ):
             raise TypeError, \
