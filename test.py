@@ -33,6 +33,11 @@ class TestFuzzyNumber( unittest.TestCase ):
                 self.N.mu( 6. ),
                 self.N.mu( 7. ) ]
         self.assertEqual( act, exp )
+    
+    def test_alpha( self ):
+        exp = RealRange( ( 1.5, 6.0 ) )
+        act = N.alpha( 0.5 )
+        self.assertEqual( act, exp )
 
 
 class TestFuzzyGraph( unittest.TestCase ):
