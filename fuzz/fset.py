@@ -56,6 +56,7 @@ class FuzzySet( set ):
         @param iterable: The iterable to construct from (optional).
         @type iterable: C{object}
         """
+        set.__init__( self )
         if iterable is not None:
             self.update( iterable )
 
@@ -154,6 +155,40 @@ class FuzzySet( set ):
         for felement in self:
             result.add( felement.obj )
         return result
+
+    @property
+    def support( self ):
+        """\
+        Support, the crisp set of all elements with non-zero membership in the
+        fuzzy set.
+
+        @rtype: C{set}
+        """
+        return self.salpha( 0.0 )
+
+    @property
+    def kernel( self ):
+        """\
+        Kernel, the crisp set of all elements with membership degree of exactly
+        1.
+
+        @rtype: C{set}
+        """
+        return self.alpha( 1.0 )
+
+    @property
+    def height( self ):
+        """\
+        Height function. Returns the maximum membership degree of any element
+        in the fuzzy set.
+
+        @rtype: C{float}
+        """
+        height = 0
+        for element in self:
+            if element.mu > height:
+                height = element.mu
+        return height
 
     # Binary fuzzy set operations
 
@@ -375,11 +410,11 @@ class FuzzySet( set ):
         @return: The crisp set result of the alpha cut.
         @rtype: C{set}
         """
-        c = set()
+        cut = set()
         for element in self:
             if element.mu >= alpha:
-                c.add( element.obj )
-        return c
+                cut.add( element.obj )
+        return cut
 
     def salpha( self, alpha ):
         """\
@@ -391,53 +426,19 @@ class FuzzySet( set ):
         @return: The crisp set result of the strong alpha cut.
         @rtype: C{set}
         """
-        c = set()
+        cut = set()
         for element in self:
             if element.mu > alpha:
-                c.add( element.obj )
-        return c
-
-    def supp( self ):
-        """\
-        Support function. Returns the crisp set of all elements with non-zero
-        membership in the fuzzy set.
-
-        @return: The support of the fuzzy set.
-        @rtype: C{set}
-        """
-        return self.salpha( 0.0 )
-
-    def core( self ):
-        """\
-        Core function. Returns the crisp set of all elements with membership
-        degree of exactly 1.
-
-        @return: The core of the fuzzy set.
-        @rtype: C{set}
-        """
-        return self.alpha( 1.0 )
-
-    def height( self ):
-        """\
-        Height function. Returns the maximum membership degree of any element
-        in the fuzzy set.
-
-        @return: The height of the fuzzy set.
-        @rtype: C{float}
-        """
-        h = 0
-        for element in self:
-            if element.mu > h:
-                h = element.mu
-        return h
+                cut.add( element.obj )
+        return cut
 
     def normalize( self ):
         """\
         Normalize the fuzzy set by scaling all membership degrees by a factor
         such that the height equals 1.
         """
-        if self.height() > 0:
-            f = 1.0 / self.height()
+        if self.height > 0:
+            f = 1.0 / self.height
             for element in self:
                 element.mu *= f
 
@@ -448,4 +449,4 @@ class FuzzySet( set ):
 
         @rtype: C{bool}
         """
-        return self.height() == 1.0
+        return self.height == 1.0
