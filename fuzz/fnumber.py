@@ -157,6 +157,18 @@ class TrapezoidalFuzzyNumber( FuzzyNumber ):
         self.support = support
         FuzzyNumber.__init__( self )
 
+    def __repr__( self ):
+        """\
+        Return string representation of a trapezoidal fuzzy number.
+
+        @return: String representation.
+        @rtype: C{string}
+        """
+        return 'Trapezoidal: kernel %s, support %s' % \
+               ( self.kernel.__repr__(), self.support.__repr__() )
+
+    __str__ = __repr__
+
     @property
     def triangular( self ):
         """\
@@ -192,8 +204,8 @@ class TrapezoidalFuzzyNumber( FuzzyNumber ):
         @rtype: L{TrapezoidalFuzzyNumber}
         """
         self._binary_sanity_check( other )
-        return TrapezoidalFuzzyNumber( self.kernel + other.kernel,
-                                       self.support + other.support )
+        return self.__class__( self.kernel + other.kernel,
+                               self.support + other.support )
 
     def __sub__( self, other ):
         """\
@@ -205,8 +217,8 @@ class TrapezoidalFuzzyNumber( FuzzyNumber ):
         @rtype: L{TrapezoidalFuzzyNumber}
         """
         self._binary_sanity_check( other )
-        return TrapezoidalFuzzyNumber( self.kernel - other.kernel,
-                                       self.support - other.support )
+        return self.__class__( self.kernel - other.kernel,
+                               self.support - other.support )
 
     # Unary trapezoidal fuzzy number operations
 
