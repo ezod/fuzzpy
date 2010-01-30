@@ -139,22 +139,22 @@ class TrapezoidalFuzzyNumber( FuzzyNumber ):
     """\
     Trapezoidal fuzzy number class.
     """
-    def __init__( self, kernel, support ):
+    def __init__( self, kernel = ( 0.0, 0.0 ), support = ( 0.0, 0.0 ) ):
         """\
         Constructor.
 
         @param kernel: The kernel of the fuzzy number.
-        @type kernel: L{RealRange}
+        @type kernel: C{tuple}
         @param support: The support of the fuzzy number.
-        @type support: L{RealRange}
+        @type support: C{tuple}
         """
-        if not isinstance( kernel, RealRange ) \
-        or not isinstance( support, RealRange ):
-            raise TypeError, ( "kernel and support must be RealRange objects" )
-        if not kernel <= support:
+        if not ( isinstance( kernel, tuple ) and len( kernel ) == 2 ) \
+        or not ( isinstance( support, tuple ) and len( support ) == 2 ):
+            raise TypeError, ( "kernel and support must be 2-tuples" )
+        self.kernel = RealRange( kernel )
+        self.support = RealRange( support )
+        if not self.kernel <= self.support:
             raise ValueError, ( "kernel range must be within support range" )
-        self.kernel = kernel
-        self.support = support
         FuzzyNumber.__init__( self )
 
     def __repr__( self ):
