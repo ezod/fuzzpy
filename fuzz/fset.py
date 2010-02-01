@@ -47,6 +47,30 @@ class FuzzyElement( object ):
         """
         return hash( self.obj )
 
+    def __eq__( self, other ):
+        """\
+        Equality operator. Note that, because this also checks for equality of
+        membership values, fuzzy sets must verify the uniqueness of obj (this
+        is handled by setting the index attribute of IndexedSet to 'obj').
+
+        @param other: The other fuzzy element.
+        @type other: L{FuzzyElement}
+        @return: True if equal, false otherwise.
+        @rtype: C{bool}
+        """
+        return self.obj == other.obj and self.mu == other.mu
+
+    def __ne__( self, other ):
+        """\
+        Inequality operator.
+
+        @param other: The other fuzzy element.
+        @type other: L{FuzzyElement}
+        @return: True if not equal, false otherwise.
+        @rtype: C{bool}
+        """
+        return not self == other
+
 
 class FuzzySet( IndexedSet ):
     """\
@@ -218,7 +242,7 @@ class FuzzySet( IndexedSet ):
             return False
         try:
             for element in self:
-                if element.mu != other[ element.obj ].mu:
+                if element != other[ element.obj ]:
                     return False
         except KeyError:
             return False
