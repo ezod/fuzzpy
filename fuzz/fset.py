@@ -8,6 +8,9 @@ definitions.
 @license: GPL-3
 """
 
+from iset import IndexedSet
+
+
 class FuzzyElement( object ):
     """\
     Fuzzy element class.
@@ -18,7 +21,7 @@ class FuzzyElement( object ):
 
         @param obj: The object for this member.
         @type obj: C{object}
-        @param mu: The membership level of this member.
+        @param mu: The membership degree of this member.
         @type mu: C{float}
         """
         self.obj = obj
@@ -45,24 +48,18 @@ class FuzzyElement( object ):
         return hash( self.obj )
 
 
-class FuzzySet( set ):
+class FuzzySet( IndexedSet ):
     """\
     Discrete fuzzy set class.
     """
-    def __init__( self, iterable = None ):
+    def __init__( self, iterable = set() ):
         """\
         Construct a fuzzy set from an optional iterable.
 
         @param iterable: The iterable to construct from (optional).
         @type iterable: C{object}
         """
-        set.__init__( self )
-        if iterable is not None:
-            self.update( iterable )
-
-    _add = set.add
-    _remove = set.remove
-    _update = set.update
+        IndexedSet.__init__( self, 'obj', iterable )
 
     def add( self, element ):
         """\
@@ -72,20 +69,9 @@ class FuzzySet( set ):
         @param element: The element to add.
         @type element: L{FuzzySet}
         """
-        if isinstance( element, FuzzyElement ):
-            if not element.obj in self.objects:
-                self._add( element )
-        else:
+        if not isinstance( element, FuzzyElement ):
             raise TypeError, ( "element to add must be a FuzzyElement" )
-
-    def remove( self, key ):
-        """\
-        Remove an element from the fuzzy set indexed by its associated object.
-
-        @param key: The object to remove.
-        @type key: C{object}
-        """
-        self._remove( self[ key ] )
+        IndexedSet.add( self, element )
 
     def update( self, iterable ):
         """\
@@ -99,62 +85,7 @@ class FuzzySet( set ):
         for element in iterable:
             if not isinstance( element, FuzzyElement ):
                 raise TypeError, ( "iterable must consist of FuzzyElements" )
-        self._update( iterable )
-
-    def __getitem__( self, key ):
-        """\
-        Returns a fuzzy element indexed by its associated object.
-
-        @param key: The object.
-        @type key: C{object}
-        @return: The fuzzy element associated with the object.
-        @rtype: L{FuzzyElement}
-        """
-        for element in self:
-            if element.obj == key:
-                return element
-        raise KeyError, key
-
-    def __contains__( self, obj ):
-        """\
-        Report whether an object is a member of a set.
-
-        @param obj: The element to test for.
-        @type obj: C{object}
-        @return: True if member, false otherwise.
-        @rtype: C{bool}
-        """
-        for element in self:
-            if element.obj == obj and element.mu > 0:
-                return True
-        return False
-
-    @property
-    def elements( self ):
-        """\
-        Returns a set of objects of elements with non-zero membership in the
-        fuzzy set.
-
-        @rtype: C{set}
-        """
-        result = set()
-        for felement in self:
-            if felement.mu > 0:
-                result.add( felement.obj )
-        return result
-
-    @property
-    def objects( self ):
-        """\
-        Returns a set of all objects in the fuzzy set (even those with zero
-        membership).
-
-        @rtype: C{set}
-        """
-        result = set()
-        for felement in self:
-            result.add( felement.obj )
-        return result
+        IndexedSet.update( self, iterable )
 
     @property
     def support( self ):
@@ -184,11 +115,7 @@ class FuzzySet( set ):
 
         @rtype: C{float}
         """
-        height = 0
-        for element in self:
-            if element.mu > height:
-                height = element.mu
-        return height
+        return max( [ element.mu for element in self ] )
 
     # Binary fuzzy set operations
 
@@ -403,7 +330,7 @@ class FuzzySet( set ):
     def alpha( self, alpha ):
         """\
         Alpha cut function. Returns the crisp set of members whose membership
-        levels meet or exceed the alpha value.
+        degrees meet or exceed the alpha value.
 
         @param alpha: The alpha value for the cut in [0, 1].
         @type alpha: C{float}
@@ -419,7 +346,7 @@ class FuzzySet( set ):
     def salpha( self, alpha ):
         """\
         Strong alpha cut function. Returns the crisp set of members whose
-        membership levels exceed the alpha value.
+        membership degrees exceed the alpha value.
 
         @param alpha: The alpha value for the cut in [0, 1].
         @type alpha: C{float}
@@ -431,6 +358,14 @@ class FuzzySet( set ):
             if element.mu > alpha:
                 cut.add( element.obj )
         return cut
+
+    def prune( self ):
+        """\
+        Prune the fuzzy set of all elements with zero membership.
+        """
+        for element in self:
+            if element.mu == 0:
+                self.remove( element.obj )
 
     def normalize( self ):
         """\

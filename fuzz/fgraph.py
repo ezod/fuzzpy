@@ -65,7 +65,7 @@ class FuzzyGraph( Graph ):
 
         @rtype: C{set}
         """
-        return self._V.objects
+        return set( self._V.keys() )
 
     def edges( self, tail = None, head = None ):
         """\
