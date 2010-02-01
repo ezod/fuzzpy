@@ -63,9 +63,12 @@ class IndexedSet( set ):
         @return: True if member, false otherwise.
         @rtype: C{bool}
         """
-        for item in self:
-            if getattr( item, self.index ) == key:
-                return True
+        try:
+            for item in self:
+                if getattr( item, self.index ) == key:
+                    return True
+        except AttributeError:
+            pass
         return set.__contains__( self, key )
 
     def add( self, item ):
