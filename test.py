@@ -49,6 +49,10 @@ class TestFuzzySet( unittest.TestCase ):
         self.assertEqual( self.B[ 'c' ].mu, 0.25 )
         self.assertEqual( self.B[ 'd' ].mu, 0.75 )
 
+    def test_overlap( self ):
+        self.assertEqual( self.A.overlap( self.B ), 0.7 / 1.6 )
+        self.assertEqual( self.B.overlap( self.A ), 0.7 / 2.3 )
+
 
 class TestFuzzyNumber( unittest.TestCase ):
 

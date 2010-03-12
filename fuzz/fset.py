@@ -333,6 +333,17 @@ class FuzzySet( IndexedSet ):
         """
         return self.issuperset( other ) and self != other
 
+    def overlap( self, other ):
+        """\
+        Return the degree of overlap of this fuzzy set on another fuzzy set.
+
+        @param other: The other fuzzy set.
+        @type other: L{FuzzySet}
+        @return: The overlap in [0, 1] of this set on the other.
+        @rtype: C{float}
+        """
+        return self.intersection( other ).cardinality / other.cardinality
+
     @staticmethod
     def _binary_sanity_check( other ):
         """\
