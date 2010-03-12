@@ -141,6 +141,15 @@ class FuzzySet( IndexedSet ):
         """
         return max( [ element.mu for element in self ] )
 
+    @property
+    def cardinality( self ):
+        """\
+        Scalar cardinality, the sum of membership degrees of all elements.
+        
+        @rtype: C{float}
+        """
+        return sum( [ element.mu for element in self ] )
+
     # Binary fuzzy set operations
 
     def __or__( self, other ):
