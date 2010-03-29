@@ -79,8 +79,10 @@ class IndexedSet( set ):
         @param item: The item to add.
         @type item: C{object}
         """
-        if not getattr( item, self.index ) in self.keys():
-            set.add( self, item )
+        if getattr( item, self.index ) in self.keys():
+            raise ValueError( "set already contains an item with index %s" \
+                              % getattr( item, self.index ) )
+        set.add( self, item )
 
     def remove( self, key ):
         """\

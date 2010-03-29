@@ -28,6 +28,21 @@ class TestFuzzySet( unittest.TestCase ):
         self.B.add( fuzz.FuzzyElement( 'b', 0.8 ) )
         self.B.add( fuzz.FuzzyElement( 'c', 0.2 ) )
         self.B.add( fuzz.FuzzyElement( 'd', 0.6 ) )
+        self.B.add( fuzz.FuzzyElement( 'e', 0.0 ) )
+
+    def test_contents( self ):
+        self.assertTrue( 'a' in self.A )
+        self.assertFalse( 'e' in self.B )
+        self.assertEqual( len( self.B ), 3 )
+
+    def test_suppkern( self ):
+        self.assertEqual( len( self.A.kernel ), 1 )
+        self.assertEqual( len( self.B.support ), 3 )
+
+    def test_prune( self ):
+        self.assertEqual( len( self.B.keys() ), 4 )
+        self.B.prune()
+        self.assertEqual( len( self.B.keys() ), 3 )
 
     def test_union( self ):
         C = fuzz.FuzzySet()

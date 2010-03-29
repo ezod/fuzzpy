@@ -58,6 +58,8 @@ class FuzzyElement( object ):
         @return: True if equal, false otherwise.
         @rtype: C{bool}
         """
+        if not isinstance( other, FuzzyElement ):
+            return False
         return self.obj == other.obj and self.mu == other.mu
 
     def __ne__( self, other ):
@@ -76,6 +78,22 @@ class FuzzySet( IndexedSet ):
     """\
     Discrete fuzzy set class.
     """
+    class FuzzySetIterator( object ):
+        """\
+        Discrete fuzzy set iterator class.
+        """
+        def __init__( self, fuzzyset ):
+            self.setiterator = set.__iter__( fuzzyset )
+
+        def __iter__( self ):
+            return self
+
+        def next( self ):
+            while True:
+                element = self.setiterator.next()
+                if element.mu > 0:
+                    return element
+
     def __init__( self, iterable = set() ):
         """\
         Construct a fuzzy set from an optional iterable.
@@ -84,6 +102,39 @@ class FuzzySet( IndexedSet ):
         @type iterable: C{object}
         """
         IndexedSet.__init__( self, 'obj', iterable )
+
+    def __iter__( self ):
+        """\
+        Return an iterator for this fuzzy set.
+
+        @return: Iterator.
+        @rtype: L{FuzzySet.FuzzySetIterator}
+        """
+        return FuzzySet.FuzzySetIterator( self )
+
+    def __len__( self ):
+        """\
+        Override the length function.
+
+        @return: Size of this fuzzy set.
+        @rtype: C{int}
+        """
+        return len( [ element for element in self ] )
+
+    def __getitem__( self, key ):
+        """\
+        Return a set item indexed by key (including those with a membership
+        degree of zero).
+
+        @param key: The index of the item to get.
+        @type key: C{object}
+        @return: The matching item.
+        @rtype: C{object}
+        """
+        for item in set.__iter__( self ):
+            if getattr( item, self.index ) == key:
+                return item
+        raise KeyError, key
 
     def add( self, element ):
         """\
@@ -111,6 +162,16 @@ class FuzzySet( IndexedSet ):
                 raise TypeError, ( "iterable must consist of FuzzyElements" )
         IndexedSet.update( self, iterable )
 
+    def keys( self ):
+        """\
+        Return a list of keys in the set (including those with a membership
+        degree of zero).
+
+        @return: List of keys in the set.
+        @rtype: C{list}
+        """
+        return [ element.obj for element in set.__iter__( self ) ]
+
     @property
     def support( self ):
         """\
@@ -119,7 +180,7 @@ class FuzzySet( IndexedSet ):
 
         @rtype: C{set}
         """
-        return self.salpha( 0.0 )
+        return set( [ element.obj for element in self ] )
 
     @property
     def kernel( self ):
@@ -186,11 +247,11 @@ class FuzzySet( IndexedSet ):
         """
         self._binary_sanity_check( other )
         result = self.__class__()
-        for element in self:
+        for element in set.__iter__( self ):
             if not element.obj in other \
             or element.mu >= other[ element.obj ].mu:
                 result.add( element )
-        for element in other:
+        for element in set.__iter__( other ):
             if not element.obj in result:
                 result.add( element )
         return result
@@ -229,7 +290,7 @@ class FuzzySet( IndexedSet ):
         """
         self._binary_sanity_check( other )
         result = self.__class__()
-        for element in self:
+        for element in set.__iter__( self ):
             if element.obj in other:
                 if element.mu <= other[ element.obj ].mu:
                     result.add( element )
@@ -390,7 +451,7 @@ class FuzzySet( IndexedSet ):
         Alpha cut function. Returns the crisp set of members whose membership
         degrees meet or exceed the alpha value.
 
-        @param alpha: The alpha value for the cut in [0, 1].
+        @param alpha: The alpha value for the cut in (0, 1].
         @type alpha: C{float}
         @return: The crisp set result of the alpha cut.
         @rtype: C{set}
@@ -421,9 +482,10 @@ class FuzzySet( IndexedSet ):
         """\
         Prune the fuzzy set of all elements with zero membership.
         """
-        for element in self:
-            if element.mu == 0:
-                self.remove( element.obj )
+        prune = [ element.obj for element in set.__iter__( self ) \
+                  if element.mu == 0 ]
+        for key in prune:
+            self.remove( key )
 
     def normalize( self ):
         """\
