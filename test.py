@@ -35,13 +35,13 @@ class TestFuzzySet( unittest.TestCase ):
         C.add( fuzz.FuzzyElement( 'b', 0.8 ) )
         C.add( fuzz.FuzzyElement( 'c', 0.8 ) )
         C.add( fuzz.FuzzyElement( 'd', 0.6 ) )
-        self.assertEqual( self.A.union( self.B ), C )
+        self.assertEqual( self.A | self.B, C )
 
     def test_intersection( self ):
         C = fuzz.FuzzySet()
         C.add( fuzz.FuzzyElement( 'b', 0.5 ) )
         C.add( fuzz.FuzzyElement( 'c', 0.2 ) )
-        self.assertEqual( self.A.intersection( self.B ), C )
+        self.assertEqual( self.A & self.B, C )
 
     def test_normalize( self ):
         self.B.normalize()
