@@ -249,24 +249,39 @@ class FuzzySet( IndexedSet ):
         self = self.union( other )
         return self
 
-    def union( self, other ):
+    def union( self, other, type = 0 ):
         """\
         Return the fuzzy union of two fuzzy sets as a new fuzzy set.
 
+        t-Conorm Types:
+        0 - Standard Intersection
+        1 - Algebraic Sum
+        2 - Bounded Sum
+        3 - Drastic Intersection
+
         @param other: The other fuzzy set.
         @type other: L{FuzzySet}
+        @param type: The t-conorm type to use.
+        @type type: C{int}
         @return: The fuzzy union.
         @rtype: L{FuzzySet}
         """
+        if not type in range( 4 ):
+            raise ValueError( "invalid t-conorm type" )
         self._binary_sanity_check( other )
         result = self.__class__()
-        for element in set.__iter__( self ):
-            if not element.obj in other \
-            or element.mu >= other[ element.obj ].mu:
-                result.add( element )
-        for element in set.__iter__( other ):
-            if not element.obj in result:
-                result.add( element )
+        bothkeys = set( self.keys() ) | set( other.keys() )
+        { 0 : lambda : result.update( [ FuzzyElement( key, max( \
+              self.mu( key ), other.mu( key ) ) ) for key in bothkeys ] ),
+          1 : lambda : result.update( [ FuzzyElement( key, self.mu( key ) + \
+              other.mu( key ) - self.mu( key ) * other.mu( key ) ) for key in \
+              bothkeys ] ),
+          2 : lambda : result.update( [ FuzzyElement( key, min( 1.0, self.mu( \
+              key ) + other.mu( key ) ) ) for key in bothkeys ] ),
+          3 : lambda : result.update( [ FuzzyElement( key, ( self.mu( key ) == \
+              0 and other.mu( key ) ) or ( other.mu( key ) == 0 and \
+              self.mu( key ) ) or 1.0 ) for key in bothkeys ] )
+        }[ type ]()
         return result
 
     def __and__( self, other ):
@@ -296,7 +311,7 @@ class FuzzySet( IndexedSet ):
         """\
         Return the fuzzy intersection of two fuzzy sets as a new fuzzy set.
 
-        Types:
+        t-Norm Types:
         0 - Standard Intersection
         1 - Algebraic Product
         2 - Bounded Difference
@@ -304,24 +319,24 @@ class FuzzySet( IndexedSet ):
 
         @param other: The other fuzzy set.
         @type other: L{FuzzySet}
+        @param type: The t-norm type to use.
+        @type type: C{int}
         @return: The fuzzy intersection.
         @rtype: L{FuzzySet}
         """
+        if not type in range( 4 ):
+            raise ValueError( "invalid t-norm type" )
         self._binary_sanity_check( other )
         result = self.__class__()
-        { 0 : lambda : result.update( [ FuzzyElement( element.obj, \
-              min( element.mu, other.mu( element.obj ) ) ) for element in \
-              set.__iter__( self ) ] ),
-          1 : lambda : result.update( [ FuzzyElement( element.obj, \
-              element.mu * other.mu( element.obj ) ) for element in \
-              set.__iter__( self ) ] ),
-          2 : lambda : result.update( [ FuzzyElement( element.obj, max( 0.0, \
-              element.mu + other.mu( element.obj ) - 1.0 ) ) for element in \
-              set.__iter__( self ) ] ),
-          3 : lambda : result.update( [ FuzzyElement( element.obj, \
-              ( element.mu == 1 and other.mu( element.obj ) ) or ( other.mu( \
-              element.obj ) == 1 and element.mu ) or 0.0 ) for element in \
-              set.__iter__( self ) ] )
+        { 0 : lambda : result.update( [ FuzzyElement( key, min( self.mu( \
+              key ), other.mu( key ) ) ) for key in self.keys() ] ),
+          1 : lambda : result.update( [ FuzzyElement( key, self.mu( key ) * \
+              other.mu( key ) ) for key in self.keys() ] ),
+          2 : lambda : result.update( [ FuzzyElement( key, max( 0.0, self.mu( \
+              key ) + other.mu( key ) - 1.0 ) ) for key in self.keys() ] ),
+          3 : lambda : result.update( [ FuzzyElement( key, ( self.mu( key ) \
+              == 1 and other.mu( key ) ) or ( other.mu( key ) == 1 and \
+              self.mu( key ) ) or 0.0 ) for key in self.keys() ] )
         }[ type ]()
         return result
 
