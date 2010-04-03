@@ -292,9 +292,15 @@ class FuzzySet( IndexedSet ):
         self = self.intersection( other )
         return self
 
-    def intersection( self, other ):
+    def intersection( self, other, type = 0 ):
         """\
         Return the fuzzy intersection of two fuzzy sets as a new fuzzy set.
+
+        Types:
+        0 - Standard Intersection
+        1 - Algebraic Product
+        2 - Bounded Difference
+        3 - Drastic Intersection
 
         @param other: The other fuzzy set.
         @type other: L{FuzzySet}
@@ -303,12 +309,20 @@ class FuzzySet( IndexedSet ):
         """
         self._binary_sanity_check( other )
         result = self.__class__()
-        for element in set.__iter__( self ):
-            if element.obj in other:
-                if element.mu <= other[ element.obj ].mu:
-                    result.add( element )
-                else:
-                    result.add( other[ element.obj ] )
+        { 0 : lambda : result.update( [ FuzzyElement( element.obj, \
+              min( element.mu, other.mu( element.obj ) ) ) for element in \
+              set.__iter__( self ) ] ),
+          1 : lambda : result.update( [ FuzzyElement( element.obj, \
+              element.mu * other.mu( element.obj ) ) for element in \
+              set.__iter__( self ) ] ),
+          2 : lambda : result.update( [ FuzzyElement( element.obj, max( 0.0, \
+              element.mu + other.mu( element.obj ) - 1.0 ) ) for element in \
+              set.__iter__( self ) ] ),
+          3 : lambda : result.update( [ FuzzyElement( element.obj, \
+              ( element.mu == 1 and other.mu( element.obj ) ) or ( other.mu( \
+              element.obj ) == 1 and element.mu ) or 0.0 ) for element in \
+              set.__iter__( self ) ] )
+        }[ type ]()
         return result
 
     def __eq__( self, other ):
