@@ -30,6 +30,11 @@ class TestFuzzySet( unittest.TestCase ):
         self.B.add( fuzz.FuzzyElement( 'd', 0.6 ) )
         self.B.add( fuzz.FuzzyElement( 'e', 0.0 ) )
 
+    def test_mu( self ):
+        self.assertEqual( self.A.mu( 'b' ), 0.5 )
+        self.assertEqual( self.B.mu( 'e' ), 0.0 )
+        self.assertEqual( self.A.mu( 'e' ), 0.0 )
+
     def test_contents( self ):
         self.assertTrue( 'a' in self.A )
         self.assertFalse( 'e' in self.B )

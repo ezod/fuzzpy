@@ -172,6 +172,19 @@ class FuzzySet( IndexedSet ):
         """
         return [ element.obj for element in set.__iter__( self ) ]
 
+    def mu( self, key ):
+        """\
+        Return the membership degree of the element specified by key. Returns
+        zero for any non-member element.
+
+        @return: The membership degree of the specified element.
+        @rtype: C{float}
+        """
+        try:
+            return self[ key ].mu
+        except KeyError:
+            return 0.0
+
     @property
     def support( self ):
         """\
