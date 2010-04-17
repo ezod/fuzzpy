@@ -91,25 +91,24 @@ class FuzzyGraph( Graph ):
                 and ( head is None or edge.obj.tail == head ) ] )
         return eset
 
-    def mu( self, tail, head ):
+    def mu( self, tail, head = None ):
         """\
-        Return the membership degree of an edge.
+        Return the membership degree of a vertex or edge.
 
-        @param tail: The tail vertex.
+        @param tail: The vertex or tail vertex.
         @type tail: C{object}
         @param head: The head vertex.
         @type head: C{object}
-        @return: The weight of the edge from tail to head.
+        @return: The membership degree of the vertex or edge from tail to head.
         @rtype: C{float}
         """
-        try:
-            edge = self.edges( tail, head ).pop()
-        except KeyError:
-            return 0.
-        for e in self._E:
-            if e.obj == edge:
-                return e.mu
-        return 0.
+        if head is None:
+            return self._V.mu( tail )
+        elif self.directed:
+            return self._E.mu( GraphEdge( tail, head ) )
+        else:
+            return max( self._E.mu( GraphEdge( tail, head ) ),
+                        self._E.mu( GraphEdge( head, tail ) ) )
 
     def weight( self, tail, head ):
         """\

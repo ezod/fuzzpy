@@ -124,6 +124,8 @@ class TestFuzzyGraph( unittest.TestCase ):
                 self.U.mu( 5, 4 ),
                 self.D.mu( 5, 4 ) ]
         self.assertEqual( act, exp )
+        self.U.add_fuzzy_vertex( 6, 0.5 )
+        self.assertEqual( self.U.mu( 6 ), 0.5 )
 
     def test_weight( self ):
         exp = [ 0., 1., float( 'inf' ), 1. / 0.9, 1. / 0.9, float( 'inf' ) ]
