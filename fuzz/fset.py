@@ -478,9 +478,10 @@ class FuzzySet( IndexedSet ):
         @return: The complement of this fuzzy set.
         @rtype: L{FuzzySet}
         """
-        result = self.__class__( self )
-        for element in set.__iter__( result ):
-            element.mu = 1.0 - element.mu
+        result = self.__class__()
+        for key in self.keys():
+            result.add( self[ key ] )
+            result[ key ].mu = Decimal( '1.0' ) - result.mu( key )
         return result
 
     def complement_yager( self, w ):
@@ -492,9 +493,11 @@ class FuzzySet( IndexedSet ):
         @return: The Yager complement of this fuzzy set.
         @rtype: L{FuzzySet}
         """
-        result = self.__class__( self )
-        for element in result:
-            element.mu = ( 1.0 - element.mu ** w ) ** ( 1.0 / w )
+        result = self.__class__()
+        for key in self.keys():
+            result.add( self[ key ] )
+            result[ key ].mu = ( Decimal( '1.0' ) - result.mu( key ) ** w ) ** \
+                               ( Decimal( '1.0' ) / Decimal( str( w ) ) )
         return result
 
     def alpha( self, alpha ):

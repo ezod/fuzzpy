@@ -88,6 +88,19 @@ class TestFuzzySet( unittest.TestCase ):
         self.assertEqual( self.B.overlap( self.A ), \
                           Decimal( '0.7' ) / Decimal( '2.3' ) )
 
+    def test_alpha( self ):
+        D = set( [ 'a', 'c' ] )
+        self.assertEqual( self.A.alpha( 0.7 ), D )
+        self.assertEqual( self.A.salpha( 0.5 ), D )
+
+    def test_complement( self ):
+        D = fuzz.FuzzySet()
+        D.add( fuzz.FuzzyElement( 'b', 0.2 ) )
+        D.add( fuzz.FuzzyElement( 'c', 0.8 ) )
+        D.add( fuzz.FuzzyElement( 'd', 0.4 ) )
+        D.add( fuzz.FuzzyElement( 'e', 1.0 ) )
+        self.assertEqual( self.B.complement(), D )
+
 
 class TestFuzzyNumber( unittest.TestCase ):
 
