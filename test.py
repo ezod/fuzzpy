@@ -12,6 +12,7 @@ breaking things in another.
 """
 
 import unittest
+from decimal import Decimal
 
 import fuzz
 print "FuzzPy imported from '%s'" % fuzz.__path__[ 0 ]
@@ -31,9 +32,9 @@ class TestFuzzySet( unittest.TestCase ):
         self.B.add( fuzz.FuzzyElement( 'e', 0.0 ) )
 
     def test_mu( self ):
-        self.assertEqual( self.A.mu( 'b' ), 0.5 )
-        self.assertEqual( self.B.mu( 'e' ), 0.0 )
-        self.assertEqual( self.A.mu( 'e' ), 0.0 )
+        self.assertEqual( self.A.mu( 'b' ), Decimal( '0.5' ) )
+        self.assertEqual( self.B.mu( 'e' ), Decimal( '0.0' ) )
+        self.assertEqual( self.A.mu( 'e' ), Decimal( '0.0' ) )
 
     def test_contents( self ):
         self.assertTrue( 'a' in self.A )
@@ -78,12 +79,14 @@ class TestFuzzySet( unittest.TestCase ):
     def test_normalize( self ):
         self.B.normalize()
         self.assertTrue( self.B.normal )
-        self.assertEqual( self.B[ 'c' ].mu, 0.25 )
-        self.assertEqual( self.B[ 'd' ].mu, 0.75 )
+        self.assertEqual( self.B[ 'c' ].mu, Decimal( '0.25' ) )
+        self.assertEqual( self.B[ 'd' ].mu, Decimal( '0.75' ) )
 
     def test_overlap( self ):
-        self.assertEqual( self.A.overlap( self.B ), 0.7 / 1.6 )
-        self.assertEqual( self.B.overlap( self.A ), 0.7 / 2.3 )
+        self.assertEqual( self.A.overlap( self.B ), \
+                          Decimal( '0.7' ) / Decimal( '1.6' ) )
+        self.assertEqual( self.B.overlap( self.A ), \
+                          Decimal( '0.7' ) / Decimal( '2.3' ) )
 
 
 class TestFuzzyNumber( unittest.TestCase ):
@@ -130,17 +133,25 @@ class TestFuzzyGraph( unittest.TestCase ):
         self.assertEqual( act, exp )
 
     def test_mu( self ):
-        exp = [ 0., 0.7, 0.7, 0. ]
+        exp = [ Decimal( '0.0' ),
+                Decimal( '0.7' ),
+                Decimal( '0.7' ),
+                Decimal( '0.0' ) ]
         act = [ self.U.mu( 1, 3 ),
                 self.U.mu( 4, 5 ),
                 self.U.mu( 5, 4 ),
                 self.D.mu( 5, 4 ) ]
         self.assertEqual( act, exp )
         self.U.add_fuzzy_vertex( 6, 0.5 )
-        self.assertEqual( self.U.mu( 6 ), 0.5 )
+        self.assertEqual( self.U.mu( 6 ), Decimal( '0.5' ) )
 
     def test_weight( self ):
-        exp = [ 0., 1., float( 'inf' ), 1. / 0.9, 1. / 0.9, float( 'inf' ) ]
+        exp = [ Decimal( '0.0' ),
+                Decimal( '1.0' ),
+                Decimal( 'inf' ),
+                Decimal( '1.0' ) / Decimal( '0.9' ),
+                Decimal( '1.0' ) / Decimal( '0.9' ),
+                Decimal( 'inf' ) ]
         act = [ self.U.weight( 1, 1 ),
                 self.U.weight( 2, 3 ),
                 self.U.weight( 1, 5 ),
@@ -177,7 +188,7 @@ class TestFuzzyGraph( unittest.TestCase ):
 
     def test_shortest_path_directed( self ):
         ep = [ 1, 2, 3, 4, 5 ]
-        el = 0.
+        el = Decimal( '0.0' )
         for i in range( len( ep ) - 1 ):
             el += self.D.weight( ep[ i ], ep[ i + 1 ] )
         act = self.D.shortest_path( 1, 5 )
@@ -185,7 +196,7 @@ class TestFuzzyGraph( unittest.TestCase ):
 
     def test_shortest_path_undirected( self ):
         ep = [ 1, 2, 5 ]
-        el = 0.
+        el = Decimal( '0.0' )
         for i in range( len( ep ) - 1 ):
             el += self.U.weight( ep[ i ], ep[ i + 1 ] )
         act = self.U.shortest_path( 1, 5 )

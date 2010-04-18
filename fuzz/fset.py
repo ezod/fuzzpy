@@ -8,6 +8,8 @@ definitions.
 @license: GPL-3
 """
 
+from decimal import Decimal
+
 from iset import IndexedSet
 
 
@@ -25,7 +27,7 @@ class FuzzyElement( object ):
         @type mu: C{float}
         """
         self.obj = obj
-        self.mu = mu
+        self.mu = Decimal( str( mu ) )
 
     def __repr__( self ):
         """\
@@ -185,12 +187,12 @@ class FuzzySet( IndexedSet ):
         zero for any non-member element.
 
         @return: The membership degree of the specified element.
-        @rtype: C{float}
+        @rtype: L{decimal.Decimal}
         """
         try:
             return self[ key ].mu
         except KeyError:
-            return 0.0
+            return Decimal( '0.0' )
 
     @property
     def support( self ):
@@ -218,7 +220,7 @@ class FuzzySet( IndexedSet ):
         Height function. Returns the maximum membership degree of any element
         in the fuzzy set.
 
-        @rtype: C{float}
+        @rtype: L{decimal.Decimal}
         """
         return max( [ element.mu for element in self ] )
 
@@ -227,7 +229,7 @@ class FuzzySet( IndexedSet ):
         """\
         Scalar cardinality, the sum of membership degrees of all elements.
         
-        @rtype: C{float}
+        @rtype: L{decimal.Decimal}
         """
         return sum( [ element.mu for element in self ] )
 
@@ -450,7 +452,7 @@ class FuzzySet( IndexedSet ):
         @param other: The other fuzzy set.
         @type other: L{FuzzySet}
         @return: The overlap in [0, 1] of this set on the other.
-        @rtype: C{float}
+        @rtype: L{decimal.Decimal}
         """
         return self.intersection( other ).cardinality / other.cardinality
 
@@ -505,7 +507,8 @@ class FuzzySet( IndexedSet ):
         @return: The crisp set result of the alpha cut.
         @rtype: C{set}
         """
-        return set( [ element.obj for element in self if element.mu >= alpha ] )
+        return set( [ element.obj for element in self \
+                      if element.mu >= Decimal( str( alpha ) ) ] )
 
     def salpha( self, alpha ):
         """\
@@ -517,7 +520,8 @@ class FuzzySet( IndexedSet ):
         @return: The crisp set result of the strong alpha cut.
         @rtype: C{set}
         """
-        return set( [ element.obj for element in self if element.mu > alpha ] )
+        return set( [ element.obj for element in self \
+                      if element.mu > Decimal( str( alpha ) ) ] )
 
     def prune( self ):
         """\
@@ -535,7 +539,7 @@ class FuzzySet( IndexedSet ):
         """
         #TODO: normalize to values other than 1?
         if self.height > 0:
-            scale = 1.0 / self.height
+            scale = Decimal( '1.0' ) / self.height
             for element in self:
                 element.mu *= scale
 
@@ -546,4 +550,4 @@ class FuzzySet( IndexedSet ):
 
         @rtype: C{bool}
         """
-        return self.height == 1.0
+        return self.height == Decimal( '1.0' )
