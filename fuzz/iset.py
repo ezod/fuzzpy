@@ -21,8 +21,9 @@ class IndexedSet( set ):
         @param iterable
         """
         self.index = str( index )
-        set.__init__( self, iterable )
-        #FIXME: if the iterable contains non unique keys = PROBLEM
+        set.__init__( self )
+        for item in iterable:
+            self.add( item )
 
     def __getitem__( self, key ):
         """\
