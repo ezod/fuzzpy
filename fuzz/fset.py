@@ -148,6 +148,8 @@ class FuzzySet( IndexedSet ):
             raise TypeError, ( "element to add must be a FuzzyElement" )
         IndexedSet.add( self, element )
 
+    #TODO: create add_fuzzy_element()
+
     def update( self, iterable ):
         """\
         Update the fuzzy set contents from an iterable. Overrides the base
@@ -254,7 +256,7 @@ class FuzzySet( IndexedSet ):
         Return the fuzzy union of two fuzzy sets as a new fuzzy set.
 
         t-Conorm Types:
-        0 - Standard Intersection
+        0 - Standard Union
         1 - Algebraic Sum
         2 - Bounded Sum
         3 - Drastic Intersection
@@ -266,11 +268,13 @@ class FuzzySet( IndexedSet ):
         @return: The fuzzy union.
         @rtype: L{FuzzySet}
         """
+        #TODO: define mnemonics/enums for t-norm/conorm types
         if not type in range( 4 ):
             raise ValueError( "invalid t-conorm type" )
         self._binary_sanity_check( other )
         result = self.__class__()
         bothkeys = set( self.keys() ) | set( other.keys() )
+        #TODO: use a list here, possible less overhead
         { 0 : lambda : result.update( [ FuzzyElement( key, max( \
               self.mu( key ), other.mu( key ) ) ) for key in bothkeys ] ),
           1 : lambda : result.update( [ FuzzyElement( key, self.mu( key ) + \
@@ -324,10 +328,12 @@ class FuzzySet( IndexedSet ):
         @return: The fuzzy intersection.
         @rtype: L{FuzzySet}
         """
+        #TODO: define mnemonics/enums for t-norm/conorm types
         if not type in range( 4 ):
             raise ValueError( "invalid t-norm type" )
         self._binary_sanity_check( other )
         result = self.__class__()
+        #TODO: use a list here, possible less overhead
         { 0 : lambda : result.update( [ FuzzyElement( key, min( self.mu( \
               key ), other.mu( key ) ) ) for key in self.keys() ] ),
           1 : lambda : result.update( [ FuzzyElement( key, self.mu( key ) * \
@@ -470,7 +476,7 @@ class FuzzySet( IndexedSet ):
         @rtype: L{FuzzySet}
         """
         result = self.__class__( self )
-        for element in result:
+        for element in set.__iter__( result ):
             element.mu = 1.0 - element.mu
         return result
 
@@ -498,11 +504,7 @@ class FuzzySet( IndexedSet ):
         @return: The crisp set result of the alpha cut.
         @rtype: C{set}
         """
-        cut = set()
-        for element in self:
-            if element.mu >= alpha:
-                cut.add( element.obj )
-        return cut
+        return set( [ element.obj for element in self if element.mu >= alpha ] )
 
     def salpha( self, alpha ):
         """\
@@ -514,11 +516,7 @@ class FuzzySet( IndexedSet ):
         @return: The crisp set result of the strong alpha cut.
         @rtype: C{set}
         """
-        cut = set()
-        for element in self:
-            if element.mu > alpha:
-                cut.add( element.obj )
-        return cut
+        return set( [ element.obj for element in self if element.mu > alpha ] )
 
     def prune( self ):
         """\
@@ -534,6 +532,7 @@ class FuzzySet( IndexedSet ):
         Normalize the fuzzy set by scaling all membership degrees by a factor
         such that the height equals 1.
         """
+        #TODO: normalize to values other than 1?
         if self.height > 0:
             scale = 1.0 / self.height
             for element in self:
