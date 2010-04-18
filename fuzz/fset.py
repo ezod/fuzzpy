@@ -155,7 +155,17 @@ class FuzzySet( IndexedSet ):
             raise TypeError, ( "element to add must be a FuzzyElement" )
         IndexedSet.add( self, element )
 
-    #TODO: create add_fuzzy_element()
+    def add_fuzzy( self, element, mu = 1.0 ):
+        """\
+        Add a fuzzy element to the fuzzy set (without explicitly constructing
+        a FuzzyElement for it). Convenience wrapper for add().
+
+        @param element: The object of the element to add.
+        @type element: C{object}
+        @param mu: The membership degree of the element.
+        @type mu: C{float}
+        """
+        self.add( FuzzyElement( element, mu ) )
 
     def update( self, iterable ):
         """\
