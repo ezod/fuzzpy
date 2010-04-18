@@ -239,7 +239,7 @@ class Graph( object ):
         @param head: The head vertex.
         @type head: C{object}
         @return: The weight of the edge from tail to head.
-        @rtype: L{decimal.Decimal}
+        @rtype: L{Decimal}
         """
         if tail == head:
             return Decimal( '0.0' )
@@ -494,7 +494,7 @@ class Graph( object ):
         @param end: The end vertex.
         @type end: C{object}
         @return: Shortest path vertex list and total distance.
-        @rtype: C{list}, L{decimal.Decimal}
+        @rtype: C{list}, L{Decimal}
         """
         path = []
         u = end

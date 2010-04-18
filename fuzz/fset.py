@@ -197,7 +197,7 @@ class FuzzySet( IndexedSet ):
         zero for any non-member element.
 
         @return: The membership degree of the specified element.
-        @rtype: L{decimal.Decimal}
+        @rtype: L{Decimal}
         """
         try:
             return self[ key ].mu
@@ -230,7 +230,7 @@ class FuzzySet( IndexedSet ):
         Height function. Returns the maximum membership degree of any element
         in the fuzzy set.
 
-        @rtype: L{decimal.Decimal}
+        @rtype: L{Decimal}
         """
         return max( [ element.mu for element in self ] )
 
@@ -239,7 +239,7 @@ class FuzzySet( IndexedSet ):
         """\
         Scalar cardinality, the sum of membership degrees of all elements.
         
-        @rtype: L{decimal.Decimal}
+        @rtype: L{Decimal}
         """
         return sum( [ element.mu for element in self ] )
 
@@ -462,7 +462,7 @@ class FuzzySet( IndexedSet ):
         @param other: The other fuzzy set.
         @type other: L{FuzzySet}
         @return: The overlap in [0, 1] of this set on the other.
-        @rtype: L{decimal.Decimal}
+        @rtype: L{Decimal}
         """
         return self.intersection( other ).cardinality / other.cardinality
 

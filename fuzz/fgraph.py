@@ -102,7 +102,7 @@ class FuzzyGraph( Graph ):
         @param head: The head vertex.
         @type head: C{object}
         @return: The membership degree of the vertex or edge from tail to head.
-        @rtype: L{decimal.Decimal}
+        @rtype: L{Decimal}
         """
         if head is None:
             return self._V.mu( tail )
@@ -122,7 +122,7 @@ class FuzzyGraph( Graph ):
         @param head: The head vertex.
         @type head: C{object}
         @return: The weight of the edge from tail to head.
-        @rtype: L{decimal.Decimal}
+        @rtype: L{Decimal}
         """
         if tail == head:
             return Decimal( '0.0' )
