@@ -56,12 +56,24 @@ class TestFuzzySet( unittest.TestCase ):
         C.add( fuzz.FuzzyElement( 'c', 0.8 ) )
         C.add( fuzz.FuzzyElement( 'd', 0.6 ) )
         self.assertEqual( self.A | self.B, C )
+        D = fuzz.FuzzySet()
+        D.add( fuzz.FuzzyElement( 'a', 1.0 ) )
+        D.add( fuzz.FuzzyElement( 'b', 0.9 ) )
+        D.add( fuzz.FuzzyElement( 'c', 0.84 ) )
+        D.add( fuzz.FuzzyElement( 'd', 0.6 ) )
+        self.assertEqual( self.A.union( self.B, \
+                          fuzz.FuzzySet.TYPE_ALGEBRAIC ), D )
 
     def test_intersection( self ):
         C = fuzz.FuzzySet()
         C.add( fuzz.FuzzyElement( 'b', 0.5 ) )
         C.add( fuzz.FuzzyElement( 'c', 0.2 ) )
         self.assertEqual( self.A & self.B, C )
+        D = fuzz.FuzzySet()
+        D.add( fuzz.FuzzyElement( 'b', 0.4 ) )
+        D.add( fuzz.FuzzyElement( 'c', 0.16 ) )
+        self.assertEqual( self.A.intersection( self.B, \
+                          fuzz.FuzzySet.TYPE_ALGEBRAIC ), D )
 
     def test_normalize( self ):
         self.B.normalize()

@@ -78,6 +78,11 @@ class FuzzySet( IndexedSet ):
     """\
     Discrete fuzzy set class.
     """
+    TYPE_STANDARD = 0
+    TYPE_ALGEBRAIC = 1
+    TYPE_BOUNDED = 2
+    TYPE_DRASTIC = 3
+
     class FuzzySetIterator( object ):
         """\
         Discrete fuzzy set iterator class.
@@ -268,24 +273,22 @@ class FuzzySet( IndexedSet ):
         @return: The fuzzy union.
         @rtype: L{FuzzySet}
         """
-        #TODO: define mnemonics/enums for t-norm/conorm types
         if not type in range( 4 ):
             raise ValueError( "invalid t-conorm type" )
         self._binary_sanity_check( other )
         result = self.__class__()
         bothkeys = set( self.keys() ) | set( other.keys() )
-        #TODO: use a list here, possible less overhead
-        { 0 : lambda : result.update( [ FuzzyElement( key, max( \
-              self.mu( key ), other.mu( key ) ) ) for key in bothkeys ] ),
-          1 : lambda : result.update( [ FuzzyElement( key, self.mu( key ) + \
-              other.mu( key ) - self.mu( key ) * other.mu( key ) ) for key in \
-              bothkeys ] ),
-          2 : lambda : result.update( [ FuzzyElement( key, min( 1.0, self.mu( \
-              key ) + other.mu( key ) ) ) for key in bothkeys ] ),
-          3 : lambda : result.update( [ FuzzyElement( key, ( self.mu( key ) == \
-              0 and other.mu( key ) ) or ( other.mu( key ) == 0 and \
-              self.mu( key ) ) or 1.0 ) for key in bothkeys ] )
-        }[ type ]()
+        [ lambda : result.update( [ FuzzyElement( key, max( self.mu( key ), \
+          other.mu( key ) ) ) for key in bothkeys ] ),
+          lambda : result.update( [ FuzzyElement( key, self.mu( key ) + \
+          other.mu( key ) - self.mu( key ) * other.mu( key ) ) for key in \
+          bothkeys ] ),
+          lambda : result.update( [ FuzzyElement( key, min( 1.0, self.mu( \
+          key ) + other.mu( key ) ) ) for key in bothkeys ] ),
+          lambda : result.update( [ FuzzyElement( key, ( self.mu( key ) == 0 \
+          and other.mu( key ) ) or ( other.mu( key ) == 0 and self.mu( key ) ) \
+          or 1.0 ) for key in bothkeys ] )
+        ][ type ]()
         return result
 
     def __and__( self, other ):
@@ -328,22 +331,20 @@ class FuzzySet( IndexedSet ):
         @return: The fuzzy intersection.
         @rtype: L{FuzzySet}
         """
-        #TODO: define mnemonics/enums for t-norm/conorm types
         if not type in range( 4 ):
             raise ValueError( "invalid t-norm type" )
         self._binary_sanity_check( other )
         result = self.__class__()
-        #TODO: use a list here, possible less overhead
-        { 0 : lambda : result.update( [ FuzzyElement( key, min( self.mu( \
-              key ), other.mu( key ) ) ) for key in self.keys() ] ),
-          1 : lambda : result.update( [ FuzzyElement( key, self.mu( key ) * \
-              other.mu( key ) ) for key in self.keys() ] ),
-          2 : lambda : result.update( [ FuzzyElement( key, max( 0.0, self.mu( \
-              key ) + other.mu( key ) - 1.0 ) ) for key in self.keys() ] ),
-          3 : lambda : result.update( [ FuzzyElement( key, ( self.mu( key ) \
-              == 1 and other.mu( key ) ) or ( other.mu( key ) == 1 and \
-              self.mu( key ) ) or 0.0 ) for key in self.keys() ] )
-        }[ type ]()
+        [ lambda : result.update( [ FuzzyElement( key, min( self.mu( key ), \
+          other.mu( key ) ) ) for key in self.keys() ] ),
+          lambda : result.update( [ FuzzyElement( key, self.mu( key ) * \
+          other.mu( key ) ) for key in self.keys() ] ),
+          lambda : result.update( [ FuzzyElement( key, max( 0.0, self.mu( \
+          key ) + other.mu( key ) - 1.0 ) ) for key in self.keys() ] ),
+          lambda : result.update( [ FuzzyElement( key, ( self.mu( key ) == 1 \
+          and other.mu( key ) ) or ( other.mu( key ) == 1 and self.mu( key ) ) \
+          or 0.0 ) for key in self.keys() ] )
+        ][ type ]()
         return result
 
     def __eq__( self, other ):
