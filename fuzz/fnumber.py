@@ -57,7 +57,6 @@ class RealRange( tuple ):
         @return: Difference of ranges.
         @rtype: L{RealRange}
         """
-        #FIXME: ( 0, 1 ) - ( -1, 0.5 ) = ( 1, 0.5 ) !!!
         return RealRange( ( self[ 0 ] - other[ 1 ], self[ 1 ] - other[ 0 ] ) )
 
     def __contains__( self, value ):
