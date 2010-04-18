@@ -1,7 +1,7 @@
                      FuzzPy - Fuzzy Mathematics for Python
 
                      Aaron Mavrinac  <mavrin1@uwindsor.ca>
-                  Last Revision: Tue Apr 14 20:27:03 EDT 2009
+                  Last Revision: Sun Apr 18 12:19:50 EDT 2010
 
 -------------------------------------------------------------------------------
 
@@ -14,7 +14,7 @@ for Python.
 
 REQUIREMENTS
 
-FuzzPy requires Python (2.5 or later).
+FuzzPy requires Python (2.6 or later).
 
 http://www.python.org
 
