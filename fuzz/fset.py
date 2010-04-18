@@ -268,7 +268,7 @@ class FuzzySet( IndexedSet ):
         self = self.union( other )
         return self
 
-    def union( self, other, type = 0 ):
+    def union( self, other, norm = 0 ):
         """\
         Return the fuzzy union of two fuzzy sets as a new fuzzy set.
 
@@ -280,12 +280,12 @@ class FuzzySet( IndexedSet ):
 
         @param other: The other fuzzy set.
         @type other: L{FuzzySet}
-        @param type: The t-conorm type to use.
-        @type type: C{int}
+        @param norm: The t-conorm type to use.
+        @type norm: C{int}
         @return: The fuzzy union.
         @rtype: L{FuzzySet}
         """
-        if not type in range( 4 ):
+        if not norm in range( 4 ):
             raise ValueError( "invalid t-conorm type" )
         self._binary_sanity_check( other )
         result = self.__class__()
@@ -300,7 +300,7 @@ class FuzzySet( IndexedSet ):
           lambda : result.update( [ FuzzyElement( key, ( self.mu( key ) == 0 \
           and other.mu( key ) ) or ( other.mu( key ) == 0 and self.mu( key ) ) \
           or 1.0 ) for key in bothkeys ] )
-        ][ type ]()
+        ][ norm ]()
         return result
 
     def __and__( self, other ):
@@ -326,7 +326,7 @@ class FuzzySet( IndexedSet ):
         self = self.intersection( other )
         return self
 
-    def intersection( self, other, type = 0 ):
+    def intersection( self, other, norm = 0 ):
         """\
         Return the fuzzy intersection of two fuzzy sets as a new fuzzy set.
 
@@ -338,12 +338,12 @@ class FuzzySet( IndexedSet ):
 
         @param other: The other fuzzy set.
         @type other: L{FuzzySet}
-        @param type: The t-norm type to use.
-        @type type: C{int}
+        @param norm: The t-norm type to use.
+        @type norm: C{int}
         @return: The fuzzy intersection.
         @rtype: L{FuzzySet}
         """
-        if not type in range( 4 ):
+        if not norm in range( 4 ):
             raise ValueError( "invalid t-norm type" )
         self._binary_sanity_check( other )
         result = self.__class__()
@@ -356,7 +356,7 @@ class FuzzySet( IndexedSet ):
           lambda : result.update( [ FuzzyElement( key, ( self.mu( key ) == 1 \
           and other.mu( key ) ) or ( other.mu( key ) == 1 and self.mu( key ) ) \
           or 0.0 ) for key in self.keys() ] )
-        ][ type ]()
+        ][ norm ]()
         return result
 
     def __eq__( self, other ):
