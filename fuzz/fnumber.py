@@ -19,7 +19,7 @@ class RealRange(tuple):
         Instatiation method. Verifies the validity of the range argument
         before returning the range object.
         """
-        if not len( arg ) == 2:
+        if not len(arg) == 2:
             raise ValueError, ("range must consist of two values")
         if not isinstance(arg[0], Number) \
         or not isinstance(arg[1], Number):
