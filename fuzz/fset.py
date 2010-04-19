@@ -256,7 +256,7 @@ class FuzzySet(IndexedSet):
         @return: The fuzzy union.
         @rtype: L{FuzzySet}
         """
-        return self.union(other)
+        return self.efficient_union(other)
 
     def __ior__(self, other):
         """\
@@ -267,7 +267,7 @@ class FuzzySet(IndexedSet):
         @return: The fuzzy union (self).
         @rtype: L{FuzzySet}
         """
-        self = self.union(other)
+        self = self.efficient_union(other)
         return self
 
     def union(self, other, norm = 0):
@@ -303,6 +303,25 @@ class FuzzySet(IndexedSet):
             Decimal('0.0') and self.mu(key)) or Decimal('1.0')) \
             for key in bothkeys])
         ][norm]()
+        return result
+
+    def efficient_union(self, other):
+        """\
+        Optimized version of the standard fuzzy union for large fuzzy sets.
+
+        @param other: The other fuzzy set.
+        @type other: L{FuzzySet}
+        @return: The fuzzy union.
+        @rtype: L{FuzzySet}
+        """
+        self._binary_sanity_check(other)
+        result = self.__class__(self)
+        for element in other:
+            try:
+                result[element.obj].mu = max(result[element.obj].mu, element.mu)
+            except KeyError:
+                continue
+        result.update(other)
         return result
 
     def __and__(self, other):
