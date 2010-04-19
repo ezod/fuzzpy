@@ -18,12 +18,12 @@ class IndexedSet(set):
 
         @param index: The attribute by which to index items.
         @type index: C{str}
-        @param iterable
+        @param iterable: The iterable to intialize the set with.
+        @type iterable: C{iterable}
         """
         self.index = str(index)
         set.__init__(self)
-        for item in iterable:
-            self.add(item)
+        self.update(iterable)
 
     def __getitem__(self, key):
         """\
@@ -73,6 +73,18 @@ class IndexedSet(set):
             pass
         return set.__contains__(self, key)
 
+    def update(self, iterable):
+        """\
+        Update the set by adding all items in an iterable to it.
+
+        @param iterable: The iterable containing the items to add.
+        @type iterable: C{iterable}
+        """
+        keys = self.keys()
+        for item in iterable:
+            if not getattr(item, self.index) in keys:
+                set.add(self, item)
+
     def add(self, item):
         """\
         Add an item to the set, verifying that it has the required index
@@ -81,10 +93,8 @@ class IndexedSet(set):
         @param item: The item to add.
         @type item: C{object}
         """
-        if getattr(item, self.index) in self.keys():
-            raise ValueError("set already contains an item with index %s" \
-                             % getattr(item, self.index))
-        set.add(self, item)
+        if not getattr(item, self.index) in self.keys():
+            set.add(self, item)
 
     def remove(self, key):
         """\
