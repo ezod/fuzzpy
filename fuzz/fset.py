@@ -92,7 +92,7 @@ class FuzzySet(IndexedSet):
         Discrete fuzzy set iterator class.
         """
         def __init__(self, fuzzyset):
-            self.setiterator = set.__iter__(fuzzyset)
+            self.setiterator = IndexedSet.__iter__(fuzzyset)
 
         def __iter__(self):
             return self
@@ -140,7 +140,7 @@ class FuzzySet(IndexedSet):
         @return: The matching item.
         @rtype: C{object}
         """
-        for item in set.__iter__(self):
+        for item in IndexedSet.__iter__(self):
             if getattr(item, self.index) == key:
                 return item
         raise KeyError, key
@@ -191,7 +191,7 @@ class FuzzySet(IndexedSet):
         @return: List of keys in the set.
         @rtype: C{list}
         """
-        return [element.obj for element in set.__iter__(self)]
+        return [element.obj for element in IndexedSet.__iter__(self)]
 
     def mu(self, key):
         """\
@@ -542,7 +542,7 @@ class FuzzySet(IndexedSet):
         """\
         Prune the fuzzy set of all elements with zero membership.
         """
-        prune = [element.obj for element in set.__iter__(self) \
+        prune = [element.obj for element in IndexedSet.__iter__(self) \
                  if element.mu == 0 ]
         for key in prune:
             self.remove(key)
