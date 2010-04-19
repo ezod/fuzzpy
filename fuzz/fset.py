@@ -316,12 +316,12 @@ class FuzzySet(IndexedSet):
         """
         self._binary_sanity_check(other)
         result = self.__class__(self)
+        keys = result.keys()
         for element in other:
-            try:
+            if element.obj in keys:
                 result[element.obj].mu = max(result[element.obj].mu, element.mu)
-            except KeyError:
-                continue
-        result.update(other)
+            else:
+                set.add(result, element)
         return result
 
     def __and__(self, other):
