@@ -13,11 +13,11 @@ from fset import FuzzyElement, FuzzySet
 from graph import GraphEdge, Graph
 
 
-class FuzzyGraph( Graph ):
+class FuzzyGraph(Graph):
     """\
     Fuzzy graph class.
     """
-    def __init__( self, viter = None, eiter = None, directed = True ):
+    def __init__(self, viter = None, eiter = None, directed = True):
         """\
         Construct a fuzzy graph from optional iterables.
 
@@ -33,43 +33,43 @@ class FuzzyGraph( Graph ):
         self._E = FuzzySet()
         if viter is not None:
             for vertex in viter:
-                if isinstance( vertex, FuzzyElement ):
-                    self.add_vertex( vertex )
+                if isinstance(vertex, FuzzyElement):
+                    self.add_vertex(vertex)
                 else:
-                    self.add_vertex( FuzzyElement( vertex, 1.0 ) )
+                    self.add_vertex(FuzzyElement(vertex, 1.0))
         if eiter is not None:
             for edge in eiter:
-                if isinstance( edge, FuzzyElement ):
-                    self.add_edge( edge )
+                if isinstance(edge, FuzzyElement):
+                    self.add_edge(edge)
                 else:
-                    self.add_edge( FuzzyElement( edge, 1.0 ) )
+                    self.add_edge(FuzzyElement(edge, 1.0))
 
-    def add_edge( self, edge ):
+    def add_edge(self, edge):
         """\
         Add an edge to the fuzzy graph.
 
         @param edge: The edge to add.
         @type edge: L{FuzzyElement} of L{GraphEdge}
         """
-        if not isinstance( edge.obj, GraphEdge ):
-            raise TypeError, ( "edge must be a GraphEdge" )
+        if not isinstance(edge.obj, GraphEdge):
+            raise TypeError, ("edge must be a GraphEdge")
         if not edge.obj.tail in self.vertices \
         or not edge.obj.head in self.vertices:
-            raise KeyError, ( "tail and head must be in vertex set" )
+            raise KeyError, ("tail and head must be in vertex set")
         if edge.obj in self.edges():
-            raise ValueError, ( "edge already exists" )
-        self._E.add( edge )
+            raise ValueError, ("edge already exists")
+        self._E.add(edge)
 
     @property
-    def vertices( self ):
+    def vertices(self):
         """\
         Return a set of vertices in the fuzzy graph.
 
         @rtype: C{set}
         """
-        return set( self._V.keys() )
+        return set(self._V.keys())
 
-    def edges( self, tail = None, head = None ):
+    def edges(self, tail = None, head = None):
         """\
         Return a fuzzy set of edges with tail and/or head optionally
         specified.
@@ -81,19 +81,19 @@ class FuzzyGraph( Graph ):
         @return: The fuzzy set of edges specified.
         @rtype: L{FuzzySet}
         """
-        if ( tail is not None and not tail in self.vertices ) \
-        or ( head is not None and not head in self.vertices ):
-            raise KeyError, ( "specified tail/head must be in vertex set" )
-        eset = set( [ edge.obj for edge in self._E \
-            if ( tail is None or edge.obj.tail == tail ) \
-            and ( head is None or edge.obj.head == head ) ] )
+        if (tail is not None and not tail in self.vertices) \
+        or (head is not None and not head in self.vertices):
+            raise KeyError, ("specified tail/head must be in vertex set")
+        eset = set([edge.obj for edge in self._E \
+            if (tail is None or edge.obj.tail == tail) \
+            and (head is None or edge.obj.head == head)])
         if not self.directed:
-            eset |= set( [ edge.obj for edge in self._E \
-                if ( tail is None or edge.obj.head == tail ) \
-                and ( head is None or edge.obj.tail == head ) ] )
+            eset |= set([edge.obj for edge in self._E \
+                if (tail is None or edge.obj.head == tail) \
+                and (head is None or edge.obj.tail == head)])
         return eset
 
-    def mu( self, tail, head = None ):
+    def mu(self, tail, head = None):
         """\
         Return the membership degree of a vertex or edge.
 
@@ -105,14 +105,14 @@ class FuzzyGraph( Graph ):
         @rtype: L{Decimal}
         """
         if head is None:
-            return self._V.mu( tail )
+            return self._V.mu(tail)
         elif self.directed:
-            return self._E.mu( GraphEdge( tail, head ) )
+            return self._E.mu(GraphEdge(tail, head))
         else:
-            return max( self._E.mu( GraphEdge( tail, head ) ),
-                        self._E.mu( GraphEdge( head, tail ) ) )
+            return max(self._E.mu(GraphEdge(tail, head)),
+                       self._E.mu(GraphEdge(head, tail)))
 
-    def weight( self, tail, head ):
+    def weight(self, tail, head):
         """\
         Return the weight of an edge. Returns the inverse of the membership
         degree for a fuzzy graph.
@@ -125,15 +125,15 @@ class FuzzyGraph( Graph ):
         @rtype: L{Decimal}
         """
         if tail == head:
-            return Decimal( '0.0' )
+            return Decimal('0.0')
         try:
-            return Decimal( str( Decimal( '1.0' ) / self.mu( tail, head ) ) )
+            return Decimal(str(Decimal('1.0') / self.mu(tail, head)))
         except ZeroDivisionError:
-            return Decimal( 'inf' )
+            return Decimal('inf')
                 
     # Convenience functions
 
-    def add_fuzzy_vertex( self, vertex, mu = 1.0 ):
+    def add_fuzzy_vertex(self, vertex, mu = 1.0):
         """\
         Add a fuzzy vertex to the fuzzy graph (without explicitly constructing
         a FuzzyElement for it). Convenience wrapper for add_vertex().
@@ -143,9 +143,9 @@ class FuzzyGraph( Graph ):
         @param mu: The membership degree of the vertex (optional).
         @type mu: C{float}
         """
-        self.add_vertex( FuzzyElement( vertex, mu ) )
+        self.add_vertex(FuzzyElement(vertex, mu))
 
-    def add_fuzzy_edge( self, edge, mu = 1.0 ):
+    def add_fuzzy_edge(self, edge, mu = 1.0):
         """\
         Add a fuzzy edge to the fuzzy graph (without explicitly constructing
         a FuzzyElement for it). Convenience wrapper for add_edge().
@@ -155,9 +155,9 @@ class FuzzyGraph( Graph ):
         @param mu: The membership degree of the edge (optional).
         @type mu: C{float}
         """
-        self.add_edge( FuzzyElement( edge, mu ) )
+        self.add_edge(FuzzyElement(edge, mu))
 
-    def connect( self, tail, head, mu = 1.0 ):
+    def connect(self, tail, head, mu = 1.0):
         """\
         Connect a pair of vertices with a new edge. Convenience wrapper for
         add_edge().
@@ -169,12 +169,12 @@ class FuzzyGraph( Graph ):
         @param mu: The membership degree of the edge (optional).
         @type mu: C{float}
         """
-        self.add_edge( FuzzyElement( GraphEdge( tail, head ), mu ) )
+        self.add_edge(FuzzyElement(GraphEdge(tail, head), mu))
 
     # Binary fuzzy graph operations
 
     @staticmethod
-    def _binary_sanity_check( other ):
+    def _binary_sanity_check(other):
         """\
         Check that the other argument to a binary operation is also a fuzzy
         graph, raising a TypeError otherwise.
@@ -182,13 +182,13 @@ class FuzzyGraph( Graph ):
         @param other: The other argument.
         @type other: L{FuzzyGraph}
         """
-        if not isinstance( other, FuzzyGraph ):
+        if not isinstance(other, FuzzyGraph):
             raise TypeError, \
-                ( "binary operation only permitted between fuzzy graphs" )
+                ("binary operation only permitted between fuzzy graphs")
 
     # Unary fuzzy graph operations
 
-    def alpha( self, alpha ):
+    def alpha(self, alpha):
         """\
         Alpha cut function. Returns the crisp graph for which both vertex and
         edge membership values meet or exceed the alpha value.
@@ -198,14 +198,14 @@ class FuzzyGraph( Graph ):
         @return: The crisp graph result of the alpha cut.
         @rtype: L{Graph}
         """
-        Va = self._V.alpha( alpha )
+        Va = self._V.alpha(alpha)
         Ea = set()
-        for edge in self._E.alpha( alpha ):
+        for edge in self._E.alpha(alpha):
             if edge.tail in Va and edge.head in Va:
-                Ea.add( edge )
-        return Graph( Va, Ea, self.directed )
+                Ea.add(edge)
+        return Graph(Va, Ea, self.directed)
 
-    def salpha( self, alpha ):
+    def salpha(self, alpha):
         """\
         Strong alpha cut function. Returns the crisp graph for which both
         vertex and edge membership values exceed the alpha value.
@@ -215,14 +215,14 @@ class FuzzyGraph( Graph ):
         @return: The crisp graph result of the strong alpha cut.
         @rtype: L{Graph}
         """
-        Va = self._V.salpha( alpha )
+        Va = self._V.salpha(alpha)
         Ea = set()
-        for edge in self._E.salpha( alpha ):
+        for edge in self._E.salpha(alpha):
             if edge.tail in Va and edge.head in Va:
-                Ea.add( edge )
-        return Graph( Va, Ea, self.directed )
+                Ea.add(edge)
+        return Graph(Va, Ea, self.directed)
 
-    def normalize( self ):
+    def normalize(self):
         """\
         Normalize the fuzzy graph by normalizing its vertex and edge sets.
         """

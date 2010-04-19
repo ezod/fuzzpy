@@ -7,9 +7,9 @@ FuzzPy: Fuzzy sets for Python
 @license: GPL-3
 """
 
-__version__ = ( 0, 2, 1 )
+__version__ = (0, 2, 2)
 
-__all__ = [ 'iset', 'fset', 'fnumber', 'graph', 'fgraph' ]
+__all__ = ['iset', 'fset', 'fnumber', 'graph', 'fgraph']
 
 from iset import *
 from fset import *

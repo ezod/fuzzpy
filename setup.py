@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from fuzz import __version__
-version = "%s.%s.%s" % __version__[ 0 : 3 ]
+version = "%s.%s.%s" % __version__[0:3]
 
 from setuptools import setup
 

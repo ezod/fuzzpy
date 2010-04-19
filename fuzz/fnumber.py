@@ -10,34 +10,34 @@ Fuzzy number module. Contains basic fuzzy number class definitions.
 from numbers import Number
 
 
-class RealRange( tuple ):
+class RealRange(tuple):
     """\
     Real range class.
     """
-    def __new__( cls, arg = ( 0.0, 0.0 ) ):
+    def __new__(cls, arg = (0.0, 0.0)):
         """\
         Instatiation method. Verifies the validity of the range argument
         before returning the range object.
         """
-        if not len( arg ) == 2 :
-            raise ValueError, ( "range must consist of two values" )
-        if not isinstance( arg[ 0 ], Number ) \
-        or not isinstance( arg[ 1 ], Number ):
-            raise TypeError, ( "range values must be numeric" )
-        if arg[ 0 ] > arg[ 1 ]:
-            raise ValueError, ( "range may not have negative size" )
-        return tuple.__new__( cls, arg )
+        if not len( arg ) == 2:
+            raise ValueError, ("range must consist of two values")
+        if not isinstance(arg[0], Number) \
+        or not isinstance(arg[1], Number):
+            raise TypeError, ("range values must be numeric")
+        if arg[0] > arg[1]:
+            raise ValueError, ("range may not have negative size")
+        return tuple.__new__(cls, arg)
 
     @property
-    def size( self ):
+    def size(self):
         """\
         Return the size of the range.
 
         @rtype: C{float}
         """
-        return float( self[ 1 ] - self[ 0 ] )
+        return float(self[1] - self[0])
 
-    def __add__( self, other ):
+    def __add__(self, other):
         """\
         Addition operation.
    
@@ -46,9 +46,9 @@ class RealRange( tuple ):
         @return: Sum of ranges.
         @rtype: L{RealRange}
         """
-        return RealRange( ( self[ 0 ] + other[ 0 ], self[ 1 ] + other[ 1 ] ) )
+        return RealRange((self[0] + other[0], self[1] + other[1]))
 
-    def __sub__( self, other ):
+    def __sub__(self, other):
         """\
         Subtraction operation.
    
@@ -57,9 +57,9 @@ class RealRange( tuple ):
         @return: Difference of ranges.
         @rtype: L{RealRange}
         """
-        return RealRange( ( self[ 0 ] - other[ 1 ], self[ 1 ] - other[ 0 ] ) )
+        return RealRange((self[0] - other[1], self[1] - other[0]))
 
-    def __contains__( self, value ):
+    def __contains__(self, value):
         """\
         Report whether a given value is within this range.
 
@@ -68,9 +68,9 @@ class RealRange( tuple ):
         @return: True if within the range, false otherwise.
         @rtype: C{bool}
         """
-        return value >= self[ 0 ] and value <= self[ 1 ]
+        return value >= self[0] and value <= self[1]
 
-    def issubset( self, other ):
+    def issubset(self, other):
         """\
         Report whether another range contains this range.
 
@@ -79,13 +79,13 @@ class RealRange( tuple ):
         @return: True if a subset, false otherwise.
         @rtype: C{bool}
         """
-        if not isinstance( other, RealRange ):
-            raise TypeError, ( "argument must be a RealRange" )
-        if other[ 0 ] <= self[ 0 ] and other[ 1 ] >= self[ 1 ]:
+        if not isinstance(other, RealRange):
+            raise TypeError, ("argument must be a RealRange")
+        if other[0] <= self[0] and other[1] >= self[1]:
             return True
         return False
 
-    def issuperset( self, other ):
+    def issuperset(self, other):
         """\
         Report whether this range contains another range.
 
@@ -94,16 +94,16 @@ class RealRange( tuple ):
         @return: True if a superset, false otherwise.
         @rtype: C{bool}
         """
-        if not isinstance( other, RealRange ):
-            raise TypeError, ( "argument must be a RealRange" )
-        if self[ 0 ] <= other[ 0 ] and self[ 1 ] >= other[ 1 ]:
+        if not isinstance(other, RealRange):
+            raise TypeError, ("argument must be a RealRange")
+        if self[0] <= other[0] and self[1] >= other[1]:
             return True
         return False
 
     __le__ = issubset
     __ge__ = issuperset
 
-    def __lt__( self, other ):
+    def __lt__(self, other):
         """\
         Report whether another range strictly contains this range.
 
@@ -112,9 +112,9 @@ class RealRange( tuple ):
         @return: True if a strict subset, false otherwise.
         @rtype: C{bool}
         """
-        return self.issubset( other ) and not self == other
+        return self.issubset(other) and not self == other
 
-    def __gt__( self, other ):
+    def __gt__(self, other):
         """\
         Report whether this range strictly contains another range.
 
@@ -123,23 +123,23 @@ class RealRange( tuple ):
         @return: True if a strict superset, false otherwise.
         @rtype: C{bool}
         """
-        return self.issuperset( other ) and not self == other
+        return self.issuperset(other) and not self == other
 
 
-class FuzzyNumber( object ):
+class FuzzyNumber(object):
     """\
     Fuzzy number class.
     """
-    def __init__( self ):
+    def __init__(self):
         if self.__class__ is FuzzyNumber:
-            raise NotImplementedError, ( "please use one of the subclasses" )
+            raise NotImplementedError, ("please use one of the subclasses")
 
 
-class TrapezoidalFuzzyNumber( FuzzyNumber ):
+class TrapezoidalFuzzyNumber(FuzzyNumber):
     """\
     Trapezoidal fuzzy number class.
     """
-    def __init__( self, kernel = ( 0.0, 0.0 ), support = ( 0.0, 0.0 ) ):
+    def __init__(self, kernel = (0.0, 0.0), support = (0.0, 0.0)):
         """\
         Constructor.
 
@@ -148,16 +148,16 @@ class TrapezoidalFuzzyNumber( FuzzyNumber ):
         @param support: The support of the fuzzy number.
         @type support: C{tuple}
         """
-        if not ( isinstance( kernel, tuple ) and len( kernel ) == 2 ) \
-        or not ( isinstance( support, tuple ) and len( support ) == 2 ):
-            raise TypeError, ( "kernel and support must be 2-tuples" )
-        self.kernel = RealRange( kernel )
-        self.support = RealRange( support )
+        if not (isinstance(kernel, tuple) and len(kernel) == 2) \
+        or not (isinstance(support, tuple) and len(support) == 2):
+            raise TypeError, ("kernel and support must be 2-tuples")
+        self.kernel = RealRange(kernel)
+        self.support = RealRange(support)
         if not self.kernel <= self.support:
-            raise ValueError, ( "kernel range must be within support range" )
-        FuzzyNumber.__init__( self )
+            raise ValueError, ("kernel range must be within support range")
+        FuzzyNumber.__init__(self)
 
-    def __repr__( self ):
+    def __repr__(self):
         """\
         Return string representation of a trapezoidal fuzzy number.
 
@@ -165,12 +165,12 @@ class TrapezoidalFuzzyNumber( FuzzyNumber ):
         @rtype: C{string}
         """
         return 'Trapezoidal: kernel %s, support %s' % \
-               ( self.kernel.__repr__(), self.support.__repr__() )
+               (str(self.kernel), str(self.support))
 
     __str__ = __repr__
 
     @property
-    def triangular( self ):
+    def triangular(self):
         """\
         Report if this is a triangular fuzzy number (kernel has zero size).
 
@@ -179,7 +179,7 @@ class TrapezoidalFuzzyNumber( FuzzyNumber ):
         return self.kernel.size == 0
 
     @staticmethod
-    def _binary_sanity_check( other ):
+    def _binary_sanity_check(other):
         """\
         Check that the other argument to a binary operation is also a
         trapezoidal fuzzy number, raising a TypeError otherwise.
@@ -187,14 +187,13 @@ class TrapezoidalFuzzyNumber( FuzzyNumber ):
         @param other: The other argument.
         @type other: L{TrapezoidalFuzzyNumber}
         """
-        if not isinstance( other, TrapezoidalFuzzyNumber ):
-            raise TypeError, \
-                ( "binary operation only permitted between trapezoidal fuzzy \
-                   numbers" )
+        if not isinstance(other, TrapezoidalFuzzyNumber):
+            raise TypeError, ("binary operation only permitted between \
+                               trapezoidal fuzzy numbers")
 
     # Binary trapezoidal fuzzy number operations
 
-    def __add__( self, other ):
+    def __add__(self, other):
         """\
         Addition operation.
 
@@ -203,11 +202,11 @@ class TrapezoidalFuzzyNumber( FuzzyNumber ):
         @return: Sum of the trapezoidal fuzzy numbers.
         @rtype: L{TrapezoidalFuzzyNumber}
         """
-        self._binary_sanity_check( other )
-        return self.__class__( self.kernel + other.kernel,
-                               self.support + other.support )
+        self._binary_sanity_check(other)
+        return self.__class__(self.kernel + other.kernel,
+                              self.support + other.support)
 
-    def __sub__( self, other ):
+    def __sub__(self, other):
         """\
         Subtraction operation.
 
@@ -216,13 +215,13 @@ class TrapezoidalFuzzyNumber( FuzzyNumber ):
         @return: Difference of the trapezoidal fuzzy numbers.
         @rtype: L{TrapezoidalFuzzyNumber}
         """
-        self._binary_sanity_check( other )
-        return self.__class__( self.kernel - other.kernel,
-                               self.support - other.support )
+        self._binary_sanity_check(other)
+        return self.__class__(self.kernel - other.kernel,
+                              self.support - other.support)
 
     # Unary trapezoidal fuzzy number operations
 
-    def mu( self, value ):
+    def mu(self, value):
         """\
         Return the membership level of a value in the universal set domain of
         the fuzzy number.
@@ -232,16 +231,16 @@ class TrapezoidalFuzzyNumber( FuzzyNumber ):
         """
         if value in self.kernel:
             return 1.
-        elif value > self.support[ 0 ] and value < self.kernel[ 0 ]:
-            return ( value - self.support[ 0 ] ) / \
-                   ( self.kernel[ 0 ] - self.support[ 0 ] )
-        elif value < self.support[ 1 ] and value > self.kernel[ 1 ]:
-            return ( self.support[ 1 ] - value ) / \
-                   ( self.support[ 1 ] - self.kernel[ 1 ] )
+        elif value > self.support[0] and value < self.kernel[0]:
+            return (value - self.support[0]) / \
+                   (self.kernel[0] - self.support[0])
+        elif value < self.support[1] and value > self.kernel[1]:
+            return (self.support[1] - value) / \
+                   (self.support[1] - self.kernel[1])
         else:
             return 0.
 
-    def alpha( self, alpha ):
+    def alpha(self, alpha):
         """\
         Alpha cut function. Returns the interval within the fuzzy number whose
         membership levels meet or exceed the alpha value.
@@ -251,6 +250,6 @@ class TrapezoidalFuzzyNumber( FuzzyNumber ):
         @return: The alpha cut interval.
         @rtype: L{RealRange}
         """
-        return RealRange( ( ( self.kernel[ 0 ] - self.support[ 0 ] ) * alpha \
-                          + self.support[ 0 ], self.support[ 1 ] - \
-                          ( self.support[ 1 ] - self.kernel[ 1 ] ) * alpha ) )
+        return RealRange(((self.kernel[0] - self.support[0]) * alpha \
+                           + self.support[0], self.support[1] - \
+                           (self.support[1] - self.kernel[1]) * alpha))

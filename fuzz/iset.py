@@ -8,11 +8,11 @@ a dict.
 @license: GPL-3
 """
 
-class IndexedSet( set ):
+class IndexedSet(set):
     """\
     Indexed set class.
     """
-    def __init__( self, index, iterable = set() ):
+    def __init__(self, index, iterable = set()):
         """\
         Constructor.
 
@@ -20,12 +20,12 @@ class IndexedSet( set ):
         @type index: C{str}
         @param iterable
         """
-        self.index = str( index )
-        set.__init__( self )
+        self.index = str(index)
+        set.__init__(self)
         for item in iterable:
-            self.add( item )
+            self.add(item)
 
-    def __getitem__( self, key ):
+    def __getitem__(self, key):
         """\
         Return a set item indexed by key.
 
@@ -35,11 +35,11 @@ class IndexedSet( set ):
         @rtype: C{object}
         """
         for item in self:
-            if getattr( item, self.index ) == key:
+            if getattr(item, self.index) == key:
                 return item
         raise KeyError, key
 
-    def __setitem__( self, key, item ):
+    def __setitem__(self, key, item):
         """\
         Assign an item by key. Normally, new items are added via add() and
         existing items modified via object reference; this is included for
@@ -50,13 +50,13 @@ class IndexedSet( set ):
         @param item: The item to assign.
         @type item: C{object}
         """
-        if not getattr( item, self.index ) == key:
-            raise ValueError, ( "key does not match item index attribute" )
+        if not getattr(item, self.index) == key:
+            raise ValueError, ("key does not match item index attribute")
         if key in self:
-            self.remove( key )
-        set.add( self, item )
+            self.remove(key)
+        set.add(self, item)
 
-    def __contains__( self, key ):
+    def __contains__(self, key):
         """\
         Return whether an item is a member of the set, by key or by object.
 
@@ -67,13 +67,13 @@ class IndexedSet( set ):
         """
         try:
             for item in self:
-                if getattr( item, self.index ) == key:
+                if getattr(item, self.index) == key:
                     return True
         except AttributeError:
             pass
-        return set.__contains__( self, key )
+        return set.__contains__(self, key)
 
-    def add( self, item ):
+    def add(self, item):
         """\
         Add an item to the set, verifying that it has the required index
         attribute and that no other item in the set has the same index.
@@ -81,12 +81,12 @@ class IndexedSet( set ):
         @param item: The item to add.
         @type item: C{object}
         """
-        if getattr( item, self.index ) in self.keys():
-            raise ValueError( "set already contains an item with index %s" \
-                              % getattr( item, self.index ) )
-        set.add( self, item )
+        if getattr(item, self.index) in self.keys():
+            raise ValueError("set already contains an item with index %s" \
+                             % getattr(item, self.index))
+        set.add(self, item)
 
-    def remove( self, key ):
+    def remove(self, key):
         """\
         Remove an item from the set by key or by object.
 
@@ -94,20 +94,20 @@ class IndexedSet( set ):
         @type key: C{object}
         """
         try:
-            set.remove( self, self[ key ] )
+            set.remove(self, self[key])
         except KeyError:
-            set.remove( self, key )
+            set.remove(self, key)
 
-    def keys( self ):
+    def keys(self):
         """\
         Return a list of keys in the set.
 
         @return: List of keys in the set.
         @rtype: C{list}
         """
-        return [ getattr( item, self.index ) for item in self ]
+        return [getattr(item, self.index) for item in self]
 
-    def has_key( self, key ):
+    def has_key(self, key):
         """\
         Return whether this set contains an item with a given index.
 
