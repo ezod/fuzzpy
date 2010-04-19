@@ -17,6 +17,8 @@ class FuzzyElement(object):
     """\
     Fuzzy element class.
     """
+    __slots__ = ['obj', 'mu']
+
     def __init__(self, obj, mu = 1.0):
         """\
         Constructor.
