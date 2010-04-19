@@ -1,7 +1,7 @@
                      FuzzPy - Fuzzy Mathematics for Python
 
                      Aaron Mavrinac  <mavrin1@uwindsor.ca>
-                  Last Revision: Sun Apr 18 12:19:50 EDT 2010
+                  Last Revision: Mon Apr 19 09:15:04 EDT 2010
 
 -------------------------------------------------------------------------------
 
@@ -29,3 +29,18 @@ API DOCUMENTATION
 API documentation can be generated with Epydoc using the provided gendoc.sh
 script. This will create a subdirectory 'doc' containing full API documentation
 in HTML format.
+
+-------------------------------------------------------------------------------
+
+DEVELOPMENT
+
+FuzzPy is in a relatively early stage of development, and is changing rapidly.
+Functional compatibility may be broken between releases, even revisions in some
+cases. Once the project is reasonably feature-complete and best practices are
+established, the 1.x release series will begin, and the project will transition
+into a policy of not breaking functional compatibility across releases with the
+same minor version.
+
+If you would like to help with development, please contact primary developer
+Aaron Mavrinac to get access to the GitHub repositories and Google Code project
+page.
