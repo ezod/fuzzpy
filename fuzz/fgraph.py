@@ -107,10 +107,10 @@ class FuzzyGraph(Graph):
         if head is None:
             return self._V.mu(tail)
         elif self.directed:
-            return self._E.mu(GraphEdge(tail, head))
+            return self._E.mu(GraphEdge((tail, head)))
         else:
-            return max(self._E.mu(GraphEdge(tail, head)),
-                       self._E.mu(GraphEdge(head, tail)))
+            return max(self._E.mu(GraphEdge((tail, head))),
+                       self._E.mu(GraphEdge((head, tail))))
 
     def weight(self, tail, head):
         """\
@@ -169,7 +169,7 @@ class FuzzyGraph(Graph):
         @param mu: The membership degree of the edge (optional).
         @type mu: C{float}
         """
-        self.add_edge(FuzzyElement(GraphEdge(tail, head), mu))
+        self.add_edge(FuzzyElement(GraphEdge((tail, head)), mu))
 
     # Binary fuzzy graph operations
 

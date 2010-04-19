@@ -10,82 +10,41 @@ Graph module. Contains crisp graph class definitions.
 from decimal import Decimal
 
 
-class GraphEdge(object):
+class GraphEdge(tuple):
     """\
     Graph edge class.
     """
-    def __init__(self, tail, head):
+    def __new__(cls, arg):
         """\
-        Construct a graph edge directed from tail to head.
-
-        @param tail: The tail vertex reference.
-        @type tail: C{object}
-        @param head: The head vertex reference.
-        @type head: C{object}
+        Instantiation method. Verifies the validity of the head and tail tuple
+        argument before returning the graph edge object.
         """
-        if tail == head:
-            raise ValueError, ("tail and head must differ")
-        self.tail = tail
-        self.head = head
+        if not len(arg) == 2:
+            raise ValueError, ("edge must consist of two vertex objects")
+        try:
+            hash(arg[0])
+            hash(arg[1])
+        except TypeError:
+            raise ValueError, ("vertices must be hashable")
+        return tuple.__new__(cls, arg)
 
-    def __repr__(self):
+    @property
+    def tail(self):
         """\
-        Return string representation of this graph edge.
+        Return the tail of this graph edge.
 
-        @return: String representation.
-        @rtype: C{string}
+        @rtype: C{object}
         """
-        return '(%s, %s)' % (str(self.tail), str(self.head))
+        return self[0]
 
-    __str__ = __repr__
-
-    def __hash__(self):
+    @property
+    def head(self):
         """\
-        Return a hash for this object.
+        Return the head of this graph edge.
 
-        @return: The hash.
-        @rtype: C{int}
+        @rtype: C{object}
         """
-        return (hash(self.tail) + 1) ^ hash(self.head)
-
-    def __contains__(self, vertex):
-        """\
-        Report whether this edge connects to the specified vertex.
-
-        @param vertex: The vertex to test for.
-        @type vertex: C{object}
-        @return: True if connected to the vertex, false otherwise.
-        @rtype: C{bool}
-        """
-        if self.tail == vertex or self.head == vertex:
-            return True
-        return False
-    
-    def __eq__(self, other):
-        """\
-        Compare two graph edges for equality.
-
-        @param other: The other graph edge.
-        @type other: L{GraphEdge}
-        @return: True if equal, false otherwise.
-        @rtype: C{bool}
-        """
-        if not isinstance(other, GraphEdge):
-            raise TypeError, ("comparison only permitted between graph edges")
-        if self.tail != other.tail or self.head != other.head:
-            return False
-        return True
-
-    def __ne__(self, other):
-        """\
-        Compare two graph edges for inequality.
-
-        @param other: The other graph edge.
-        @type other: L{GraphEdge}
-        @return: True if not equal, false otherwise.
-        @rtype: C{bool}
-        """
-        return not self == other
+        return self[1]
 
     def reverse(self):
         """\
@@ -94,7 +53,7 @@ class GraphEdge(object):
         @return: The reversed graph edge.
         @rtype: L{GraphEdge}
         """
-        return GraphEdge(self.head, self.tail)
+        return GraphEdge((self[1], self[0]))
 
 
 class Graph(object):
@@ -242,7 +201,7 @@ class Graph(object):
         """
         if tail == head:
             return Decimal('0.0')
-        elif GraphEdge(tail, head) in self.edges():
+        elif GraphEdge((tail, head)) in self.edges():
             return Decimal('1.0')
         else:
             return Decimal('inf') 
@@ -279,7 +238,7 @@ class Graph(object):
         @param head: The head vertex.
         @type head: C{object}
         """
-        self.add_edge(GraphEdge(tail, head))
+        self.add_edge(GraphEdge((tail, head)))
 
     def disconnect(self, tail, head):
         """\
@@ -291,7 +250,7 @@ class Graph(object):
         @param head: The head vertex.
         @type head: C{object}
         """
-        self.remove_edge(GraphEdge(tail, head))
+        self.remove_edge(GraphEdge((tail, head)))
 
     # Binary graph operations
 
