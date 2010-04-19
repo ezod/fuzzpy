@@ -154,7 +154,7 @@ class FuzzySet(IndexedSet):
         @type element: L{FuzzySet}
         """
         if not isinstance(element, FuzzyElement):
-            raise TypeError, ("element to add must be a FuzzyElement")
+            element = FuzzyElement(element)
         IndexedSet.add(self, element)
 
     def add_fuzzy(self, element, mu = 1.0):
@@ -180,7 +180,7 @@ class FuzzySet(IndexedSet):
         """
         for element in iterable:
             if not isinstance(element, FuzzyElement):
-                raise TypeError, ("iterable must consist of FuzzyElements")
+                element = FuzzyElement(element)
         IndexedSet.update(self, iterable)
 
     def keys(self):
