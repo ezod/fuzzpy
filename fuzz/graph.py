@@ -221,7 +221,7 @@ class Graph(object):
         @rtype: C{list}
         """
         ebw = []
-        for edge in self.edges():
+        for edge in self.edges(tail, head):
             ebw.append((edge, self.weight(edge.tail, edge.head)))
         ebw.sort(cmp = lambda a, b: cmp(a[1], b[1]))
         for i in range(len(ebw)):
