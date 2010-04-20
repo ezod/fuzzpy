@@ -60,6 +60,8 @@ class Graph(object):
     """\
     Crisp graph class (used for alpha cuts and crisp methods).
     """
+    setcls = set
+
     def __init__(self, viter = None, eiter = None, directed = True):
         """\
         Construct a crisp graph from optional iterables.
@@ -72,8 +74,8 @@ class Graph(object):
         @type directed: C{bool}
         """
         self._directed = directed
-        self._V = set()
-        self._E = set()
+        self._V = self.setcls()
+        self._E = self.setcls()
         if viter is not None:
             for vertex in viter:
                 self.add_vertex(vertex)

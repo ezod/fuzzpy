@@ -17,6 +17,8 @@ class FuzzyGraph(Graph):
     """\
     Fuzzy graph class.
     """
+    setcls = FuzzySet
+
     def __init__(self, viter = None, eiter = None, directed = True):
         """\
         Construct a fuzzy graph from optional iterables.
@@ -28,21 +30,7 @@ class FuzzyGraph(Graph):
         @param directed: Defines the graph as directed or undirected.
         @type directed: C{bool}
         """
-        self._directed = directed
-        self._V = FuzzySet()
-        self._E = FuzzySet()
-        if viter is not None:
-            for vertex in viter:
-                if isinstance(vertex, FuzzyElement):
-                    self.add_vertex(vertex)
-                else:
-                    self.add_vertex(FuzzyElement(vertex, 1.0))
-        if eiter is not None:
-            for edge in eiter:
-                if isinstance(edge, FuzzyElement):
-                    self.add_edge(edge)
-                else:
-                    self.add_edge(FuzzyElement(edge, 1.0))
+        Graph.__init__(self, viter, eiter, directed)
 
     def add_edge(self, edge):
         """\
