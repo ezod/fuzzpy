@@ -9,6 +9,7 @@ definitions.
 """
 
 from decimal import Decimal
+from copy import copy
 
 from iset import IndexedSet
 
@@ -321,7 +322,7 @@ class FuzzySet(IndexedSet):
             if element.obj in keys:
                 result[element.obj].mu = max(result[element.obj].mu, element.mu)
             else:
-                set.add(result, element)
+                set.add(result, copy(element))
         return result
 
     def __and__(self, other):

@@ -8,6 +8,8 @@ a dict.
 @license: GPL-3
 """
 
+from copy import copy
+
 class IndexedSet(set):
     """\
     Indexed set class.
@@ -83,7 +85,7 @@ class IndexedSet(set):
         keys = self.keys()
         for item in iterable:
             if not getattr(item, self.index) in keys:
-                set.add(self, item)
+                set.add(self, copy(item))
 
     def add(self, item):
         """\
@@ -94,7 +96,7 @@ class IndexedSet(set):
         @type item: C{object}
         """
         if not getattr(item, self.index) in self.keys():
-            set.add(self, item)
+            set.add(self, copy(item))
 
     def remove(self, key):
         """\
