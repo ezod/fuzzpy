@@ -268,4 +268,4 @@ class TriangularFuzzyNumber(TrapezoidalFuzzyNumber):
         @param support: The support of the fuzzy number.
         @type support: C{tuple}
         """
-        TrapezoidalFuzzyNumber.__init__((kernel,kernel), support)
+        TrapezoidalFuzzyNumber.__init__((kernel, kernel), support)
