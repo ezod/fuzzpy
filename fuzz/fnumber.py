@@ -253,3 +253,19 @@ class TrapezoidalFuzzyNumber(FuzzyNumber):
         return RealRange(((self.kernel[0] - self.support[0]) * alpha \
                            + self.support[0], self.support[1] - \
                            (self.support[1] - self.kernel[1]) * alpha))
+
+
+class TriangularFuzzyNumber(TrapezoidalFuzzyNumber):
+    """\
+    Triangular fuzzy number class (special case of trapezoidal fuzzy number).
+    """
+    def __init__(self, kernel = 0.0, support = (0.0, 0.0)):
+        """\
+        Constructor.
+
+        @param kernel: The kernel value of the fuzzy number.
+        @type kernel: C{float}
+        @param support: The support of the fuzzy number.
+        @type support: C{tuple}
+        """
+        TrapezoidalFuzzyNumber.__init__((kernel,kernel), support)
