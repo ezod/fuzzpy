@@ -572,7 +572,6 @@ class FuzzySet(IndexedSet):
         Normalize the fuzzy set by scaling all membership degrees by a factor
         such that the height equals 1.
         """
-        #TODO: normalize to values other than 1?
         if self.height > 0:
             scale = Decimal('1.0') / self.height
             for element in self:
