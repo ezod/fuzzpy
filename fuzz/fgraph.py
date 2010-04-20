@@ -39,8 +39,11 @@ class FuzzyGraph(Graph):
         @param edge: The edge to add.
         @type edge: L{FuzzyElement} of L{GraphEdge}
         """
-        if not isinstance(edge.obj, GraphEdge):
-            raise TypeError, ("edge must be a GraphEdge")
+        try:
+            if not isinstance(edge.obj, GraphEdge):
+                raise TypeError, ("edge must be a GraphEdge")
+        except AttributeError:
+            Graph.add_edge(self, edge)
         if not edge.obj.tail in self.vertices \
         or not edge.obj.head in self.vertices:
             raise KeyError, ("tail and head must be in vertex set")
@@ -145,10 +148,10 @@ class FuzzyGraph(Graph):
         """
         self.add_edge(FuzzyElement(edge, mu))
 
-    def connect(self, tail, head, mu = 1.0):
+    def connect_fuzzy(self, tail, head, mu = 1.0):
         """\
-        Connect a pair of vertices with a new edge. Convenience wrapper for
-        add_edge().
+        Connect a pair of vertices with a new fuzzy edge. Convenience wrapper
+        for add_edge().
 
         @param tail: The tail vertex.
         @type tail: C{object}
