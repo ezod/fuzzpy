@@ -563,7 +563,7 @@ class FuzzySet(IndexedSet):
         Prune the fuzzy set of all elements with zero membership.
         """
         prune = [element.obj for element in IndexedSet.__iter__(self) \
-                 if element.mu == 0 ]
+                 if element.mu == 0]
         for key in prune:
             self.remove(key)
 
