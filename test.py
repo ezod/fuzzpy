@@ -109,7 +109,12 @@ class TestFuzzyNumber(unittest.TestCase):
         self.N = fuzz.TrapezoidalFuzzyNumber(K, S)
 
     def test_mu(self):
-        exp = [0., 1./3., 1., 1., 0.5, 0.]
+        exp = [Decimal('0.0'),
+               Decimal('1.0') / Decimal('3.0'),
+               Decimal('1.0'),
+               Decimal('1.0'),
+               Decimal('0.5'),
+               Decimal('0.0')]
         act = [self.N.mu( 0. ),
                self.N.mu( 1. ),
                self.N.mu( 3. ),

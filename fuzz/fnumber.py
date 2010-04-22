@@ -7,23 +7,28 @@ Fuzzy number module. Contains basic fuzzy number class definitions.
 @license: GPL-3
 """
 
-from numbers import Number
+from decimal import Decimal, InvalidOperation
 
 
 class RealRange(tuple):
     """\
     Real range class.
     """
-    def __new__(cls, arg = (0.0, 0.0)):
+    def __new__(cls, arg = (Decimal('0.0'), Decimal('0.0'))):
         """\
         Instatiation method. Verifies the validity of the range argument
         before returning the range object.
         """
         if not len(arg) == 2:
             raise ValueError, ("range must consist of two values")
-        if not isinstance(arg[0], Number) \
-        or not isinstance(arg[1], Number):
-            raise TypeError, ("range values must be numeric")
+        if not isinstance(arg[0], Decimal) \
+        or not isinstance(arg[1], Decimal):
+            try:
+                arg = (Decimal(arg[0]), Decimal(arg[1]))
+            except TypeError:
+                arg = (Decimal(str(arg[0])), Decimal(str(arg[1])))
+            except InvalidOperation:
+                raise TypeError, ("range values must be numeric")
         if arg[0] > arg[1]:
             raise ValueError, ("range may not have negative size")
         return tuple.__new__(cls, arg)
@@ -33,9 +38,9 @@ class RealRange(tuple):
         """\
         Return the size of the range.
 
-        @rtype: C{float}
+        @rtype: L{Decimal}
         """
-        return float(self[1] - self[0])
+        return self[1] - self[0]
 
     def __add__(self, other):
         """\
@@ -64,10 +69,17 @@ class RealRange(tuple):
         Report whether a given value is within this range.
 
         @param value: The value.
-        @type value: C{float}
+        @type value: L{Decimal}
         @return: True if within the range, false otherwise.
         @rtype: C{bool}
         """
+        if not isinstance(value, Decimal):
+            try:
+                value = Decimal(value)
+            except TypeError:
+                value = Decimal(str(value))
+            except InvalidOperation:
+                raise TypeError, ("value must be numeric")
         return value >= self[0] and value <= self[1]
 
     def issubset(self, other):
@@ -227,10 +239,17 @@ class TrapezoidalFuzzyNumber(FuzzyNumber):
         the fuzzy number.
 
         @param value: A value in the universal set.
-        @type value: C{float}
+        @type value: L{Decimal}
         """
+        if not isinstance(value, Decimal):
+            try:
+                value = Decimal(value)
+            except TypeError:
+                value = Decimal(str(value))
+            except InvalidOperation:
+                raise TypeError, ("value must be numeric")
         if value in self.kernel:
-            return 1.
+            return Decimal('1.0')
         elif value > self.support[0] and value < self.kernel[0]:
             return (value - self.support[0]) / \
                    (self.kernel[0] - self.support[0])
@@ -238,7 +257,7 @@ class TrapezoidalFuzzyNumber(FuzzyNumber):
             return (self.support[1] - value) / \
                    (self.support[1] - self.kernel[1])
         else:
-            return 0.
+            return Decimal('0.0')
 
     def alpha(self, alpha):
         """\
@@ -246,10 +265,17 @@ class TrapezoidalFuzzyNumber(FuzzyNumber):
         membership levels meet or exceed the alpha value.
 
         @param alpha: The alpha value for the cut in [0, 1].
-        @type alpha: C{float}
+        @type alpha: L{Decimal}
         @return: The alpha cut interval.
         @rtype: L{RealRange}
         """
+        if not isinstance(alpha, Decimal):
+            try:
+                alpha = Decimal(alpha)
+            except TypeError:
+                alpha = Decimal(str(alpha))
+            except InvalidOperation:
+                raise TypeError, ("value must be numeric")
         return RealRange(((self.kernel[0] - self.support[0]) * alpha \
                            + self.support[0], self.support[1] - \
                            (self.support[1] - self.kernel[1]) * alpha))
@@ -259,12 +285,13 @@ class TriangularFuzzyNumber(TrapezoidalFuzzyNumber):
     """\
     Triangular fuzzy number class (special case of trapezoidal fuzzy number).
     """
-    def __init__(self, kernel = 0.0, support = (0.0, 0.0)):
+    def __init__(self, kernel = Decimal('0.0'),
+                 support = (Decimal('0.0'), Decimal('0.0'))):
         """\
         Constructor.
 
         @param kernel: The kernel value of the fuzzy number.
-        @type kernel: C{float}
+        @type kernel: L{Decimal}
         @param support: The support of the fuzzy number.
         @type support: C{tuple}
         """
