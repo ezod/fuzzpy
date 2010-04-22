@@ -1,7 +1,7 @@
                      FuzzPy - Fuzzy Mathematics for Python
 
                      Aaron Mavrinac  <mavrin1@uwindsor.ca>
-                  Last Revision: Mon Apr 19 09:15:04 EDT 2010
+                  Last Revision: Thu Apr 22 14:29:11 EDT 2010
 
 -------------------------------------------------------------------------------
 
@@ -24,11 +24,14 @@ http://epydoc.sourceforge.net
 
 -------------------------------------------------------------------------------
 
-API DOCUMENTATION
+DOCUMENTATION & EXAMPLES
 
 API documentation can be generated with Epydoc using the provided gendoc.sh
 script. This will create a subdirectory 'doc' containing full API documentation
 in HTML format.
+
+Examples demonstrating the use of FuzzPy can be found in the 'examples'
+subdirectory.
 
 -------------------------------------------------------------------------------
 
