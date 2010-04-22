@@ -206,7 +206,7 @@ class Graph(object):
         elif GraphEdge((tail, head)) in self.edges():
             return Decimal('1.0')
         else:
-            return Decimal('inf') 
+            return Decimal('Infinity') 
 
     def edges_by_weight(self, tail = None, head = None):
         """\
@@ -426,7 +426,7 @@ class Graph(object):
         prev = {}
         Q = set(self.vertices)
         for vertex in self.vertices:
-            dist[ vertex ] = Decimal('inf')
+            dist[ vertex ] = Decimal('Infinity')
             prev[ vertex ] = None
         dist[ start ] = Decimal('0.0')
         while len(Q):
