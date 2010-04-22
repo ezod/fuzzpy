@@ -24,8 +24,6 @@ class RealRange(tuple):
         if not isinstance(arg[0], Decimal) \
         or not isinstance(arg[1], Decimal):
             try:
-                arg = (Decimal(arg[0]), Decimal(arg[1]))
-            except TypeError:
                 arg = (Decimal(str(arg[0])), Decimal(str(arg[1])))
             except InvalidOperation:
                 raise TypeError, ("range values must be numeric")
@@ -75,8 +73,6 @@ class RealRange(tuple):
         """
         if not isinstance(value, Decimal):
             try:
-                value = Decimal(value)
-            except TypeError:
                 value = Decimal(str(value))
             except InvalidOperation:
                 raise TypeError, ("value must be numeric")
@@ -243,8 +239,6 @@ class TrapezoidalFuzzyNumber(FuzzyNumber):
         """
         if not isinstance(value, Decimal):
             try:
-                value = Decimal(value)
-            except TypeError:
                 value = Decimal(str(value))
             except InvalidOperation:
                 raise TypeError, ("value must be numeric")
@@ -271,8 +265,6 @@ class TrapezoidalFuzzyNumber(FuzzyNumber):
         """
         if not isinstance(alpha, Decimal):
             try:
-                alpha = Decimal(alpha)
-            except TypeError:
                 alpha = Decimal(str(alpha))
             except InvalidOperation:
                 raise TypeError, ("value must be numeric")
