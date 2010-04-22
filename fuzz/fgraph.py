@@ -124,7 +124,7 @@ class FuzzyGraph(Graph):
                 
     # Convenience functions
 
-    def add_fuzzy_vertex(self, vertex, mu = 1.0):
+    def add_fuzzy_vertex(self, vertex, mu = Decimal('1.0')):
         """\
         Add a fuzzy vertex to the fuzzy graph (without explicitly constructing
         a FuzzyElement for it). Convenience wrapper for add_vertex().
@@ -132,11 +132,11 @@ class FuzzyGraph(Graph):
         @param vertex: The vertex to add.
         @type vertex: C{object}
         @param mu: The membership degree of the vertex (optional).
-        @type mu: C{float}
+        @type mu: L{Decimal}
         """
         self.add_vertex(FuzzyElement(vertex, mu))
 
-    def add_fuzzy_edge(self, edge, mu = 1.0):
+    def add_fuzzy_edge(self, edge, mu = Decimal('1.0')):
         """\
         Add a fuzzy edge to the fuzzy graph (without explicitly constructing
         a FuzzyElement for it). Convenience wrapper for add_edge().
@@ -144,11 +144,11 @@ class FuzzyGraph(Graph):
         @param edge: The edge to add.
         @type edge: L{GraphEdge}
         @param mu: The membership degree of the edge (optional).
-        @type mu: C{float}
+        @type mu: L{Decimal}
         """
         self.add_edge(FuzzyElement(edge, mu))
 
-    def connect_fuzzy(self, tail, head, mu = 1.0):
+    def connect_fuzzy(self, tail, head, mu = Decimal('1.0')):
         """\
         Connect a pair of vertices with a new fuzzy edge. Convenience wrapper
         for add_edge().
@@ -158,7 +158,7 @@ class FuzzyGraph(Graph):
         @param head: The head vertex.
         @type head: C{object}
         @param mu: The membership degree of the edge (optional).
-        @type mu: C{float}
+        @type mu: L{Decimal}
         """
         self.add_edge(FuzzyElement(GraphEdge((tail, head)), mu))
 
@@ -185,7 +185,7 @@ class FuzzyGraph(Graph):
         edge membership values meet or exceed the alpha value.
 
         @param alpha: The alpha value for the cut in [0, 1].
-        @type alpha: C{float}
+        @type alpha: L{Decimal}
         @return: The crisp graph result of the alpha cut.
         @rtype: L{Graph}
         """
@@ -202,7 +202,7 @@ class FuzzyGraph(Graph):
         vertex and edge membership values exceed the alpha value.
 
         @param alpha: The alpha value for the cut in [0, 1].
-        @type alpha: C{float}
+        @type alpha: L{Decimal}
         @return: The crisp graph result of the strong alpha cut.
         @rtype: L{Graph}
         """
