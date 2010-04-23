@@ -7,9 +7,7 @@ Fuzzy number module. Contains basic fuzzy number class definitions.
 @license: GPL-3
 """
 
-from decimal import Decimal
-
-from helpers import convert_to_decimal
+from decimal import Decimal, InvalidOperation
 
 
 class RealRange(tuple):
@@ -23,7 +21,12 @@ class RealRange(tuple):
         """
         if not len(arg) == 2:
             raise ValueError, ("range must consist of two values")
-        arg = (convert_to_decimal(arg[0]), convert_to_decimal(arg[1]))
+        if not isinstance(arg[0], Decimal) \
+        or not isinstance(arg[1], Decimal):
+            try:
+                arg = (Decimal(str(arg[0])), Decimal(str(arg[1])))
+            except InvalidOperation:
+                raise TypeError, ("range values must be numeric")
         if arg[0] > arg[1]:
             raise ValueError, ("range may not have negative size")
         return tuple.__new__(cls, arg)
@@ -68,7 +71,11 @@ class RealRange(tuple):
         @return: True if within the range, false otherwise.
         @rtype: C{bool}
         """
-        value = convert_to_decimal(value)
+        if not isinstance(value, Decimal):
+            try:
+                value = Decimal(str(value))
+            except InvalidOperation:
+                raise TypeError, ("value must be numeric")
         return value >= self[0] and value <= self[1]
 
     def issubset(self, other):
@@ -140,8 +147,7 @@ class TrapezoidalFuzzyNumber(FuzzyNumber):
     """\
     Trapezoidal fuzzy number class.
     """
-    def __init__(self, kernel = (Decimal('0.0'), Decimal('0.0')),
-                       support = (Decimal('0.0'), Decimal('0.0'))):
+    def __init__(self, kernel = (0.0, 0.0), support = (0.0, 0.0)):
         """\
         Constructor.
 
@@ -231,7 +237,11 @@ class TrapezoidalFuzzyNumber(FuzzyNumber):
         @param value: A value in the universal set.
         @type value: L{Decimal}
         """
-        value = convert_to_decimal(value)
+        if not isinstance(value, Decimal):
+            try:
+                value = Decimal(str(value))
+            except InvalidOperation:
+                raise TypeError, ("value must be numeric")
         if value in self.kernel:
             return Decimal('1.0')
         elif value > self.support[0] and value < self.kernel[0]:
@@ -253,7 +263,11 @@ class TrapezoidalFuzzyNumber(FuzzyNumber):
         @return: The alpha cut interval.
         @rtype: L{RealRange}
         """
-        alpha = convert_to_decimal(alpha)
+        if not isinstance(alpha, Decimal):
+            try:
+                alpha = Decimal(str(alpha))
+            except InvalidOperation:
+                raise TypeError, ("value must be numeric")
         return RealRange(((self.kernel[0] - self.support[0]) * alpha \
                            + self.support[0], self.support[1] - \
                            (self.support[1] - self.kernel[1]) * alpha))

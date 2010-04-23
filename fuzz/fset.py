@@ -12,7 +12,6 @@ from decimal import Decimal
 from copy import copy
 
 from iset import IndexedSet
-from helpers import convert_to_decimal
 
 
 class FuzzyElement(object):
@@ -21,18 +20,17 @@ class FuzzyElement(object):
     """
     __slots__ = ['obj', 'mu']
 
-    def __init__(self, obj, mu = Decimal('1.0')):
+    def __init__(self, obj, mu = 1.0):
         """\
         Constructor.
 
         @param obj: The object for this member.
         @type obj: C{object}
         @param mu: The membership degree of this member.
-        @type mu: L{Decimal}
+        @type mu: C{float}
         """
-        mu = convert_to_decimal(mu)
         self.obj = obj
-        self.mu = mu
+        self.mu = Decimal(str(mu))
 
     def __repr__(self):
         """\
@@ -160,7 +158,7 @@ class FuzzySet(IndexedSet):
             element = FuzzyElement(element)
         IndexedSet.add(self, element)
 
-    def add_fuzzy(self, element, mu = Decimal('1.0')):
+    def add_fuzzy(self, element, mu = 1.0):
         """\
         Add a fuzzy element to the fuzzy set (without explicitly constructing
         a FuzzyElement for it). Convenience wrapper for add().
@@ -168,7 +166,7 @@ class FuzzySet(IndexedSet):
         @param element: The object of the element to add.
         @type element: C{object}
         @param mu: The membership degree of the element.
-        @type mu: L{Decimal}
+        @type mu: C{float}
         """
         self.add(FuzzyElement(element, mu))
 
@@ -524,14 +522,14 @@ class FuzzySet(IndexedSet):
         Return the Yager complement of this fuzzy set.
 
         @param w: Yager operator exponent.
-        @type w: L{Decimal}
+        @type w: C{float}
         @return: The Yager complement of this fuzzy set.
         @rtype: L{FuzzySet}
         """
-        w = convert_to_decimal(w)
         result = self.__class__()
         result.update([FuzzyElement(key, (Decimal('1.0') - self.mu(key) ** \
-                       w) ** (Decimal('1.0') / w)) for key in self.keys()])
+                       Decimal(str(w))) ** (Decimal('1.0') / Decimal(str(w)))) \
+                       for key in self.keys()])
         return result
 
     def alpha(self, alpha):
@@ -540,12 +538,12 @@ class FuzzySet(IndexedSet):
         degrees meet or exceed the alpha value.
 
         @param alpha: The alpha value for the cut in (0, 1].
-        @type alpha: L{Decimal} 
+        @type alpha: C{float}
         @return: The crisp set result of the alpha cut.
         @rtype: C{set}
         """
-        alpha = convert_to_decimal(alpha)
-        return set([element.obj for element in self if element.mu >= alpha])
+        return set([element.obj for element in self \
+                    if element.mu >= Decimal(str(alpha))])
 
     def salpha(self, alpha):
         """\
@@ -553,12 +551,12 @@ class FuzzySet(IndexedSet):
         membership degrees exceed the alpha value.
 
         @param alpha: The alpha value for the cut in [0, 1].
-        @type alpha: L{Decimal} 
+        @type alpha: C{float}
         @return: The crisp set result of the strong alpha cut.
         @rtype: C{set}
         """
-        alpha = convert_to_decimal(alpha)
-        return set([element.obj for element in self if element.mu > alpha])
+        return set([element.obj for element in self \
+                    if element.mu > Decimal(str(alpha))])
 
     def prune(self):
         """\
