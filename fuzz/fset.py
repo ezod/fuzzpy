@@ -64,6 +64,7 @@ class FuzzyElement(object):
         """
         if not isinstance(other, FuzzyElement):
             return False
+        #FIXME: is there a better way to compare "almost equal" floats?
         return self.obj == other.obj and abs( self.mu - other.mu ) < 1e-10
 
     def __ne__(self, other):
