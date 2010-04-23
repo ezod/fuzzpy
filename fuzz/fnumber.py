@@ -7,6 +7,7 @@ Fuzzy number module. Contains basic fuzzy number class definitions.
 @license: GPL-3
 """
 
+from math import e, pi
 from numbers import Number
 
 
@@ -269,3 +270,53 @@ class TriangularFuzzyNumber(TrapezoidalFuzzyNumber):
         @type support: C{tuple}
         """
         TrapezoidalFuzzyNumber.__init__((kernel, kernel), support)
+
+
+class GaussianFuzzyNumber(FuzzyNumber):
+    """\
+    Gaussian fuzzy number class.
+    """
+    def __init__(self, mean, stddev):
+        """\
+        Constructor.
+
+        @param kernel: The mean (central value) of the Gaussian.
+        @type kernel: C{float}
+        @param stddev: The standard deviation of the Gaussian.
+        @type stddev: C{float}
+        """
+        self.mean = mean
+        self.stddev = stddev
+        FuzzyNumber.__init__(self)
+
+    def mu(self, value):
+        """\
+        Return the membership level of a value in the universal set domain of
+        the fuzzy number.
+
+        @param value: A value in the universal set.
+        @type value: C{float}
+        """
+        return e ** -( (value - self.mean) ** 2 / ( 2.0 * self.stddev ) ** 2 )
+
+    @property
+    def kernel(self):
+        """\
+        Return the kernel of the fuzzy number (range of values in the
+        universal set where membership degree is equal to one).
+
+        @rtype: L{RealRange}
+        """
+        return RealRange((self.mean, self.mean))
+
+    @property
+    def support(self):
+        """\
+        Return the support of the fuzzy number (range of values in the
+        universal set where membership degree is nonzero).
+
+        @rtype: L{RealRange}
+        """
+        #TODO: actually calculate the support where mu > some threshold, maybe
+        #      based on the same context as FuzzyElement.__eq__
+        return RealRange((-float('inf'), float('inf')))
