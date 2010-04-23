@@ -7,8 +7,6 @@ Graph module. Contains fuzzy graph class definitions.
 @license: GPL-3
 """
 
-from decimal import Decimal
-
 from fset import FuzzyElement, FuzzySet 
 from graph import GraphEdge, Graph
 
@@ -93,7 +91,7 @@ class FuzzyGraph(Graph):
         @param head: The head vertex.
         @type head: C{object}
         @return: The membership degree of the vertex or edge from tail to head.
-        @rtype: L{Decimal}
+        @rtype: C{float}
         """
         if head is None:
             return self._V.mu(tail)
@@ -113,14 +111,14 @@ class FuzzyGraph(Graph):
         @param head: The head vertex.
         @type head: C{object}
         @return: The weight of the edge from tail to head.
-        @rtype: L{Decimal}
+        @rtype: C{float}
         """
         if tail == head:
-            return Decimal('0.0')
+            return 0.0
         try:
-            return Decimal(str(Decimal('1.0') / self.mu(tail, head)))
+            return 1.0 / self.mu(tail, head)
         except ZeroDivisionError:
-            return Decimal('inf')
+            return float('inf')
                 
     # Convenience functions
 

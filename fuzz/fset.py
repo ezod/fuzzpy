@@ -8,7 +8,6 @@ definitions.
 @license: GPL-3
 """
 
-from decimal import Decimal
 from copy import copy
 
 from iset import IndexedSet
@@ -30,7 +29,7 @@ class FuzzyElement(object):
         @type mu: C{float}
         """
         self.obj = obj
-        self.mu = Decimal(str(mu))
+        self.mu = mu
 
     def __repr__(self):
         """\
@@ -65,7 +64,7 @@ class FuzzyElement(object):
         """
         if not isinstance(other, FuzzyElement):
             return False
-        return self.obj == other.obj and self.mu == other.mu
+        return self.obj == other.obj and abs( self.mu - other.mu ) < 1e-10
 
     def __ne__(self, other):
         """\
@@ -200,12 +199,12 @@ class FuzzySet(IndexedSet):
         zero for any non-member element.
 
         @return: The membership degree of the specified element.
-        @rtype: L{Decimal}
+        @rtype: C{float}
         """
         try:
             return self[key].mu
         except KeyError:
-            return Decimal('0.0')
+            return 0.0
 
     @property
     def support(self):
@@ -233,7 +232,7 @@ class FuzzySet(IndexedSet):
         Height function. Returns the maximum membership degree of any element
         in the fuzzy set.
 
-        @rtype: L{Decimal}
+        @rtype: C{float}
         """
         return max([element.mu for element in self])
 
@@ -242,7 +241,7 @@ class FuzzySet(IndexedSet):
         """\
         Scalar cardinality, the sum of membership degrees of all elements.
         
-        @rtype: L{Decimal}
+        @rtype: C{float}
         """
         return sum([element.mu for element in self])
 
@@ -297,12 +296,11 @@ class FuzzySet(IndexedSet):
             other.mu(key))) for key in bothkeys]),
          lambda: result.update([FuzzyElement(key, self.mu(key) + other.mu(key) \
             - self.mu(key) * other.mu(key)) for key in bothkeys]),
-         lambda: result.update([FuzzyElement(key, min(Decimal('1.0'), \
-            self.mu(key) + other.mu(key))) for key in bothkeys]),
-         lambda: result.update([FuzzyElement(key, (self.mu(key) == \
-            Decimal('0.0') and other.mu(key)) or (other.mu(key) == \
-            Decimal('0.0') and self.mu(key)) or Decimal('1.0')) \
-            for key in bothkeys])
+         lambda: result.update([FuzzyElement(key, min(1.0, self.mu(key) + \
+            other.mu(key))) for key in bothkeys]),
+         lambda: result.update([FuzzyElement(key, (self.mu(key) == 0.0 and \
+            other.mu(key)) or (other.mu(key) == 0.0 and self.mu(key)) or \
+            1.0) for key in bothkeys])
         ][norm]()
         return result
 
@@ -373,12 +371,10 @@ class FuzzySet(IndexedSet):
             other.mu(key))) for key in self.keys()]),
          lambda: result.update([FuzzyElement(key, self.mu(key) * \
             other.mu(key)) for key in self.keys()]),
-         lambda: result.update([FuzzyElement(key, max(Decimal('0.0'), \
-            self.mu(key) + other.mu(key) - Decimal('1.0'))) \
-            for key in self.keys()]),
-         lambda: result.update([FuzzyElement(key, (self.mu(key) == \
-            Decimal('1.0') and other.mu(key)) or (other.mu(key) == \
-            Decimal('1.0') and self.mu(key)) or Decimal('0.0')) \
+         lambda: result.update([FuzzyElement(key, max(0.0, self.mu(key) + \
+            other.mu(key) - 1.0)) for key in self.keys()]),
+         lambda: result.update([FuzzyElement(key, (self.mu(key) == 1.0 and \
+            other.mu(key)) or (other.mu(key) == 1.0 and self.mu(key)) or 0.0) \
             for key in self.keys()])
         ][norm]()
         return result
@@ -486,7 +482,7 @@ class FuzzySet(IndexedSet):
         @param other: The other fuzzy set.
         @type other: L{FuzzySet}
         @return: The overlap in [0, 1] of this set on the other.
-        @rtype: L{Decimal}
+        @rtype: C{float}
         """
         return self.intersection(other).cardinality / other.cardinality
 
@@ -513,8 +509,8 @@ class FuzzySet(IndexedSet):
         @rtype: L{FuzzySet}
         """
         result = self.__class__()
-        result.update([FuzzyElement(key, Decimal('1.0') - \
-                       self.mu(key)) for key in self.keys()])
+        result.update([FuzzyElement(key, 1.0 - self.mu(key)) \
+                       for key in self.keys()])
         return result
 
     def complement_yager(self, w):
@@ -527,9 +523,8 @@ class FuzzySet(IndexedSet):
         @rtype: L{FuzzySet}
         """
         result = self.__class__()
-        result.update([FuzzyElement(key, (Decimal('1.0') - self.mu(key) ** \
-                       Decimal(str(w))) ** (Decimal('1.0') / Decimal(str(w)))) \
-                       for key in self.keys()])
+        result.update([FuzzyElement(key, (1.0 - self.mu(key) ** w) ** \
+                       (1.0 / w)) for key in self.keys()])
         return result
 
     def alpha(self, alpha):
@@ -542,8 +537,7 @@ class FuzzySet(IndexedSet):
         @return: The crisp set result of the alpha cut.
         @rtype: C{set}
         """
-        return set([element.obj for element in self \
-                    if element.mu >= Decimal(str(alpha))])
+        return set([element.obj for element in self if element.mu >= alpha])
 
     def salpha(self, alpha):
         """\
@@ -555,8 +549,7 @@ class FuzzySet(IndexedSet):
         @return: The crisp set result of the strong alpha cut.
         @rtype: C{set}
         """
-        return set([element.obj for element in self \
-                    if element.mu > Decimal(str(alpha))])
+        return set([element.obj for element in self if element.mu > alpha])
 
     def prune(self):
         """\
@@ -573,7 +566,7 @@ class FuzzySet(IndexedSet):
         such that the height equals 1.
         """
         if self.height > 0:
-            scale = Decimal('1.0') / self.height
+            scale = 1.0 / self.height
             for element in self:
                 element.mu *= scale
 
@@ -584,4 +577,4 @@ class FuzzySet(IndexedSet):
 
         @rtype: C{bool}
         """
-        return self.height == Decimal('1.0')
+        return self.height == 1.0

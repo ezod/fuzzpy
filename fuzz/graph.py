@@ -7,8 +7,6 @@ Graph module. Contains crisp graph class definitions.
 @license: GPL-3
 """
 
-from decimal import Decimal
-
 
 class GraphEdge(tuple):
     """\
@@ -199,14 +197,14 @@ class Graph(object):
         @param head: The head vertex.
         @type head: C{object}
         @return: The weight of the edge from tail to head.
-        @rtype: L{Decimal}
+        @rtype: C{float}
         """
         if tail == head:
-            return Decimal('0.0')
+            return 0.0
         elif GraphEdge((tail, head)) in self.edges():
-            return Decimal('1.0')
+            return 1.0
         else:
-            return Decimal('inf') 
+            return float('inf') 
 
     def edges_by_weight(self, tail = None, head = None):
         """\
@@ -426,9 +424,9 @@ class Graph(object):
         prev = {}
         Q = set(self.vertices)
         for vertex in self.vertices:
-            dist[ vertex ] = Decimal('inf')
+            dist[ vertex ] = float('inf')
             prev[ vertex ] = None
-        dist[ start ] = Decimal('0.0')
+        dist[ start ] = 0.0
         while len(Q):
             u = None
             for vertex in Q:
@@ -452,12 +450,12 @@ class Graph(object):
         @param end: The end vertex.
         @type end: C{object}
         @return: Shortest path vertex list and total distance.
-        @rtype: C{list}, L{Decimal}
+        @rtype: C{list}, C{float}
         """
         path = []
         u = end
         prev = self.dijkstra(start)
-        dist = Decimal('0.0')
+        dist = 0.0
         while u in prev.keys():
             path.insert(0, u)
             if prev[u]:
