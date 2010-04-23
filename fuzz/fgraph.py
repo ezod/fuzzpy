@@ -120,7 +120,7 @@ class FuzzyGraph(Graph):
         try:
             return Decimal(str(Decimal('1.0') / self.mu(tail, head)))
         except ZeroDivisionError:
-            return Decimal('Infinity')
+            return Decimal('inf')
                 
     # Convenience functions
 
