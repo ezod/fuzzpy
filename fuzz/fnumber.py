@@ -129,11 +129,110 @@ class RealRange(tuple):
 
 class FuzzyNumber(object):
     """\
-    Fuzzy number class.
+    Fuzzy number class (abstract base class for all fuzzy numbers).
     """
     def __init__(self):
+        """\
+        Constructor. Not to be instantiated directly.
+        """
         if self.__class__ is FuzzyNumber:
             raise NotImplementedError, ("please use one of the subclasses")
+
+    def __repr__(self):
+        """\
+        Return string representation of a trapezoidal fuzzy number.
+
+        @return: String representation.
+        @rtype: C{string}
+        """
+        return '%s: kernel %s, support %s' % \
+               (self.__class__.__name__, str(self.kernel), str(self.support))
+
+    __str__ = __repr__
+
+    def mu(self, value):
+        """\
+        Return the membership level of a value in the universal set domain of
+        the fuzzy number.
+
+        @param value: A value in the universal set.
+        @type value: C{float}
+        """
+        raise NotImplementedError, ("mu method must be overridden")
+
+
+class PolygonalFuzzyNumber(FuzzyNumber):
+    """\
+    Polygonal fuzzy number class.
+    """
+    def __init__(self, points):
+        """\
+        Constructor.
+
+        @param points: A set of points from which to generate the polygon.
+        @type points: C{list} of C{tuple}
+        """
+        if not points[0][1] == 0.0 or not points[-1][1] == 0.0:
+            raise ValueError, ("points must start and end with mu = 0")
+        for i in range(1, len(points)):
+            if not points[i][0] > points[i - 1][0]:
+                raise ValueError, ("points must be in increasing order")
+        self.points = points
+        FuzzyNumber.__init__(self)
+
+    def mu(self, value):
+        """\
+        Return the membership level of a value in the universal set domain of
+        the fuzzy number.
+
+        @param value: A value in the universal set.
+        @type value: C{float}
+        """
+        if value not in self.support:
+            return 0.0
+        for i in range(1, len(self.points)):
+            if self.points[i][0] > value:
+                return ((value - self.points[i - 1][0]) / (self.points[i][0] \
+                       - self.points[i - 1][0])) * (self.points[i][1] - \
+                       self.points[i - 1][1]) + self.points[i - 1][1]
+
+    @property
+    def kernel(self):
+        """\
+        Return the kernel of the fuzzy number (range of values in the
+        universal set where membership degree is equal to one).
+
+        @rtype: C{list} of L{RealRange}
+        """
+        kernel = []
+        start = None
+        for i in range(1, len(self.points)):
+            if start is None and self.points[i][1] == 1.0:
+                start = i
+            elif start is not None and self.points[i][1] < 1.0:
+                kernel.append(RealRange((self.points[start][0],
+                                         self.points[i - 1][0])))
+                start = None
+        return kernel
+
+    @property
+    def support(self):
+        """\
+        Return the support of the fuzzy number (range of values in the
+        universal set where membership degree is nonzero).
+
+        @rtype: C{list} of L{RealRange}
+        """
+        support = []
+        start = None
+        for i in range(1, len(self.points)):
+            if start is None and self.points[i][1] > 0.0:
+                start = i - 1
+            elif start is not None and self.points[i][1] == 0.0:
+                support.append(RealRange((self.points[start][0],
+                                          self.points[i][0])))
+                start = None
+        return support
 
 
 class TrapezoidalFuzzyNumber(FuzzyNumber):
@@ -157,18 +256,6 @@ class TrapezoidalFuzzyNumber(FuzzyNumber):
         if not self.kernel <= self.support:
             raise ValueError, ("kernel range must be within support range")
         FuzzyNumber.__init__(self)
-
-    def __repr__(self):
-        """\
-        Return string representation of a trapezoidal fuzzy number.
-
-        @return: String representation.
-        @rtype: C{string}
-        """
-        return 'Trapezoidal: kernel %s, support %s' % \
-               (str(self.kernel), str(self.support))
-
-    __str__ = __repr__
 
     @property
     def triangular(self):
@@ -254,6 +341,16 @@ class TrapezoidalFuzzyNumber(FuzzyNumber):
         return RealRange(((self.kernel[0] - self.support[0]) * alpha \
                            + self.support[0], self.support[1] - \
                            (self.support[1] - self.kernel[1]) * alpha))
+
+    def to_polygonal(self):
+        """\
+        Convert this trapezoidal fuzzy number into a polygonal fuzzy number.
+        """
+        points = [(self.support[0], 0.0),
+                  (self.kernel[0], 1.0),
+                  (self.kernel[1], 1.0),
+                  (self.support[1], 0.0)]
+        return PolygonalFuzzyNumber(points)
 
 
 class TriangularFuzzyNumber(TrapezoidalFuzzyNumber):
