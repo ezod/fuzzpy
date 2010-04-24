@@ -7,7 +7,7 @@ Fuzzy number module. Contains basic fuzzy number class definitions.
 @license: GPL-3
 """
 
-from math import e, pi
+from math import e, pi, sqrt, log
 from numbers import Number
 
 
@@ -377,8 +377,8 @@ class GaussianFuzzyNumber(FuzzyNumber):
         """\
         Constructor.
 
-        @param kernel: The mean (central value) of the Gaussian.
-        @type kernel: C{float}
+        @param mean: The mean (central value) of the Gaussian.
+        @type mean: C{float}
         @param stddev: The standard deviation of the Gaussian.
         @type stddev: C{float}
         """
@@ -394,7 +394,9 @@ class GaussianFuzzyNumber(FuzzyNumber):
         @param value: A value in the universal set.
         @type value: C{float}
         """
-        return e ** -( (value - self.mean) ** 2 / ( 2.0 * self.stddev ) ** 2 )
+        if value not in self.support:
+            return 0.0
+        return e ** -((value - self.mean) ** 2 / (2.0 * self.stddev ** 2))
 
     @property
     def kernel(self):
@@ -414,6 +416,30 @@ class GaussianFuzzyNumber(FuzzyNumber):
 
         @rtype: L{RealRange}
         """
-        #TODO: actually calculate the support where mu > some threshold, maybe
-        #      based on the same context as FuzzyElement.__eq__
-        return RealRange((-float('inf'), float('inf')))
+        edge = sqrt(-2.0 * (self.stddev ** 2) * log(1e-10))
+        return RealRange((self.mean - edge, self.mean + edge))
+
+    def to_polygonal(self, np):
+        """\
+        Convert this Gaussian fuzzy number into a polygonal fuzzy number
+        (approximate).
+
+        @param np: The number of points to interpolate per side.
+        @type np: C{int}
+        """
+        if np < 0:
+            raise ValueError, ("number of points must be positive")
+        points = []
+        start, end = self.support
+        increment = (self.mean - start) / float(np + 1)
+        points.append((start, 0.0))
+        for i in range(1, np + 1):
+            value = start + i * increment
+            points.append((value, self.mu(value)))
+        points.append((self.mean, 1.0))
+        for i in range(1, np + 1):
+            value = self.mean + i * increment
+            points.append((value, self.mu(value)))
+        points.append((end, 0.0))
+        print points
+        return PolygonalFuzzyNumber(points)
