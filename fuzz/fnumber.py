@@ -211,6 +211,7 @@ class PolygonalFuzzyNumber(FuzzyNumber):
                 return ((value - self.points[i - 1][0]) / (self.points[i][0] \
                        - self.points[i - 1][0])) * (self.points[i][1] - \
                        self.points[i - 1][1]) + self.points[i - 1][1]
+        return 0.0
 
     @property
     def kernel(self):
@@ -294,6 +295,8 @@ class PolygonalFuzzyNumber(FuzzyNumber):
 
         @param other: The other fuzzy number.
         @type other: L{PolygonalFuzzyNumber}
+        @return: The fuzzy union.
+        @rtype: L{PolygonalFuzzyNumber}
         """
         self._binary_sanity_check(other)
         points = []
@@ -308,6 +311,67 @@ class PolygonalFuzzyNumber(FuzzyNumber):
         while(True):
             try:
                 if points[i][0][0] == points[i + 1][0][0]:
+                    del points[i]
+                    continue
+                if points[i][1] is not points[i + 1][1]:
+                    points.insert(i + 1, (self._line_intersection(points[i][0],
+                        points[i][1].points[points[i][2] + 1], points[i + 1][0],
+                        points[i + 1][1].points[points[i + 1][2] - 1]),
+                        None, None))
+                    i += 1
+                i += 1
+            except IndexError:
+                break
+        return PolygonalFuzzyNumber([point[0] for point in points])
+
+    def __and__(self, other):
+        """\
+        Return the standard fuzzy intersection of two polygonal fuzzy numbers
+        as a new polygonal fuzzy number.
+
+        @param other: The other fuzzy number.
+        @type other: L{PolygonalFuzzyNumber}
+        @return: The fuzzy intersection.
+        @rtype: L{PolygonalFuzzyNumber}
+        """
+        return self.intersection(other)
+
+    def __iand__(self, other):
+        """\
+        In-place standard fuzzy intersection.
+
+        @param other: The other fuzzy number.
+        @type other: L{PolygonalFuzzyNumber}
+        @return: The fuzzy intersection (self).
+        @rtype: L{PolygonalFuzzyNumber}
+        """
+        self = self.intersection(other)
+        return self
+
+    def intersection(self, other):
+        """\
+        Return the standard fuzzy intersection of two polygonal fuzzy numbers
+        as a new polygonal fuzzy number.
+
+        @param other: The other fuzzy number.
+        @type other: L{PolygonalFuzzyNumber}
+        @return: The fuzzy intersection.
+        @rtype: L{PolygonalFuzzyNumber}
+        """
+        self._binary_sanity_check(other)
+        points = []
+        for i in range(len(self.points)):
+            if self.points[i][1] <= other.mu(self.points[i][0]):
+                points.append((self.points[i], self, i))
+        for i in range(len(other.points)):
+            if other.points[i][1] <= self.mu(other.points[i][0]):
+                points.append((other.points[i], other, i))
+        points.sort()
+        i = 0
+        while(True):
+            try:
+                if points[i][0][0] == points[i + 1][0][0] \
+                or points[i][0][1] == 0.0 and points[i + 1][0][1] == 0.0:
                     del points[i]
                     continue
                 if points[i][1] is not points[i + 1][1]:

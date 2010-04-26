@@ -146,6 +146,12 @@ class TestFuzzyNumber(unittest.TestCase):
             self.assertTrue(abs(Z.mu(value) - max(self.X.mu(value),
                                 self.Y.mu(value))) < 10e-1)
 
+    def test_intersection(self):
+        Z = self.X & self.Y
+        for value in [1.5, 3.5, 4.5, 5.5, 6.2, 6.7, 8.3, 10.5]:
+            self.assertTrue(abs(Z.mu(value) - min(self.X.mu(value),
+                                self.Y.mu(value))) < 10e-1)
+
 
 class TestFuzzyGraph(unittest.TestCase):
     
