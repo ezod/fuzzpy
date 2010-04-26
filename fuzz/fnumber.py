@@ -425,7 +425,21 @@ class GaussianFuzzyNumber(FuzzyNumber):
 
         @rtype: L{RealRange}
         """
-        edge = sqrt(-2.0 * (self.stddev ** 2) * log(1e-10))
+        return self.alpha(1e-10)
+
+    def alpha(self, alpha):
+        """\
+        Alpha cut function. Returns the interval within the fuzzy number whose
+        membership levels meet or exceed the alpha value.
+
+        @param alpha: The alpha value for the cut in [0, 1].
+        @type alpha: C{float}
+        @return: The alpha cut interval.
+        @rtype: L{RealRange}
+        """
+        if alpha < 1e-10:
+            alpha = 1e-10
+        edge = sqrt(-2.0 * (self.stddev ** 2) * log(alpha))
         return RealRange((self.mean - edge, self.mean + edge))
 
     def to_polygonal(self, np):
