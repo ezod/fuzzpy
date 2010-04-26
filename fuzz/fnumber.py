@@ -180,6 +180,19 @@ class PolygonalFuzzyNumber(FuzzyNumber):
         self.points = points
         FuzzyNumber.__init__(self)
 
+    @staticmethod
+    def _binary_sanity_check(other):
+        """\
+        Check that the other argument to a binary operation is also a
+        polygonal fuzzy number, raising a TypeError otherwise.
+
+        @param other: The other argument.
+        @type other: L{PolygonalFuzzyNumber}
+        """
+        if not isinstance(other, PolygonalFuzzyNumber):
+            raise TypeError, ("binary operation only permitted between \
+                               polygonal fuzzy numbers")
+
     def mu(self, value):
         """\
         Return the membership level of a value in the universal set domain of
@@ -188,7 +201,7 @@ class PolygonalFuzzyNumber(FuzzyNumber):
         @param value: A value in the universal set.
         @type value: C{float}
         """
-        if value not in self.support:
+        if not True in [value in subrange for subrange in self.support]:
             return 0.0
         for i in range(1, len(self.points)):
             if self.points[i][0] > value:
@@ -279,8 +292,6 @@ class TrapezoidalFuzzyNumber(FuzzyNumber):
             raise TypeError, ("binary operation only permitted between \
                                trapezoidal fuzzy numbers")
 
-    # Binary trapezoidal fuzzy number operations
-
     def __add__(self, other):
         """\
         Addition operation.
@@ -306,8 +317,6 @@ class TrapezoidalFuzzyNumber(FuzzyNumber):
         self._binary_sanity_check(other)
         return self.__class__(self.kernel - other.kernel,
                               self.support - other.support)
-
-    # Unary trapezoidal fuzzy number operations
 
     def mu(self, value):
         """\
