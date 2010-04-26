@@ -7,7 +7,7 @@ Fuzzy number module. Contains basic fuzzy number class definitions.
 @license: GPL-3
 """
 
-from math import e, pi, sqrt, log
+from math import e, sqrt, log
 from numbers import Number
 
 
@@ -160,6 +160,9 @@ class FuzzyNumber(object):
         """
         raise NotImplementedError, ("mu method must be overridden")
 
+    kernel = None
+    support = None
+
 
 class PolygonalFuzzyNumber(FuzzyNumber):
     """\
@@ -310,7 +313,8 @@ class PolygonalFuzzyNumber(FuzzyNumber):
                 if points[i][1] is not points[i + 1][1]:
                     points.insert(i + 1, (self._line_intersection(points[i][0],
                         points[i][1].points[points[i][2] + 1], points[i + 1][0],
-                        points[i + 1][1].points[points[i + 1][2] - 1]), None, None))
+                        points[i + 1][1].points[points[i + 1][2] - 1]),
+                        None, None))
                     i += 1
                 i += 1
             except IndexError:
