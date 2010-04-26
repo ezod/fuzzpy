@@ -247,6 +247,76 @@ class PolygonalFuzzyNumber(FuzzyNumber):
                 start = None
         return support
 
+    @staticmethod
+    def _line_intersection(p, q, r, s):
+        """\
+        Return the point of intersection of line segments pq and rs. Helper
+        function for union and intersection.
+
+        @return: The point of intersection.
+        @rtype: C{tuple} of C{float}
+        """
+        ua = ((s[0] - r[0]) * (p[1] - r[1]) - (s[1] - r[1]) * (p[0] - r[0])) / \
+             ((s[1] - r[1]) * (q[0] - p[0]) - (s[0] - r[0]) * (q[1] - p[1]))
+        return(p[0] + ua * (q[0] - p[0]), p[1] + ua * (q[1] - p[1]))
+
+    def __or__(self, other):
+        """\
+        Return the standard fuzzy union of two polygonal fuzzy numbers as a new
+        polygonal fuzzy number.
+
+        @param other: The other fuzzy number.
+        @type other: L{PolygonalFuzzyNumber}
+        @return: The fuzzy union.
+        @rtype: L{PolygonalFuzzyNumber}
+        """
+        return self.union(other)
+
+    def __ior__(self, other):
+        """\
+        In-place standard fuzzy union.
+
+        @param other: The other fuzzy number.
+        @type other: L{PolygonalFuzzyNumber}
+        @return: The fuzzy union (self).
+        @rtype: L{PolygonalFuzzyNumber}
+        """
+        self = self.union(other)
+        return self
+
+    def union(self, other):
+        """\
+        Return the standard fuzzy union of two polygonal fuzzy numbers as a new
+        polygonal fuzzy number.
+
+        @param other: The other fuzzy number.
+        @type other: L{PolygonalFuzzyNumber}
+        """
+        self._binary_sanity_check(other)
+        points = []
+        for i in range(len(self.points)):
+            if self.points[i][1] >= other.mu(self.points[i][0]):
+                points.append((self.points[i], self, i))
+        for i in range(len(other.points)):
+            if other.points[i][1] >= self.mu(other.points[i][0]):
+                points.append((other.points[i], other, i))
+        points.sort()
+        i = 0
+        while(True):
+            try:
+                if points[i][0][0] == points[i + 1][0][0]:
+                    del points[i]
+                    continue
+                if points[i][1] is not points[i + 1][1]:
+                    points.insert(i + 1, (self._line_intersection(points[i][0],
+                        points[i][1].points[points[i][2] + 1], points[i + 1][0],
+                        points[i + 1][1].points[points[i + 1][2] - 1]), None, None))
+                    i += 1
+                i += 1
+            except IndexError:
+                break
+        return PolygonalFuzzyNumber([point[0] for point in points])
+
 
 class TrapezoidalFuzzyNumber(FuzzyNumber):
     """\

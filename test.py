@@ -105,6 +105,11 @@ class TestFuzzyNumber(unittest.TestCase):
         S = fuzz.RealRange((0.0, 6.5))
         self.N = fuzz.TrapezoidalFuzzyNumber(K, S)
         self.G = fuzz.GaussianFuzzyNumber(12.0, 1.0)
+        self.X = fuzz.PolygonalFuzzyNumber( \
+            [(0.0, 0.0), (3.0, 0.5), (4.0, 0.3), (6.0, 0.8), (7.0, 0.2),
+             (8.0, 0.3), (9.0, 0.2), (10.0, 0.7), (11.0, 0.0)])
+        self.Y = fuzz.PolygonalFuzzyNumber( \
+            [(1.0, 0.0), (2.0, 1.0), (5.0, 0.3), (7.0, 0.7), (11.0, 0.0)])
 
     def test_mu(self):
         exp = [0., 1./3., 1., 1., 0.5, 0.]
@@ -134,6 +139,12 @@ class TestFuzzyNumber(unittest.TestCase):
         self.assertEqual(P.mu(1.0), Q.mu(1.0))
         self.assertEqual(P.mu(1.0), self.N.mu(1.0))
         self.assertEqual(P.mu(7.0), self.N.mu(7.0))
+
+    def test_union(self):
+        Z = self.X | self.Y
+        for value in [0.5, 1.5, 3.5, 5.0, 6.2, 6.7, 8.3, 10.5]:
+            self.assertTrue(abs(Z.mu(value) - max(self.X.mu(value),
+                                self.Y.mu(value))) < 10e-1)
 
 
 class TestFuzzyGraph(unittest.TestCase):
