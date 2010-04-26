@@ -104,6 +104,7 @@ class TestFuzzyNumber(unittest.TestCase):
         K = fuzz.RealRange((3.0, 5.5))
         S = fuzz.RealRange((0.0, 6.5))
         self.N = fuzz.TrapezoidalFuzzyNumber(K, S)
+        self.G = fuzz.GaussianFuzzyNumber(12.0, 1.0)
 
     def test_mu(self):
         exp = [0., 1./3., 1., 1., 0.5, 0.]
@@ -114,11 +115,25 @@ class TestFuzzyNumber(unittest.TestCase):
                self.N.mu( 6. ),
                self.N.mu( 7. )]
         self.assertEqual(act, exp)
+        self.assertEqual(self.G.mu(12.0), 1.0)
+        self.assertEqual(self.G.mu(self.G.support[1] + 1.0), 0.0)
     
     def test_alpha(self):
         exp = fuzz.RealRange((1.5, 6.0))
         act = self.N.alpha(0.5)
         self.assertEqual(act, exp)
+
+    def test_to_polygonal(self):
+        points = [(0.0, 0.0), (3.0, 1.0), (5.5, 1.0), (6.5, 0.0)]
+        P = fuzz.PolygonalFuzzyNumber(points)
+        Q = self.N.to_polygonal()
+        self.assertEqual(P.kernel, Q.kernel)
+        self.assertEqual(P.kernel[0], self.N.kernel)
+        self.assertEqual(P.support, Q.support)
+        self.assertEqual(P.support[0], self.N.support)
+        self.assertEqual(P.mu(1.0), Q.mu(1.0))
+        self.assertEqual(P.mu(1.0), self.N.mu(1.0))
+        self.assertEqual(P.mu(7.0), self.N.mu(7.0))
 
 
 class TestFuzzyGraph(unittest.TestCase):
