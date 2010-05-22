@@ -12,4 +12,4 @@ import sys
 sys.path.insert(0, '..')
 
 import fuzz
-print "FuzzPy imported from '%s'" % fuzz.__path__[0]
+print "FuzzPy imported from '%s'\n" % fuzz.__path__[0]
