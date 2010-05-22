@@ -144,7 +144,7 @@ class FuzzySet(IndexedSet):
         for item in IndexedSet.__iter__(self):
             if getattr(item, self.index) == key:
                 return item
-        raise KeyError, key
+        raise KeyError(key)
 
     def add(self, element):
         """\
@@ -497,8 +497,8 @@ class FuzzySet(IndexedSet):
         @type other: L{FuzzySet}
         """
         if not isinstance(other, FuzzySet):
-            raise TypeError, \
-                ("binary operation only permitted between fuzzy sets")
+            raise TypeError("binary operation only permitted between fuzzy \
+                             sets")
 
     # Unary fuzzy set operations
 

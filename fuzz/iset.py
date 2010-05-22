@@ -39,7 +39,7 @@ class IndexedSet(set):
         for item in self:
             if getattr(item, self.index) == key:
                 return item
-        raise KeyError, key
+        raise KeyError(key)
 
     def __setitem__(self, key, item):
         """\
@@ -53,7 +53,7 @@ class IndexedSet(set):
         @type item: C{object}
         """
         if not getattr(item, self.index) == key:
-            raise ValueError, ("key does not match item index attribute")
+            raise ValueError("key does not match item index attribute")
         if key in self:
             self.remove(key)
         set.add(self, item)
