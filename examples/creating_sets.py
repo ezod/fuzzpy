@@ -74,3 +74,5 @@ print "B = %s is initialized." % str(B)
 C = fuzz.FuzzySet(A)
 
 print "C = %s is the same as A." % str(C)
+if C == A:
+    print "See?"
