@@ -8,7 +8,13 @@ a dict.
 @license: GPL-3
 """
 
+import warnings
 from copy import copy
+
+
+class DuplicateItemWarning(Warning):
+    pass
+
 
 class IndexedSet(set):
     """\
@@ -97,6 +103,9 @@ class IndexedSet(set):
         """
         if not getattr(item, self.index) in self.keys():
             set.add(self, copy(item))
+        else:
+            warnings.warn("attempted to add item with duplicate index",
+                          DuplicateItemWarning)
 
     def remove(self, key):
         """\
