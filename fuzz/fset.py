@@ -279,7 +279,7 @@ class FuzzySet(IndexedSet):
         0 - Standard Union
         1 - Algebraic Sum
         2 - Bounded Sum
-        3 - Drastic Intersection
+        3 - Drastic Union
 
         @param other: The other fuzzy set.
         @type other: L{FuzzySet}
