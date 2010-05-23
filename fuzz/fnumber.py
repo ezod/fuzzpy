@@ -318,7 +318,10 @@ class PolygonalFuzzyNumber(FuzzyNumber):
                         points[i][1].points[points[i][2] + 1], points[i + 1][0],
                         points[i + 1][1].points[points[i + 1][2] - 1]),
                         None, None))
-                    i += 1
+                    if points[i + 1][0][0] == points[i + 2][0][0]:
+                        del points[i + 1]
+                    else:
+                        i += 1
                 i += 1
             except IndexError:
                 break
