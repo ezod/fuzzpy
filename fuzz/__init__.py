@@ -16,3 +16,4 @@ from fset import *
 from fnumber import *
 from graph import *
 from fgraph import *
+from plot import *
