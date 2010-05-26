@@ -616,7 +616,6 @@ class GaussianFuzzyNumber(FuzzyNumber):
         @return: Result polygonal fuzzy number.
         @rtype: L{PolygonalFuzzyNumber}
         """
-        # FIXME: np is awkward, find a better way to do this? (samplepoints?)
         if np < 0:
             raise ValueError("number of points must be positive")
         points = []
