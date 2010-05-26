@@ -253,6 +253,16 @@ class PolygonalFuzzyNumber(FuzzyNumber):
                 start = None
         return support
 
+    @property
+    def height(self):
+        """\
+        Return the height of the fuzzy number (maximum membership degree
+        value).
+
+        @rtype: C{float}
+        """
+        return max([point[1] for point in self.points])
+
     @staticmethod
     def _line_intersection(p, q, r, s):
         """\
@@ -389,6 +399,13 @@ class PolygonalFuzzyNumber(FuzzyNumber):
             except IndexError:
                 break
         return PolygonalFuzzyNumber([point[0] for point in points])
+
+    def normalize(self):
+        """\
+        Normalize this fuzzy number, so that its height is equal to 1.0.
+        """
+        self.points = [(point[0], point[1] * (1.0 / self.height)) \
+                       for point in self.points]
 
     def to_fuzzy_set(self, samplepoints = None):
         """\
