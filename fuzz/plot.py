@@ -22,3 +22,5 @@ def plot_polygonal_fuzzy_number(number, plotter = 'gnuplot'):
         plot('set data style lines')
         plot.plot([[p[1], p[1]] for p in number.points])
         raw_input("Press a key to continue...")
+    else:
+        raise ValueError("invalid plotter specified")
