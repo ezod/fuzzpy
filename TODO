@@ -1,2 +1,16 @@
-- Create some examples
+GENERAL
+-------
 - New logo (vector graphic?)
+- Start a fuzzy logic module
+
+FUZZY GRAPHS
+------------
+- Add some examples for graphs and fuzzy graphs
+- Graph drawing functionality
+
+FUZZY NUMBERS
+-------------
+- Improve union and intersection for polygonal fuzzy numbers
+- Add center-of-gravity method
+- Method for discretizing a fuzzy number into a fuzzy set
+- Add some examples for fuzzy numbers
