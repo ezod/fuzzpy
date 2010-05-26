@@ -62,14 +62,20 @@ print "A | B = %s (standard union)" % str(A | B)
 print "A & B = %s (standard intersection)" % str(A & B)
 
 # Other t-conorm and t-norm types are available for unions...
-print "A | B = %s (algebraic sum union)" % str(A.union(B, fuzz.FuzzySet.NORM_ALGEBRAIC))
-print "A | B = %s (bounded sum union)" % str(A.union(B, fuzz.FuzzySet.NORM_BOUNDED))
-print "A | B = %s (drastic union)" % str(A.union(B, fuzz.FuzzySet.NORM_DRASTIC))
+print "A | B = %s (algebraic sum union)" \
+    % str(A.union(B, fuzz.FuzzySet.NORM_ALGEBRAIC))
+print "A | B = %s (bounded sum union)" \
+    % str(A.union(B, fuzz.FuzzySet.NORM_BOUNDED))
+print "A | B = %s (drastic union)" \
+    % str(A.union(B, fuzz.FuzzySet.NORM_DRASTIC))
 
 # ...and intersections.
-print "A & B = %s (algebraic product intersection)" % str(A.intersection(B, fuzz.FuzzySet.NORM_ALGEBRAIC))
-print "A & B = %s (bounded difference intersection)" % str(A.intersection(B, fuzz.FuzzySet.NORM_BOUNDED))
-print "A & B = %s (drastic intersection)" % str(A.intersection(B, fuzz.FuzzySet.NORM_DRASTIC))
+print "A & B = %s (algebraic product intersection)" \
+    % str(A.intersection(B, fuzz.FuzzySet.NORM_ALGEBRAIC))
+print "A & B = %s (bounded difference intersection)" \
+    % str(A.intersection(B, fuzz.FuzzySet.NORM_BOUNDED))
+print "A & B = %s (drastic intersection)" \
+    % str(A.intersection(B, fuzz.FuzzySet.NORM_DRASTIC))
 
 # Of course, this can be done in-place.
 A |= B
