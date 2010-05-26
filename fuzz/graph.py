@@ -492,8 +492,7 @@ class Graph(object):
         @rtype: L{Graph}
         """
         if self.directed:
-            raise NotImplementedError("Kruskal's algorithm is for undirected \
-                                       graphs only")
+            raise TypeError("Kruskal's algorithm is for undirected graphs only")
         # create a list of edges sorted by weight
         Q = self.edges_by_weight()
         # initialize the minimum spanning tree
