@@ -1,30 +1,26 @@
                      FuzzPy - Fuzzy Mathematics for Python
-
                      Aaron Mavrinac  <mavrin1@uwindsor.ca>
-                  Last Revision: Thu Apr 22 14:29:11 EDT 2010
 
--------------------------------------------------------------------------------
-
-OVERVIEW
+--------------------------------------------------------------------------------
+                                    OVERVIEW
+--------------------------------------------------------------------------------
 
 FuzzPy is a library for fuzzy sets, fuzzy graphs, and general fuzzy mathematics
 for Python.
 
--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+                                  REQUIREMENTS
+--------------------------------------------------------------------------------
 
-REQUIREMENTS
+FuzzPy requires Python 2.6 or later [1].
 
-FuzzPy requires Python (2.6 or later).
+For plotting fuzzy numbers (optional), one of the following: Gnuplot.py [2].
 
-http://www.python.org
+Epydoc [3] is required for generating documentation (optional).
 
-Additionally, Epydoc is required for generating documentation.
-
-http://epydoc.sourceforge.net
-
--------------------------------------------------------------------------------
-
-DOCUMENTATION & EXAMPLES
+--------------------------------------------------------------------------------
+                            DOCUMENTATION & EXAMPLES
+--------------------------------------------------------------------------------
 
 API documentation can be generated with Epydoc using the provided gendoc.sh
 script. This will create a subdirectory 'doc' containing full API documentation
@@ -33,9 +29,9 @@ in HTML format.
 Examples demonstrating the use of FuzzPy can be found in the 'examples'
 subdirectory.
 
--------------------------------------------------------------------------------
-
-DEVELOPMENT
+--------------------------------------------------------------------------------
+                                   DEVELOPMENT
+--------------------------------------------------------------------------------
 
 FuzzPy is in a relatively early stage of development, and is changing rapidly.
 Functional compatibility may be broken between releases, even revisions in some
@@ -47,3 +43,8 @@ same minor version.
 If you would like to help with development, please contact primary developer
 Aaron Mavrinac to get access to the GitHub repositories and Google Code project
 page.
+
+
+[1] http://www.python.org
+[2] http://gnuplot-py.sourceforge.net
+[3] http://epydoc.sourceforge.net
