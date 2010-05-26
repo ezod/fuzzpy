@@ -12,5 +12,4 @@ FUZZY NUMBERS
 -------------
 - Improve union and intersection for polygonal fuzzy numbers
 - Add center-of-gravity method
-- Method for discretizing a fuzzy number into a fuzzy set
 - Add some examples for fuzzy numbers

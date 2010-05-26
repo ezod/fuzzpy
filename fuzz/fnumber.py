@@ -10,6 +10,8 @@ Fuzzy number module. Contains basic fuzzy number class definitions.
 from math import e, sqrt, log
 from numbers import Number
 
+from fset import FuzzySet
+
 
 class RealRange(tuple):
     """\
@@ -388,6 +390,24 @@ class PolygonalFuzzyNumber(FuzzyNumber):
                 break
         return PolygonalFuzzyNumber([point[0] for point in points])
 
+    def to_fuzzy_set(self, samplepoints = None):
+        """\
+        Convert this polygonal fuzzy number to a discrete fuzzy set at the
+        specified sample points. If no sample points are specified, the
+        vertices of the polygonal fuzzy number will be used.
+
+        @param samplepoints: Set of points at which to sample the number.
+        @type samplepoints: C{set} of C{float}
+        @return: Result fuzzy set.
+        @rtype: L{fset.FuzzySet}
+        """
+        if samplepoints is None:
+            samplepoints = [point[0] for point in self.points]
+        F = FuzzySet()
+        for point in samplepoints:
+            F.add_fuzzy(point, self.mu(point))
+        return F
+
 
 class TrapezoidalFuzzyNumber(FuzzyNumber):
     """\
@@ -495,6 +515,9 @@ class TrapezoidalFuzzyNumber(FuzzyNumber):
     def to_polygonal(self):
         """\
         Convert this trapezoidal fuzzy number into a polygonal fuzzy number.
+
+        @return: Result polygonal fuzzy number.
+        @rtype: L{PolygonalFuzzyNumber}
         """
         points = [(self.support[0], 0.0),
                   (self.kernel[0], 1.0),
@@ -590,7 +613,10 @@ class GaussianFuzzyNumber(FuzzyNumber):
 
         @param np: The number of points to interpolate per side.
         @type np: C{int}
+        @return: Result polygonal fuzzy number.
+        @rtype: L{PolygonalFuzzyNumber}
         """
+        # FIXME: np is awkward, find a better way to do this? (samplepoints?)
         if np < 0:
             raise ValueError("number of points must be positive")
         points = []
