@@ -141,6 +141,12 @@ class TestFuzzyNumber(unittest.TestCase):
         self.assertEqual(P.mu(1.0), self.N.mu(1.0))
         self.assertEqual(P.mu(7.0), self.N.mu(7.0))
 
+    def test_to_fuzzy_set(self):
+        F = fuzz.FuzzySet()
+        F.add_fuzzy(1.5, 0.25)
+        F.add_fuzzy(6.0, 0.8)
+        self.assertEqual(self.X.to_fuzzy_set([1.5, 6.0]), F)
+
     def test_union(self):
         Z = self.X | self.Y
         for value in [0.5, 1.5, 3.5, 5.0, 6.2, 6.7, 8.3, 10.5]:
