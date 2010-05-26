@@ -123,6 +123,11 @@ class TestFuzzyNumber(unittest.TestCase):
         self.assertEqual(act, exp)
         self.assertEqual(self.G.mu(12.0), 1.0)
         self.assertEqual(self.G.mu(self.G.support[1] + 1.0), 0.0)
+
+    def test_height(self):
+        self.assertEqual(self.N.height, 1.0)
+        self.assertEqual(self.X.height, 0.8)
+        self.assertEqual(self.Y.height, 1.0)
     
     def test_alpha(self):
         exp = fuzz.RealRange((1.5, 6.0))

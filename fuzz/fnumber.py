@@ -162,8 +162,16 @@ class FuzzyNumber(object):
         """
         raise NotImplementedError("mu method must be overridden")
 
+    def normalize(self):
+        """\
+        Normalize this fuzzy number, so that its height is equal to 1.0.
+        """
+        if not self.height == 1.0:
+            raise NotImplementedError("normalize method must be overridden")
+
     kernel = None
     support = None
+    height = None
 
 
 class PolygonalFuzzyNumber(FuzzyNumber):
@@ -446,6 +454,7 @@ class TrapezoidalFuzzyNumber(FuzzyNumber):
         self.support = RealRange(support)
         if not self.kernel <= self.support:
             raise ValueError("kernel range must be within support range")
+        self.height = 1.0
         FuzzyNumber.__init__(self)
 
     @property
@@ -574,6 +583,7 @@ class GaussianFuzzyNumber(FuzzyNumber):
         """
         self.mean = mean
         self.stddev = stddev
+        self.height = 1.0
         FuzzyNumber.__init__(self)
 
     def mu(self, value):
