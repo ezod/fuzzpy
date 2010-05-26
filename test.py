@@ -88,6 +88,7 @@ class TestFuzzySet(unittest.TestCase):
         D = set(['a', 'c'])
         self.assertEqual(self.A.alpha(0.7), D)
         self.assertEqual(self.A.salpha(0.5), D)
+        self.assertTrue('e' not in self.B.alpha(0.0))
 
     def test_complement(self):
         D = fuzz.FuzzySet()
