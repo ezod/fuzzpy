@@ -487,6 +487,43 @@ class FuzzySet(IndexedSet):
         """
         return self.intersection(other).cardinality / other.cardinality
 
+    def hausdorff(self, other, resolution):
+        """\
+        Return the fuzzy Hausdorff distance between this fuzzy set and another.
+        This assumes that both fuzzy sets are fuzzy subsets of a metric space,
+        and that all elements of both sets are objects of the same class with a
+        "distance" method defined, taking another object of the same class as
+        input and returning a float value as output, with the properties of
+        non-negativity (d(x,y) >= 0), identity (d(x,x) = 0), symmetry (d(x,y) =
+        d(y,x)), and subadditivity (d(x,z) <= d(x,y) + d(y,z)).
+
+        The definition of the fuzzy Hausdorff distance follows B. B. Chaudhuri
+        and A. Rosenfeld, "A Modified Hausdorff Distance Between Fuzzy Sets,"
+        Information Sciences, vol. 118, 1999, pp. 159-171. Note that if the
+        resolution parameter does not reflect actual discrete valuation of the
+        membership degree, this will only approach the continuous Hausdorff
+        definition as resolution approaches infinity.
+
+        @param other: The other fuzzy set.
+        @type other: L{FuzzySet}
+        @param resolution: The number of alpha cuts to take.
+        @type resolution: C{int}
+        @return: The Hausdorff distance to the other fuzzy set.
+        @rtype: C{float}
+        """
+        # standard (crisp) Hausdorff distance
+        H = lambda X, Y: max(max([min([x.distance(y) for y in Y]) for x in X]),
+                             max([min([y.distance(x) for x in X]) for y in Y]))
+        # modified alpha cut
+        malpha = lambda S, t: t < S.height and S.alpha(t) or S.alpha(S.height)
+
+        sumH, sumt = 0.0, 0.0
+        for i in range(resolution + 1):
+            t = float(i) / float(resolution)
+            sumH += t * H(malpha(self, t), malpha(other, t))
+            sumt += t
+        return sumH / sumt
+
     @staticmethod
     def _binary_sanity_check(other):
         """\
