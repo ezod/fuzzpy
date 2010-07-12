@@ -1,0 +1,43 @@
+                             FuzzPy - Release Notes
+
+FuzzPy 0.3.0
+    - improved polygonal fuzzy number class
+    - plotting module
+    - various examples
+    - switched to LGPL3 licensing
+
+FuzzPy 0.2.3
+    - polygonal and Gaussian fuzzy number classes
+    - conversion from other fuzzy number types to polygonal
+    - switched real number handling back to floats (decimal was too cumbersome)
+
+FuzzPy 0.2.2
+    - triangular fuzzy number class
+    - efficient union operator
+    - mnemonics for t-norm/t-conorm types for union and intersection
+    - mu method in fuzzy graphs works on vertices
+    - improved memory usage
+    - full PEP 8 compliance
+
+FuzzPy 0.2.1
+    - support for multiple t-norm/t-conorm types for union and intersection
+    - changed contents behaviour: mu = 0 means an element is not in a fuzzy set
+    - mu-by-key method in fuzzy set class
+
+FuzzPy 0.2.0
+    - refactored fuzzy set class (new indexed set base class)
+    - improved fuzzy number functionality
+    - fuzzy set overlap
+    - yager complement
+
+FuzzPy 0.1.1
+    - trapezoidal fuzzy number class
+    - various Python-related improvements
+
+FuzzPy 0.1.0
+    - Floyd-Warshall all-pairs shortest path algorithm for fuzzy graphs
+    - shortest path subgraph method for fuzzy graphs
+    - various additional functionality for fuzzy graphs
+    - unit testing module
+
+There are no release notes for the 0.0.x versions.
