@@ -8,7 +8,7 @@ from setuptools import setup
 setup(
     name = "FuzzPy",
     version = version,
-    license = "GPL",
+    license = "LGPL",
     description = "Library for fuzzy sets, fuzzy graphs, and general fuzzy mathematics for Python.",
     author = "Aaron Mavrinac",
     author_email = "mavrin1@uwindsor.ca",
