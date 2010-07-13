@@ -4,7 +4,7 @@ Fuzzy number plotting module.
 @author: Aaron Mavrinac
 @organization: University of Windsor
 @contact: mavrin1@uwindsor.ca
-@license: GPL-3
+@license: LGPL-3
 """
 
 def plot_polygonal_fuzzy_number(number, plotter = 'gnuplot'):

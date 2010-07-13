@@ -4,7 +4,7 @@ Graph module. Contains crisp graph class definitions.
 @author: Aaron Mavrinac
 @organization: University of Windsor
 @contact: mavrin1@uwindsor.ca
-@license: GPL-3
+@license: LGPL-3
 """
 
 
