@@ -1,0 +1,11 @@
+recursive-include fuzz *.py
+recursive-include examples *.py
+recursive-include media *.png
+include *.py
+include AUTHORS
+include COPYING
+include LICENSE
+include README
+include RELEASE-NOTES
+include TODO
+include MANIFEST.in
