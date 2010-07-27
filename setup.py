@@ -43,10 +43,6 @@ setup(
     download_url = "http://fuzzpy.googlecode.com/files/fuzzpy-%s.tar.bz2" % VERSION,
     keywords = "fuzzy set graph math",
     packages = [PACKAGE],
-    data_files = [('.', ('AUTHORS', 'COPYING', 'LICENSE', 'README', 'RELEASE-NOTES', 'TODO')),
-                  ('examples', glob('examples/*.py')),
-                  ('media', glob('media/*.png'))],
-    include_package_data = True,
     test_suite = "test",
     cmdclass = {'doc': GenerateDoc},
 )
