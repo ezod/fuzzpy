@@ -142,15 +142,22 @@ class FuzzyNumber(object):
 
     def __repr__(self):
         """\
-        Return string representation of a trapezoidal fuzzy number.
+        Return the canonical representation of a fuzzy number.
+
+        @return: Canonical representation.
+        @rtype: C{str}
+        """
+        return '<%s>' % self.__class__.__name__
+
+    def __str__(self):
+        """\
+        Return the string representation of a fuzzy number.
 
         @return: String representation.
-        @rtype: C{string}
+        @rtype: C{str}
         """
         return '%s: kernel %s, support %s' % \
                (self.__class__.__name__, str(self.kernel), str(self.support))
-
-    __str__ = __repr__
 
     def mu(self, value):
         """\

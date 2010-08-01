@@ -33,14 +33,21 @@ class FuzzyElement(object):
 
     def __repr__(self):
         """\
-        Return string representation of a fuzzy element.
+        Return the canonical representation of a fuzzy element.
+
+        @return: Canonical representation.
+        @rtype: C{str}
+        """
+        return 'FuzzyElement(%s, %f)' % (str(self.obj), self.mu)
+
+    def __str__(self):
+        """\
+        Return the string representation of a fuzzy element.
 
         @return: String representation.
-        @rtype: C{string}
+        @rtype: C{str}
         """
         return '%s \ %f' % (str(self.obj), self.mu)
-
-    __str__ = __repr__
 
     def __hash__(self):
         """\

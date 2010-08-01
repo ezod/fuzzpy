@@ -83,14 +83,23 @@ class Graph(object):
 
     def __repr__(self):
         """\
-        Return string representation of this graph.
+        Return the canonical representation of a graph.
+
+        @return: Canonical representation.
+        @rtype: C{str}
+        """
+        return '%s(viter = %s, eiter = %s, directed = %s)' \
+            % (self.__class__.__name__, self._V, self._E, self._directed)
+
+    def __str__(self):
+        """\
+        Return the string representation of a graph.
 
         @return: String representation.
-        @rtype: C{string}
+        @rtype: C{str}
         """
-        return 'V: %s\nE: %s' % (self._V, self._E)
-
-    __str__ = __repr__
+        return '%s: vertices: %s, edges: %s, directed: %s' \
+            % (self.__class__.__name__, self._V, self._E, self._directed)
 
     @property
     def directed(self):
