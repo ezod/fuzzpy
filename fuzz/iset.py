@@ -12,10 +12,6 @@ import warnings
 from copy import copy
 
 
-class DuplicateItemWarning(Warning):
-    pass
-
-
 class IndexedSet(set):
     """\
     Indexed set class.
@@ -88,24 +84,8 @@ class IndexedSet(set):
         @param iterable: The iterable containing the items to add.
         @type iterable: C{iterable}
         """
-        keys = self.keys()
         for item in iterable:
-            if not getattr(item, self.index) in keys:
-                set.add(self, copy(item))
-
-    def add(self, item):
-        """\
-        Add an item to the set, verifying that it has the required index
-        attribute and that no other item in the set has the same index.
-
-        @param item: The item to add.
-        @type item: C{object}
-        """
-        if not getattr(item, self.index) in self.keys():
             set.add(self, copy(item))
-        else:
-            warnings.warn("attempted to add item with duplicate index",
-                          DuplicateItemWarning)
 
     def remove(self, key):
         """\
