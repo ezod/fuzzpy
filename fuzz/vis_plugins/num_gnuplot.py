@@ -1,1 +1,1 @@
-types = ['Number']
+types = ['FuzzyNumber']
