@@ -25,6 +25,9 @@ class IndexedMember(object):
         @param index: The index object (immutable).
         @type index: C{object}
         """
+        if not hasattr(type(index), '__hash__') \
+        or not hasattr(type(index), '__eq__'):
+            raise TypeError("index object must be immutable")
         self._index = index
 
     @property
