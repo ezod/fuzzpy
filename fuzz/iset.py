@@ -39,6 +39,24 @@ class IndexedMember(object):
         """
         return self._index
 
+    def __repr__(self):
+        """\
+        Return the canonical string representation of the index.
+
+        @return: Canonical string representation.
+        @rtype: C{str}
+        """
+        return repr(self.index)
+
+    def __str__(self):
+        """\
+        Return the string representation of the index.
+
+        @return: String representation.
+        @rtype: C{str}
+        """
+        return str(self.index)
+
     def __hash__(self):
         """\
         Return a hash of the index object.
@@ -84,7 +102,8 @@ class IndexedSet(set):
         @type iterable: C{iterable}
         """
         set.__init__(self)
-        self.update(iterable)
+        for item in iterable:
+            self.add(item)
 
     def __getitem__(self, key):
         """\
@@ -129,15 +148,24 @@ class IndexedSet(set):
             raise TypeError("item to add must be an IndexedMember")
         set.add(self, copy(item))
 
-    def update(self, iterable):
+    def update(self, *args):
         """\
-        Update the set by adding all items in an iterable to it.
-
-        @param iterable: The iterable containing the items to add.
-        @type iterable: C{iterable}
+        Update the set with the union of itself and other iterables.
         """
-        for item in iterable:
-            self.add(item)
+        for arg in args:
+            for item in arg:
+                self.add(item)
+
+    def intersection_update(self, *args):
+        """\
+        Update the set with the intersection of itself and other iterables.
+        """
+        common = set()
+        for arg in args:
+            common |= set(arg)
+        for item in self.keys():
+            if item not in common:
+                self.remove(item)
 
     def copy(self):
         """\
