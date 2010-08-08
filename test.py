@@ -42,6 +42,11 @@ class TestFuzzySet(unittest.TestCase):
         self.A.clear()
         self.assertEqual(self.A, fuzz.FuzzySet())
 
+    def test_copy(self):
+        C = self.A.copy()
+        C['a'].mu = 0.0
+        self.assertTrue(self.A.mu('a') > 0.5)
+
     def test_pop(self):
         A = [fuzz.FuzzyElement('a', 1.0),
              fuzz.FuzzyElement('c', 0.8),

@@ -305,7 +305,7 @@ class FuzzySet(IndexedSet):
         @rtype: L{FuzzySet}
         """
         self._binary_sanity_check(other)
-        result = self.__class__(self)
+        result = self.copy()
         keys = result.keys()
         for element in other:
             if element.index in keys:

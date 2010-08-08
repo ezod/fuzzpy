@@ -139,6 +139,12 @@ class IndexedSet(set):
         for item in iterable:
             self.add(item)
 
+    def copy(self):
+        """\
+        Return a copy of the set with shallow copies of all members.
+        """
+        return self.__class__(self)
+
     def keys(self):
         """\
         Return a list of keys in the set.
