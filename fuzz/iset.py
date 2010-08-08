@@ -161,11 +161,32 @@ class IndexedSet(set):
         Update the set with the intersection of itself and other iterables.
         """
         common = set()
-        for arg in args:
-            common |= set(arg)
+        common.update(args)
         for item in self.keys():
             if item not in common:
                 self.remove(item)
+
+    def difference_update(self, *args):
+        """\
+        Update the set with the difference of itself and other iterables.
+        """
+        common = set()
+        common.update(args)
+        for item in common:
+            self.discard(item)
+
+    def symmetric_difference_update(self, *args):
+        """\
+        Update the set with the symmetric difference of itself and other
+        iterables.
+        """
+        common = set()
+        common.update(args)
+        for item in common:
+            try:
+                self.remove(item)
+            except KeyError:
+                self.add(item)
 
     def copy(self):
         """\
