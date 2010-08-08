@@ -50,6 +50,13 @@ class TestFuzzySet(unittest.TestCase):
         self.assertTrue(self.A.pop() in A)
         self.assertTrue(self.A.pop() in A)
         self.assertEqual(self.A, fuzz.FuzzySet())
+    
+    def test_disjoint(self):
+        self.assertFalse(self.A.isdisjoint(self.B))
+        self.assertFalse(self.B.isdisjoint(self.A))
+        C = fuzz.FuzzySet(['e','f'])
+        self.assertTrue(self.A.isdisjoint(C))
+        self.assertTrue(self.B.isdisjoint(C))
 
     def test_mu(self):
         self.assertEqual(self.A.mu('b'), 0.5)

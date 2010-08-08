@@ -405,6 +405,20 @@ class FuzzySet(IndexedSet):
         """
         return not self == other
 
+    def isdisjoint(self, other):
+        """\
+        Report whether two fuzzy sets have a null intersection.
+
+        @param other: The other fuzzy set.
+        @type other: L{FuzzySet}
+        @return: True if null intersection.
+        @rtype: C{bool}
+        """
+        for element in self:
+            if element in other:
+                return False
+        return True
+
     def issubset(self, other):
         """\
         Report whether another fuzzy set contains this fuzzy set.
