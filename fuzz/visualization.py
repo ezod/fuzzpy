@@ -63,18 +63,23 @@ class VisManager:
             try:
                 plugin_mod = __import__("vis_plugins.%s" % plugin, 
                         fromlist=plugin)
-            except ImportError:
+            except ImportError, ex:
                 # Don't include modules that can't be imported
-                pass
+                continue
+            try:
+                plugin_obj = plugin_mod.VisPlugin()
+            except AttributeError, ex:
+                # Class doesn't follow our interface
+                continue
             else:
                 try:
-                    for vis_type in plugin_mod.types:
+                    for vis_type in plugin_obj.types:
                         if vis_type not in plugins.keys():
-                            plugins[vis_type] = [plugin]
+                            plugins[vis_type.__name__] = [plugin]
                         else:
-                            plugins[vis_type].append(plugin)
+                            plugins[vis_type.__name__].append(plugin)
                 except AttributeError:
-                    # Do not include plugins that don't support our interface.
+                    # Class doesn't follow our interface
                     pass
         return plugins
     
@@ -108,7 +113,8 @@ class VisManager:
         
         for plugin in plugins:
             try:
-                plugin_mod = __import__("vis_plugins.%s" % plugin)
+                plugin_mod = __import__("vis_plugins.%s" % plugin,
+                        fromlist=plugin)
             except ImportError, ex:
                 pass
             else:
@@ -120,6 +126,7 @@ class VisManager:
                     pass
         
     
-    def visualize(self, plugin, plugin_config):
-        pass
-    
+    def visualize(self, obj, plugin, *args, **kwargs):
+        plugin_mod = __import__("vis_plugins.%s" % plugin, fromlist=plugin)
+        plugin_obj = plugin_mod.VisPlugin(obj=obj, args=args, kwargs=kwargs)
+        plugin_obj.visualize()
