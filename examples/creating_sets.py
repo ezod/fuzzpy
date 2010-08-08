@@ -36,7 +36,7 @@ print "A = %s now has some elements." % str(A)
 # (or mu value). If the mu argument is left out, it will default to 1.0,
 # mimicking a classic set.
 e = fuzz.FuzzyElement(42, 0.3)
-print "Fuzzy element %s has object %s and mu value %s." % (str(e), str(e.obj),
+print "Fuzzy element %s has object %s and mu value %s." % (str(e), str(e.index),
     str(e.mu))
 
 # Because a fuzzy set is a subclass of IndexedSet, its fuzzy elements must be
