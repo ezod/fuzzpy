@@ -134,6 +134,18 @@ class IndexedSet(set):
             pass
         return set.__contains__(self, key)
 
+    def add(self, item):
+        """\
+        Add an item to the set. Uses a copy since IndexedMembers have mutable
+        properties.
+
+        @param item: The item to add.
+        @type item: L{IndexedMember}
+        """
+        if not isinstance(item, IndexedMember):
+            raise TypeError("item to add must be an IndexedMember")
+        set.add(self, copy(item))
+
     def update(self, iterable):
         """\
         Update the set by adding all items in an iterable to it.
@@ -142,7 +154,7 @@ class IndexedSet(set):
         @type iterable: C{iterable}
         """
         for item in iterable:
-            set.add(self, copy(item))
+            self.add(item)
 
     def remove(self, key):
         """\
