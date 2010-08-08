@@ -3,10 +3,13 @@ GENERAL
 - New logo (vector graphic?)
 - Start a fuzzy logic module
 
+FUZZY SETS
+----------
+- Override difference and symmetric_difference from base set
+
 FUZZY GRAPHS
 ------------
 - Add some examples for graphs and fuzzy graphs
-- Graph drawing functionality
 
 FUZZY NUMBERS
 -------------
