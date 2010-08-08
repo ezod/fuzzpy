@@ -122,11 +122,11 @@ class VisManager:
                     if plugin_mod.is_supported():
                         supported.append(plugin)
                 except Exception, ex:
-                    print ex
-                    pass
+                    continue
         
+        return supported
     
     def visualize(self, obj, plugin, *args, **kwargs):
         plugin_mod = __import__("vis_plugins.%s" % plugin, fromlist=plugin)
         plugin_obj = plugin_mod.VisPlugin(obj=obj, args=args, kwargs=kwargs)
-        plugin_obj.visualize()
+        return plugin_obj.visualize()
