@@ -19,11 +19,9 @@ class GraphEdge(tuple):
         """
         if not len(arg) == 2:
             raise ValueError("edge must consist of two vertex objects")
-        try:
-            hash(arg[0])
-            hash(arg[1])
-        except TypeError:
-            raise ValueError("vertices must be hashable")
+        if not hasattr(type(arg[0]), '__hash__') \
+        or not hasattr(type(arg[1]), '__hash__'):
+            raise ValueError("vertices must be immutable")
         return tuple.__new__(cls, arg)
 
     @property

@@ -55,10 +55,10 @@ class IndexedMember(object):
         @return: True if equal, false otherwise.
         @rtype: C{bool}
         """
-        try:
+        if isinstance(other, IndexedMember):
             return self.index == other.index
-        except AttributeError:
-            return False
+        else:
+            return self.index == other
 
     def __ne__(self, other):
         """\
@@ -117,22 +117,17 @@ class IndexedSet(set):
             self.remove(key)
         set.add(self, item)
 
-    def __contains__(self, key):
+    def add(self, item):
         """\
-        Return whether an item is a member of the set, by key or by object.
+        Add an item to the set. Uses a copy since IndexedMembers have mutable
+        properties.
 
-        @param key: The index or object to test for.
-        @type key: C{object}
-        @return: True if member, false otherwise.
-        @rtype: C{bool}
+        @param item: The item to add.
+        @type item: L{IndexedMember}
         """
-        try:
-            for item in self:
-                if item.index == key:
-                    return True
-        except AttributeError:
-            pass
-        return set.__contains__(self, key)
+        if not isinstance(item, IndexedMember):
+            raise TypeError("item to add must be an IndexedMember")
+        set.add(self, copy(item))
 
     def update(self, iterable):
         """\
@@ -142,19 +137,7 @@ class IndexedSet(set):
         @type iterable: C{iterable}
         """
         for item in iterable:
-            set.add(self, copy(item))
-
-    def remove(self, key):
-        """\
-        Remove an item from the set by key or by object.
-
-        @param key: The index or object to remove.
-        @type key: C{object}
-        """
-        try:
-            set.remove(self, self[key])
-        except KeyError:
-            set.remove(self, key)
+            self.add(item)
 
     def keys(self):
         """\

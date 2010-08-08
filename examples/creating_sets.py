@@ -8,8 +8,6 @@ populate fuzzy sets.
 @license: GPL-3
 """
 
-import warnings
-
 from common import fuzz
 
 # By default, the constructor will create an empty fuzzy set.
@@ -36,27 +34,18 @@ print "A = %s now has some elements." % str(A)
 # (or mu value). If the mu argument is left out, it will default to 1.0,
 # mimicking a classic set.
 e = fuzz.FuzzyElement(42, 0.3)
-print "Fuzzy element %s has object %s and mu value %s." % (str(e), str(e.obj),
+print "Fuzzy element %s has object %s and mu value %s." % (str(e), str(e.index),
     str(e.mu))
 
 # Because a fuzzy set is a subclass of IndexedSet, its fuzzy elements must be
-# unique in terms of their object. Attempting to add an item with a duplicate
-# object will raise a warning (and leave the set unaffected).
-warnings.simplefilter('error', fuzz.DuplicateItemWarning)
-try:
-    A.add(fuzz.FuzzyElement('two', 0.1))
-except fuzz.DuplicateItemWarning:
-    print "Attempted to add an item with a duplicate object to A."
+# unique in terms of their object. The following does nothing.
+A.add(fuzz.FuzzyElement('two', 0.1))
 
 # Fuzzy elements can be added using a convenience method. Again, if the mu
 # argument is left out, it will default to 1.0.
 A.add_fuzzy('five', 0.6)
 
 # Elements can be removed explicitly...
-try:
-    A.remove(fuzz.FuzzyElement('four', 0.3))
-except KeyError:
-    print "Oops, that won't work."
 A.remove(fuzz.FuzzyElement('four', 0.1))
 
 # ...but it's much more convenient in most cases to remove them by object.

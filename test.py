@@ -30,11 +30,26 @@ class TestFuzzySet(unittest.TestCase):
         self.B.add_fuzzy('d', 0.6)
         self.B.add_fuzzy('e', 0.0)
 
-    def test_add_update(self):
+    def test_add_update_remove(self):
         self.A.add_fuzzy('a', 1)
         self.assertEqual(len(self.A), 3)
         self.A.update([fuzz.FuzzyElement('a', 1), fuzz.FuzzyElement('d', 1)])
         self.assertEqual(len(self.A), 4)
+        self.A.remove('d')
+        self.assertEqual(len(self.A), 3)
+
+    def test_clear(self):
+        self.A.clear()
+        self.assertEqual(self.A, fuzz.FuzzySet())
+
+    def test_pop(self):
+        A = [fuzz.FuzzyElement('a', 1.0),
+             fuzz.FuzzyElement('c', 0.8),
+             fuzz.FuzzyElement('b', 0.5)]
+        self.assertTrue(self.A.pop() in A)
+        self.assertTrue(self.A.pop() in A)
+        self.assertTrue(self.A.pop() in A)
+        self.assertEqual(self.A, fuzz.FuzzySet())
 
     def test_mu(self):
         self.assertEqual(self.A.mu('b'), 0.5)

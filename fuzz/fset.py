@@ -102,6 +102,15 @@ class FuzzySet(IndexedSet):
         """
         return len([element for element in self])
 
+    def __contains__(self, element):
+        """\
+        Override the contents function.
+
+        @return: True if in the set, false otherwise.
+        @rtype: C{bool}
+        """
+        return set.__contains__(self, element) and self.mu(element) > 0
+
     def __getitem__(self, key):
         """\
         Return a set item indexed by key (including those with a membership
@@ -116,6 +125,16 @@ class FuzzySet(IndexedSet):
             if item.index == key:
                 return item
         raise KeyError(key)
+    
+    def __str__(self):
+        """\
+        String representation of a fuzzy set.
+
+        @return: String representation.
+        @rtype: C{str}
+        """
+        return ("%s([" % self.__class__.__name__) \
+            + ', '.join([str(element) for element in self]) + "])"
 
     def add(self, element):
         """\
