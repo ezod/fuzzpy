@@ -59,6 +59,8 @@ class FuzzySet(IndexedSet):
     NORM_BOUNDED = 2
     NORM_DRASTIC = 3
 
+    itemcls = FuzzyElement
+
     class FuzzySetIterator(object):
         """\
         Discrete fuzzy set iterator class.
@@ -136,18 +138,6 @@ class FuzzySet(IndexedSet):
         return ("%s([" % self.__class__.__name__) \
             + ', '.join([str(element) for element in self]) + "])"
 
-    def add(self, element):
-        """\
-        Add an element to the fuzzy set. Overrides the base class add()
-        function to verify that the element is a FuzzyElement.
-
-        @param element: The element to add.
-        @type element: L{FuzzySet}
-        """
-        if not isinstance(element, FuzzyElement):
-            element = FuzzyElement(element)
-        IndexedSet.add(self, element)
-
     def add_fuzzy(self, element, mu = 1.0):
         """\
         Add a fuzzy element to the fuzzy set (without explicitly constructing
@@ -159,20 +149,6 @@ class FuzzySet(IndexedSet):
         @type mu: C{float}
         """
         self.add(FuzzyElement(element, mu))
-
-    def update(self, iterable):
-        """\
-        Update the fuzzy set contents from an iterable. Overrides the base
-        class update() function to verify that the iterable contains only
-        FuzzyElement objects.
-        
-        @param iterable: The iterable to update from.
-        @type iterable: C{object}
-        """
-        for element in iterable:
-            if not isinstance(element, FuzzyElement):
-                element = FuzzyElement(element)
-        IndexedSet.update(self, iterable)
 
     def keys(self):
         """\
