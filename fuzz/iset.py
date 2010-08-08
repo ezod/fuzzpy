@@ -8,24 +8,78 @@ a dict.
 @license: LGPL-3
 """
 
-import warnings
 from copy import copy
+
+
+class IndexedMember(object):
+    """\
+    Indexed member class. This is a special type of object which has mutable
+    properties but a special immutable property (called the index) which is
+    used for hashing and equality, allowing it to be stored in a set or to be
+    used as a dict key.
+    """
+    def __init__(self, index):
+        """\
+        Constructor.
+
+        @param index: The index object (immutable).
+        @type index: C{object}
+        """
+        self._index = index
+
+    @property
+    def index(self):
+        """\
+        Return the index object.
+
+        @rtype: C{object}
+        """
+        return self._index
+
+    def __hash__(self):
+        """\
+        Return a hash of the index object.
+
+        @return: The index hash.
+        @rtype: C{int}
+        """
+        return hash(self.index)
+
+    def __eq__(self, other):
+        """\
+        Return whether the index objects match.
+
+        @return: True if equal, false otherwise.
+        @rtype: C{bool}
+        """
+        try:
+            return self.index == other.index
+        except AttributeError:
+            return False
+
+    def __ne__(self, other):
+        """\
+        Return whether the index objects do not match.
+
+        @return: True if not equal, false otherwise.
+        @rtype: C{bool}
+        """
+        return not self == other
 
 
 class IndexedSet(set):
     """\
-    Indexed set class.
+    Indexed set class. This is a special type of set whose members are mutable
+    objects with an immutable attribute. These overall-mutable members can then
+    be accessed in dict style, using the index as key.
     """
-    def __init__(self, index, iterable = set()):
+    def __init__(self, iterable = set()):
         """\
         Constructor.
 
-        @param index: The attribute by which to index items.
-        @type index: C{str}
         @param iterable: The iterable to intialize the set with.
         @type iterable: C{iterable}
         """
-        self.index = str(index)
         set.__init__(self)
         self.update(iterable)
 
@@ -39,7 +93,7 @@ class IndexedSet(set):
         @rtype: C{object}
         """
         for item in self:
-            if getattr(item, self.index) == key:
+            if item.index == key:
                 return item
         raise KeyError(key)
 
@@ -54,7 +108,7 @@ class IndexedSet(set):
         @param item: The item to assign.
         @type item: C{object}
         """
-        if not getattr(item, self.index) == key:
+        if not item.index == key:
             raise ValueError("key does not match item index attribute")
         if key in self:
             self.remove(key)
@@ -71,7 +125,7 @@ class IndexedSet(set):
         """
         try:
             for item in self:
-                if getattr(item, self.index) == key:
+                if item.index == key:
                     return True
         except AttributeError:
             pass
@@ -106,7 +160,7 @@ class IndexedSet(set):
         @return: List of keys in the set.
         @rtype: C{list}
         """
-        return [getattr(item, self.index) for item in self]
+        return [item.index for item in self]
 
     def has_key(self, key):
         """\

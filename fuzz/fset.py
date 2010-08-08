@@ -10,25 +10,25 @@ definitions.
 
 from copy import copy
 
-from iset import IndexedSet
+from iset import IndexedMember, IndexedSet
 
 
-class FuzzyElement(object):
+class FuzzyElement(IndexedMember):
     """\
     Fuzzy element class.
     """
-    __slots__ = ['obj', 'mu']
+    __slots__ = ['_index', 'mu']
 
-    def __init__(self, obj, mu = 1.0):
+    def __init__(self, index, mu = 1.0):
         """\
         Constructor.
 
-        @param obj: The object for this member.
-        @type obj: C{object}
+        @param index: The object for this member.
+        @type index: C{object}
         @param mu: The membership degree of this member.
         @type mu: C{float}
         """
-        self.obj = obj
+        IndexedMember.__init__(self, index)
         self.mu = mu
 
     def __repr__(self):
@@ -38,7 +38,7 @@ class FuzzyElement(object):
         @return: Canonical representation.
         @rtype: C{str}
         """
-        return 'FuzzyElement(%s, %f)' % (str(self.obj), self.mu)
+        return 'FuzzyElement(%s, %f)' % (str(self.index), self.mu)
 
     def __str__(self):
         """\
@@ -47,42 +47,7 @@ class FuzzyElement(object):
         @return: String representation.
         @rtype: C{str}
         """
-        return '%s \ %f' % (str(self.obj), self.mu)
-
-    def __hash__(self):
-        """\
-        Return a hash for the fuzzy element which is the hash of its object.
-
-        @return: The hash.
-        @rtype: C{int}
-        """
-        return hash(self.obj)
-
-    def __eq__(self, other):
-        """\
-        Equality operator. Note that, because this also checks for equality of
-        membership values, fuzzy sets must verify the uniqueness of obj (this
-        is handled by setting the index attribute of IndexedSet to 'obj').
-
-        @param other: The other fuzzy element.
-        @type other: L{FuzzyElement}
-        @return: True if equal, false otherwise.
-        @rtype: C{bool}
-        """
-        if not isinstance(other, FuzzyElement):
-            return False
-        return self.obj == other.obj
-
-    def __ne__(self, other):
-        """\
-        Inequality operator.
-
-        @param other: The other fuzzy element.
-        @type other: L{FuzzyElement}
-        @return: True if not equal, false otherwise.
-        @rtype: C{bool}
-        """
-        return not self == other
+        return '%s \ %f' % (str(self.index), self.mu)
 
 
 class FuzzySet(IndexedSet):
@@ -117,7 +82,7 @@ class FuzzySet(IndexedSet):
         @param iterable: The iterable to construct from (optional).
         @type iterable: C{object}
         """
-        IndexedSet.__init__(self, 'obj', iterable)
+        IndexedSet.__init__(self, iterable)
 
     def __iter__(self):
         """\
@@ -148,7 +113,7 @@ class FuzzySet(IndexedSet):
         @rtype: C{object}
         """
         for item in IndexedSet.__iter__(self):
-            if getattr(item, self.index) == key:
+            if item.index == key:
                 return item
         raise KeyError(key)
 
@@ -198,7 +163,7 @@ class FuzzySet(IndexedSet):
         @return: List of keys in the set.
         @rtype: C{list}
         """
-        return [element.obj for element in IndexedSet.__iter__(self)]
+        return [element.index for element in IndexedSet.__iter__(self)]
 
     def mu(self, key):
         """\
@@ -221,7 +186,7 @@ class FuzzySet(IndexedSet):
 
         @rtype: C{set}
         """
-        return set([element.obj for element in self])
+        return set([element.index for element in self])
 
     @property
     def kernel(self):
@@ -324,8 +289,9 @@ class FuzzySet(IndexedSet):
         result = self.__class__(self)
         keys = result.keys()
         for element in other:
-            if element.obj in keys:
-                result[element.obj].mu = max(result[element.obj].mu, element.mu)
+            if element.index in keys:
+                result[element.index].mu = max(result[element.index].mu,
+                                               element.mu)
             else:
                 set.add(result, copy(element))
         return result
@@ -400,8 +366,8 @@ class FuzzySet(IndexedSet):
             return False
         try:
             for element in self:
-                if element == other[element.obj]:
-                    if abs(element.mu - other[element.obj].mu) > 1e-10:
+                if element == other[element.index]:
+                    if abs(element.mu - other[element.index].mu) > 1e-10:
                         return False
                 else:
                     return False
@@ -434,7 +400,7 @@ class FuzzySet(IndexedSet):
             return False
         try:
             for element in self:
-                if element.mu > other[element.obj].mu:
+                if element.mu > other[element.index].mu:
                     return False
         except KeyError:
             return False
@@ -454,7 +420,7 @@ class FuzzySet(IndexedSet):
             return False
         try:
             for element in other:
-                if element.mu > self[element.obj].mu:
+                if element.mu > self[element.index].mu:
                     return False
         except KeyError:
             return False
@@ -547,7 +513,7 @@ class FuzzySet(IndexedSet):
         @return: The crisp set result of the alpha cut.
         @rtype: C{set}
         """
-        return set([element.obj for element in self if element.mu >= alpha])
+        return set([element.index for element in self if element.mu >= alpha])
 
     def salpha(self, alpha):
         """\
@@ -559,13 +525,13 @@ class FuzzySet(IndexedSet):
         @return: The crisp set result of the strong alpha cut.
         @rtype: C{set}
         """
-        return set([element.obj for element in self if element.mu > alpha])
+        return set([element.index for element in self if element.mu > alpha])
 
     def prune(self):
         """\
         Prune the fuzzy set of all elements with zero membership.
         """
-        prune = [element.obj for element in IndexedSet.__iter__(self) \
+        prune = [element.index for element in IndexedSet.__iter__(self) \
                  if element.mu == 0]
         for key in prune:
             self.remove(key)

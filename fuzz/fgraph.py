@@ -38,14 +38,14 @@ class FuzzyGraph(Graph):
         @type edge: L{FuzzyElement} of L{GraphEdge}
         """
         try:
-            if not isinstance(edge.obj, GraphEdge):
+            if not isinstance(edge.index, GraphEdge):
                 raise TypeError("edge must be a GraphEdge")
         except AttributeError:
             Graph.add_edge(self, edge)
-        if not edge.obj.tail in self.vertices \
-        or not edge.obj.head in self.vertices:
+        if not edge.index.tail in self.vertices \
+        or not edge.index.head in self.vertices:
             raise KeyError("tail and head must be in vertex set")
-        if edge.obj in self.edges():
+        if edge.index in self.edges():
             raise ValueError("edge already exists")
         self._E.add(edge)
 
@@ -73,13 +73,13 @@ class FuzzyGraph(Graph):
         if (tail is not None and not tail in self.vertices) \
         or (head is not None and not head in self.vertices):
             raise KeyError("specified tail/head must be in vertex set")
-        eset = set([edge.obj for edge in self._E \
-            if (tail is None or edge.obj.tail == tail) \
-            and (head is None or edge.obj.head == head)])
+        eset = set([edge.index for edge in self._E \
+            if (tail is None or edge.index.tail == tail) \
+            and (head is None or edge.index.head == head)])
         if not self.directed:
-            eset |= set([edge.obj for edge in self._E \
-                if (tail is None or edge.obj.head == tail) \
-                and (head is None or edge.obj.tail == head)])
+            eset |= set([edge.index for edge in self._E \
+                if (tail is None or edge.index.head == tail) \
+                and (head is None or edge.index.tail == head)])
         return eset
 
     def mu(self, tail, head = None):
