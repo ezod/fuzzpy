@@ -59,7 +59,7 @@ class FuzzySet(IndexedSet):
     NORM_BOUNDED = 2
     NORM_DRASTIC = 3
 
-    itemcls = FuzzyElement
+    _itemcls = FuzzyElement
 
     class FuzzySetIterator(object):
         """\

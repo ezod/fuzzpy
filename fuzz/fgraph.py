@@ -15,7 +15,7 @@ class FuzzyGraph(Graph):
     """\
     Fuzzy graph class.
     """
-    setcls = FuzzySet
+    _setcls = FuzzySet
 
     def __init__(self, viter = None, eiter = None, directed = True):
         """\
