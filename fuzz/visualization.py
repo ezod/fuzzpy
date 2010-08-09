@@ -71,8 +71,6 @@ class VisManager:
             # Extract plugin class name
             if '__plugin' not in plugin_mod.__dict__.keys():
                 continue
-            print plugin
-            print getattr(plugin_mod, '__plugin')
             plugin_name = getattr(plugin_mod, '__plugin')
             
             # Instanciation attempt
