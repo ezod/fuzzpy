@@ -60,27 +60,31 @@ class VisManager:
         """
         plugins = {}
         for plugin in vis_plugins.__all__:
+            # Import attempt
             try:
                 plugin_mod = __import__("vis_plugins.%s" % plugin, 
                         fromlist=plugin)
             except ImportError, ex:
                 # Don't include modules that can't be imported
                 continue
+            
+            # Instanciation attempt
             try:
                 plugin_obj = plugin_mod.VisPlugin()
             except AttributeError, ex:
                 # Class doesn't follow our interface
                 continue
-            else:
-                try:
-                    for vis_type in plugin_obj.types:
-                        if vis_type not in plugins.keys():
-                            plugins[vis_type.__name__] = [plugin]
-                        else:
-                            plugins[vis_type.__name__].append(plugin)
-                except AttributeError:
-                    # Class doesn't follow our interface
-                    pass
+
+            # Supported types extraction and dict building
+            try:
+                for vis_type in [x.__name__ for x in plugin_obj.types]:
+                    if vis_type not in plugins.keys():
+                        plugins[vis_type] = [plugin]
+                    else:
+                        plugins[vis_type].append(plugin)
+            except AttributeError:
+                # Class doesn't follow our interface
+                pass
         return plugins
     
     def get_supported_plugins(self, datatype=None):
@@ -112,21 +116,45 @@ class VisManager:
                 raise ValueError("Unknown datatype: %s" % datatype)
         
         for plugin in plugins:
+            # Try to import the plugin
             try:
                 plugin_mod = __import__("vis_plugins.%s" % plugin,
                         fromlist=plugin)
             except ImportError, ex:
-                pass
-            else:
-                try:
-                    if plugin_mod.is_supported():
-                        supported.append(plugin)
-                except Exception, ex:
-                    continue
-        
+                continue
+            
+            # Try to instanciate it
+            try:
+                plugin_obj = plugin_mod.VisPlugin()
+            except AttributeError:
+                continue
+            
+            # Invoke the plugin's is_supported() method
+            try:
+                if plugin_mod.is_supported():
+                    supported.append(plugin)
+            except Exception, ex:
+                continue
+    
         return supported
     
     def visualize(self, obj, plugin, *args, **kwargs):
+        """\
+        Visualization dispatcher
+        
+        Imports and instanciates the specified visualization plugin, then
+        dispatch C{obj} to it and call the C{visualize} method.
+        
+        Any exception encountered during the import, instanciation, or
+        invocation of the visualization method will be raised here.
+        
+        @param obj: Object to draw
+        @type obj: Object
+        @param plugin: Name of the plugin to use
+        @type plugin: C{str}
+        @returns: The return value of the plugin's visualize() method
+        @rtype: C{tuple} (format, payload)
+        """
         plugin_mod = __import__("vis_plugins.%s" % plugin, fromlist=plugin)
         plugin_obj = plugin_mod.VisPlugin(obj=obj, args=args, kwargs=kwargs)
         return plugin_obj.visualize()
