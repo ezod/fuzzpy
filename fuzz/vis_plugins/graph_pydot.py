@@ -2,8 +2,11 @@ import graph
 import pydot
 from .fgraph import FuzzyGraph
 from .graph import Graph
+from abc_plugin import AbstractPlugin
 
-class VisPlugin:
+__plugin = 'FuzzPyDot'
+
+class FuzzPyDot(AbstractPlugin):
     """\
     Pydot visualization plugin for fuzzpy
     
@@ -86,3 +89,5 @@ class VisPlugin:
             )
         
         return D.create()
+
+AbstractPlugin.register(FuzzPyDot)
