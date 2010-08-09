@@ -68,10 +68,17 @@ class VisManager:
                 # Don't include modules that can't be imported
                 continue
             
+            # Extract plugin class name
+            if '__plugin' not in plugin_mod.__dict__.keys():
+                continue
+            print plugin
+            print getattr(plugin_mod, '__plugin')
+            plugin_name = getattr(plugin_mod, '__plugin')
+            
             # Instanciation attempt
             try:
-                plugin_obj = plugin_mod.VisPlugin()
-            except AttributeError, ex:
+                plugin_obj = getattr(plugin_mod, plugin_name)()
+            except AttributeError:
                 # Class doesn't follow our interface
                 continue
 
@@ -122,10 +129,15 @@ class VisManager:
                         fromlist=plugin)
             except ImportError, ex:
                 continue
+                
+            # Extract plugin class name
+            if '__plugin' not in plugin_mod:
+                continue
+            plugin_name = plugin_mod.__plugin
             
             # Try to instanciate it
             try:
-                plugin_obj = plugin_mod.VisPlugin()
+                plugin_obj = getattr(plugin_mod, plugin_name)()
             except AttributeError:
                 continue
             
@@ -156,5 +168,10 @@ class VisManager:
         @rtype: C{tuple} (format, payload)
         """
         plugin_mod = __import__("vis_plugins.%s" % plugin, fromlist=plugin)
-        plugin_obj = plugin_mod.VisPlugin(obj=obj, args=args, kwargs=kwargs)
+        # Extract plugin class name
+        if '__plugin' not in plugin_mod.__dict__.keys():
+            raise ImportError("Plugin %s is missing __plugin property" % \
+                plugin)
+        plugin_name = getattr(plugin_mod, '__plugin')
+        plugin_obj = getattr(plugin_mod, plugin_name)(obj=obj, args=args, kwargs=kwargs)
         return plugin_obj.visualize()
