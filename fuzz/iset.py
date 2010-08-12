@@ -94,7 +94,7 @@ class IndexedSet(set):
     objects with an immutable attribute. These overall-mutable members can then
     be accessed in dict style, using the index as key.
     """
-    itemcls = IndexedMember
+    _itemcls = IndexedMember
 
     def __init__(self, iterable = set()):
         """\
@@ -146,8 +146,8 @@ class IndexedSet(set):
         @return: The item or wrapped item.
         @rtype: L{IndexedMember}
         """
-        if not isinstance(item, self.itemcls):
-            return self.itemcls(item)
+        if not isinstance(item, self._itemcls):
+            return self._itemcls(item)
         return item
 
     def add(self, item):

@@ -7,15 +7,15 @@ Graph module. Contains fuzzy graph class definitions.
 @license: LGPL-3
 """
 
-from .fset import FuzzyElement, FuzzySet 
-from .graph import GraphEdge, Graph
+from fset import FuzzyElement, FuzzySet 
+from graph import GraphEdge, Graph
 
 
 class FuzzyGraph(Graph):
     """\
     Fuzzy graph class.
     """
-    setcls = FuzzySet
+    _setcls = FuzzySet
 
     def __init__(self, viter = None, eiter = None, directed = True):
         """\

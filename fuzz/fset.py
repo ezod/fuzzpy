@@ -10,7 +10,7 @@ definitions.
 
 from copy import copy
 
-from .iset import IndexedMember, IndexedSet
+from iset import IndexedMember, IndexedSet
 
 
 class FuzzyElement(IndexedMember):
@@ -59,7 +59,7 @@ class FuzzySet(IndexedSet):
     NORM_BOUNDED = 2
     NORM_DRASTIC = 3
 
-    itemcls = FuzzyElement
+    _itemcls = FuzzyElement
 
     class FuzzySetIterator(object):
         """\

@@ -57,39 +57,25 @@ class VisManager:
         
         @rtype: C{dict}
         @return: Dictionary of k=datatype => v=list of supported plugins
+        @raises: ImportError, AttributeError
         """
         plugins = {}
         for plugin in vis_plugins.__all__:
-            # Import attempt
-            try:
-                plugin_mod = __import__("vis_plugins.%s" % plugin, 
-                        fromlist=plugin)
-            except ImportError, ex:
-                # Don't include modules that can't be imported
-                continue
+            # Import attempt (or raise ImportError)
+            plugin_mod = __import__("vis_plugins.%s" % plugin, fromlist=plugin)
             
-            # Extract plugin class name
-            if '__plugin' not in plugin_mod.__dict__.keys():
-                continue
+            # Extract plugin class name (or raise AttributeError)
             plugin_name = getattr(plugin_mod, '__plugin')
             
-            # Instanciation attempt
-            try:
-                plugin_obj = getattr(plugin_mod, plugin_name)()
-            except AttributeError:
-                # Class doesn't follow our interface
-                continue
-
-            # Supported types extraction and dict building
-            try:
-                for vis_type in [x.__name__ for x in plugin_obj.types]:
-                    if vis_type not in plugins.keys():
-                        plugins[vis_type] = [plugin]
-                    else:
-                        plugins[vis_type].append(plugin)
-            except AttributeError:
-                # Class doesn't follow our interface
-                pass
+            # Instanciation (or raise AttributeError)
+            plugin_obj = getattr(plugin_mod, plugin_name)()
+            
+            # Build plugins registry (or raise AttributeError)
+            for vis_type in [x.__name__ for x in plugin_obj.types]:
+                if vis_type not in plugins.keys():
+                    plugins[vis_type] = [plugin]
+                else:
+                    plugins[vis_type].append(plugin)
         return plugins
     
     def get_supported_plugins(self, datatype=None):

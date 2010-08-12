@@ -56,7 +56,7 @@ class Graph(object):
     """\
     Crisp graph class (used for alpha cuts and crisp methods).
     """
-    setcls = set
+    _setcls = set
 
     def __init__(self, viter = None, eiter = None, directed = True):
         """\
@@ -70,8 +70,8 @@ class Graph(object):
         @type directed: C{bool}
         """
         self._directed = directed
-        self._V = self.setcls()
-        self._E = self.setcls()
+        self._V = self._setcls()
+        self._E = self._setcls()
         if viter is not None:
             for vertex in viter:
                 self.add_vertex(vertex)

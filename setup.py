@@ -12,7 +12,7 @@ import sys
 import epydoc.cli
 
 NAME = 'fuzzpy'
-URL = 'http://code.google.com/p/fuzzpy'
+URL = 'http://github.com/ezod/fuzzpy'
 PACKAGE = 'fuzz'
 
 class GenerateDoc(Command):
@@ -40,7 +40,7 @@ setup(
     author = "Aaron Mavrinac",
     author_email = "mavrin1@uwindsor.ca",
     url = URL,
-    download_url = "http://fuzzpy.googlecode.com/files/fuzzpy-%s.tar.bz2" % VERSION,
+    download_url = "http://github.com/downloads/ezod/fuzzpy/fuzzpy-%s.tar.bz2" % VERSION,
     keywords = "fuzzy set graph math",
     packages = [PACKAGE],
     test_suite = "test",
