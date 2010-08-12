@@ -10,7 +10,7 @@ Fuzzy number module. Contains basic fuzzy number class definitions.
 from math import e, sqrt, log
 from numbers import Number
 
-from .fset import FuzzySet
+from fset import FuzzySet
 
 
 class RealRange(tuple):
