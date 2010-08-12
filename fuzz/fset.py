@@ -10,7 +10,7 @@ definitions.
 
 from copy import copy
 
-from .iset import IndexedMember, IndexedSet
+from iset import IndexedMember, IndexedSet
 
 
 class FuzzyElement(IndexedMember):
