@@ -1,6 +1,6 @@
 import pydot
-from .fgraph import FuzzyGraph
-from .graph import Graph
+from ..fgraph import FuzzyGraph
+from ..graph import Graph
 from abc_plugin import AbstractPlugin
 
 # Class Name

@@ -44,7 +44,7 @@ class VisManager:
             # Try to import the plugin
             try:
                 plugin_mod = __import__("vis_plugins.%s" % plugin,
-                        fromlist=plugin)
+                        globals(), locals(), fromlist=[plugin])
             except ImportError, ex:
                 warnings.warn(ex)
                 continue
@@ -83,7 +83,8 @@ class VisManager:
         if None == plugin:
             plugin = VisManager.get_supported_plugins(obj.__class__)[0]
         
-        plugin_mod = __import__("vis_plugins.%s" % plugin, fromlist=plugin)
+        plugin_mod = __import__("vis_plugins.%s" % plugin, globals(), locals(),
+                fromlist=[plugin])
         
         # Extract plugin class name
         plugin_name = getattr(plugin_mod, 'VIS_PLUGIN')
