@@ -1,4 +1,3 @@
-import graph
 import pydot
 from .fgraph import FuzzyGraph
 from .graph import Graph
@@ -50,7 +49,7 @@ class FuzzPyDot(AbstractPlugin):
     @staticmethod
     def is_supported():
         """\
-        Placeholder
+        Returns True if we can import our dependencies, False otherwise.
         
         @rtype: Boolean
         @return: True if the plugin can run in this environment.
@@ -62,6 +61,64 @@ class FuzzPyDot(AbstractPlugin):
             You must install the PyDot python module first.")
             return False
         return True
+    
+    def marshall_vertices(self):
+        """\
+        Converts vertices to PyDot nodes
+        
+        Adds GraphViz attributes to each vertex and converts it into a
+        pydot.Node object.
+        
+        @rtype: list
+        @return: list of pydot.Node objects
+        """
+        vertices = []
+        for vertex in self._G.vertices:
+            if isinstance(self._G, FuzzyGraph):
+                node = pydot.Node(
+                    name="g_%s" % str(vertex),
+                    label=str(vertex),
+                    weight=str(self._G.mu(vertex)),
+                    penwidth="%.2f" % self._G.mu(vertex)
+                )
+            elif isinstance(self._G, Graph):
+                node = pydot.Node(
+                    name="g_%s" % str(vertex),
+                    label=str(vertex),
+                )
+            vertices.append(node)
+            
+        return vertices
+        
+    def marshall_edges(self):
+        """\
+        Converts edges to PyDot edges
+        
+        Adds GraphViz attributes to edges and registers them all as PyDot
+        edge objects.
+        
+        @rtype: list
+        @returns: list of pydot.Edge objects
+        """
+        edges = []
+        
+        for edge in self._G.edges:
+            if isinstance(self._G, FuzzyGraph):
+                connector = pydot.Edge(
+                    "g_%s" % edge.head, 
+                    "g_%s" % edge.tail,
+                    weight=str(self._G.mu(edge)),
+                    penwidth=str((self._G.mu(edge.tail, edge.head)+0.05)*2.0)
+                )
+            elif isinstance(self._G, Graph):
+                connector = pydot.Edge(
+                    "g_%s" % edge.head, 
+                    "g_%s" % edge.tail,
+                )
+            edges.append(connector)
+            
+        return edges
+        
     
     def visualize(self, *args, **kwargs):
         """\
@@ -77,10 +134,6 @@ class FuzzPyDot(AbstractPlugin):
         @return: Postscript visualization string
         @rtype: C{str}
         """
-        if self._G.directed == True:
-            gtype = 'digraph'
-        else:
-            gtype = 'graph'
         
         # Pick default output format if required
         if kwargs.has_key('format') and kwargs['format'] in VIS_FORMATS:
@@ -88,30 +141,21 @@ class FuzzPyDot(AbstractPlugin):
         else:
             output_format = 'png'
         
+        if self._G.directed == True:
+            gtype = 'digraph'
+        else:
+            gtype = 'graph'
+        
         D = pydot.Dot('rt', graph_type=gtype)
         
-        # Convert vertices
-        for vertex in self._G.vertices:
-            D.add_node(
-                    pydot.Node(
-                            name="g_%s" % str(vertex),
-                            label=str(vertex),
-                            weight=str(self._G.mu(vertex)),
-                            penwidth="%.2f" % self._G.mu(vertex)
-                        )
-                    )
+        # Convert vertices and edges to PyDot nodes/connectors
+        for vertex in self.marshall_vertices:
+            D.add_node(vertex
         
-        # Convert edges
-        for edge in self._G.edges():
-            D.add_edge(
-                pydot.Edge(
-                    "g_%s" % edge.head, 
-                    "g_%s" % edge.tail,
-                    weight=str(self._G.mu(edge)),
-                    penwidth=str((self._G.mu(edge.tail, edge.head)+0.05)*2.0)
-                )
-            )
+        for edge in self.marshall_edges:
+            D.add_edge(edge)
         
+        # Return formatted output
         return D.create(format=output_format)
 
 AbstractPlugin.register(FuzzPyDot)
