@@ -6,79 +6,23 @@ This submodule allows the dispatch of any supported fuzzpy datatypes to
 an arbitrary visualization plugin. All available visualization plugins are
 located in the L{vis_plugins} submodule.
 
-The manager provides helper functions to discover installed plugins as well
-as to determine which plugins can be run in the current environment.
-
-Once instanciated, the core method in this class is the L{visualize()},
-which will dispatch the specified fuzzpy object to the appropriate plugin.
-
-The type of returned value depends on the plugin, so you should carefully read
-the documentation for the plugin you are using.
+The manager provides a helper function to discover installed plugins as well
+as a visualization backend factory.
 """
 
 import vis_plugins
+import warnings
 
 class VisManager:
     """\
-    Visualization Manager class
-    
+    Visualization Plugin Factory
+        
     Provides plugin management methods and a helper method to dispatch
     a fuzzpy object to a plugin.
     """
-    _plugins = {}
     
-    def __init__(self):
-        """\
-        Constructor Method
-        
-        Initializes the L{_plugins} dictionary from the results of the
-        L{_discover_plugins} method.
-        
-        @rtype: VisManager
-        @return: Initialized VisManager instance
-        """
-        self._plugins = self._discover_plugins()
-    
-    def _discover_plugins(self):
-        """\
-        Plugin Discovery Method
-        
-        Attempts to import all plugins in the vis_plugins submodule
-        and retrieve the list of supported fuzzpy datatypes that this plugin
-        can be used to visualize.
-        
-        The resulting dictionary will look like this:
-        C{ {'Graph' => ['graph_graphviz', 'graph_networkx', ...],
-            'Number' => ['num_gnuplot', 'num_matplot', ...],
-            ...
-            }}
-        Where the keys are supported datatypes, and the values are lists of
-        supported plugins for that datatype.
-        
-        @rtype: C{dict}
-        @return: Dictionary of k=datatype => v=list of supported plugins
-        @raises: ImportError, AttributeError
-        """
-        plugins = {}
-        for plugin in vis_plugins.__all__:
-            # Import attempt (or raise ImportError)
-            plugin_mod = __import__("vis_plugins.%s" % plugin, fromlist=plugin)
-            
-            # Extract plugin class name (or raise AttributeError)
-            plugin_name = getattr(plugin_mod, '__plugin')
-            
-            # Instanciation (or raise AttributeError)
-            plugin_obj = getattr(plugin_mod, plugin_name)()
-            
-            # Build plugins registry (or raise AttributeError)
-            for vis_type in [x.__name__ for x in plugin_obj.types]:
-                if vis_type not in plugins.keys():
-                    plugins[vis_type] = [plugin]
-                else:
-                    plugins[vis_type].append(plugin)
-        return plugins
-    
-    def get_supported_plugins(self, datatype=None):
+    @staticmethod
+    def get_supported_plugins(datatype=None):
         """\
         Returns a list of plugins supported by the current system.
         
@@ -96,53 +40,36 @@ class VisManager:
         """
         supported = []
         
-        if None == datatype:
-            # Assume we want to run the discovery for all installed plugins
-            # k => keys, p => plugins
-            plugins = [p for k in self._plugins.values() for p in k]
-        else:
-            if datatype in self._plugins.keys():
-                plugins = self._plugins[datatype]
-            else:
-                raise ValueError("Unknown datatype: %s" % datatype)
-        
-        for plugin in plugins:
+        for plugin in vis_plugins.__all__:
             # Try to import the plugin
             try:
                 plugin_mod = __import__("vis_plugins.%s" % plugin,
                         fromlist=plugin)
             except ImportError, ex:
+                warnings.warn(ex)
                 continue
                 
-            # Extract plugin class name
-            if '__plugin' not in plugin_mod:
-                continue
-            plugin_name = plugin_mod.__plugin
+            # Extract plugin class name (or raise AttributeError)
+            if not getattr(plugin_mod, 'VIS_PLUGIN'):
+                raise AttributeError("Plugin %s is missing VIS_PLUGIN \
+                    property" % plugin)
+            plugin_class = getattr(plugin_mod, plugin_mod.VIS_PLUGIN)
             
-            # Try to instanciate it
-            try:
-                plugin_obj = getattr(plugin_mod, plugin_name)()
-            except AttributeError:
-                continue
-            
-            # Invoke the plugin's is_supported() method
-            try:
-                if plugin_mod.is_supported():
-                    supported.append(plugin)
-            except Exception, ex:
-                continue
-    
+            if (getattr(plugin_class, 'is_supported')() == True) and \
+                (datatype in [None] + getattr(plugin_mod, 'VIS_TYPES')):
+                supported.append(plugin)
+
         return supported
     
-    def visualize(self, obj, plugin, *args, **kwargs):
+    @staticmethod
+    def create_backend(obj, plugin=None, *args, **kwargs):
         """\
-        Visualization dispatcher
+        Visualization Plugin Factory
         
-        Imports and instanciates the specified visualization plugin, then
-        dispatch C{obj} to it and call the C{visualize} method.
-        
-        Any exception encountered during the import, instanciation, or
-        invocation of the visualization method will be raised here.
+        Returns a new instance of the appropriate visualization plugin.
+        If no 'plugin' argument is specified as the preferred visualization
+        backend, the first plugin that supports visualization for 'obj's
+        class name will be used as the backend.
         
         @param obj: Object to draw
         @type obj: Object
@@ -151,11 +78,16 @@ class VisManager:
         @returns: The return value of the plugin's visualize() method
         @rtype: C{tuple} (format, payload)
         """
+        
+        # Pick a supported plugin if none is specified
+        if None == plugin:
+            plugin = VisManager.get_supported_plugins(obj.__class__)[0]
+        
         plugin_mod = __import__("vis_plugins.%s" % plugin, fromlist=plugin)
+        
         # Extract plugin class name
-        if '__plugin' not in plugin_mod.__dict__.keys():
-            raise ImportError("Plugin %s is missing __plugin property" % \
-                plugin)
-        plugin_name = getattr(plugin_mod, '__plugin')
-        plugin_obj = getattr(plugin_mod, plugin_name)(obj=obj, args=args, kwargs=kwargs)
-        return plugin_obj.visualize()
+        plugin_name = getattr(plugin_mod, 'VIS_PLUGIN')
+        
+        return getattr(plugin_mod, plugin_name)\
+            (obj=obj, args=args, kwargs=kwargs)
+        

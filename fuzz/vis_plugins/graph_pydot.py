@@ -4,7 +4,18 @@ from .fgraph import FuzzyGraph
 from .graph import Graph
 from abc_plugin import AbstractPlugin
 
-__plugin = 'FuzzPyDot'
+# Class Name
+VIS_PLUGIN = 'FuzzPyDot'
+
+# Supported Visualization Datatypes
+VIS_TYPES = [FuzzyGraph, Graph, graph]
+
+# Supported Output Formats
+VIS_FORMATS = ['bmp', 'canon', 'dot', 'xdot', 'eps', 'fig', 'gd', 'gd2', 
+    'gif', 'gtk', 'ico', 'imap', 'cmapx', 'jpg', 'jpeg', 'jpe', 'pdf', 
+    'plain', 'plain-ext', 'png', 'ps', 'ps2', 'svg', 'svgz', 'tif', 'tiff', 
+    'vml', 'vmlz', 'vrml', 'wbmp', 'xlib']
+
 
 class FuzzPyDot(AbstractPlugin):
     """\
@@ -13,8 +24,6 @@ class FuzzPyDot(AbstractPlugin):
     This plugin converts vertices and edges to pydot elements then create
     a rendering based on the 'format' attribute (default=ps).
     """
-    # Supported visualization datatypes
-    types = [FuzzyGraph, Graph, graph]
     
     # Graph instance
     _G = None
@@ -38,13 +47,20 @@ class FuzzPyDot(AbstractPlugin):
         if ('name' in kwargs.keys()):
             self.name = kwargs['name']
     
-    def is_supported(self):
+    @staticmethod
+    def is_supported():
         """\
         Placeholder
         
         @rtype: Boolean
         @return: True if the plugin can run in this environment.
         """
+        try:
+            import pydot
+        except ImportError, ex:
+            warning.warn("PyDot plugin will not run on this system. \
+            You must install the PyDot python module first.")
+            return False
         return True
     
     def visualize(self, *args, **kwargs):
@@ -66,7 +82,13 @@ class FuzzPyDot(AbstractPlugin):
         else:
             gtype = 'graph'
         
-        D = pydot.Dot(name=self.name, graph_type=gtype)
+        # Pick default output format if required
+        if kwargs.has_key('format') and kwargs['format'] in VIS_FORMATS:
+            output_format = kwargs['format']
+        else:
+            output_format = 'png'
+        
+        D = pydot.Dot('rt', graph_type=gtype)
         
         # Convert vertices
         for vertex in self._G.vertices:
@@ -74,7 +96,8 @@ class FuzzPyDot(AbstractPlugin):
                     pydot.Node(
                             name="g_%s" % str(vertex),
                             label=str(vertex),
-                            weight=str(self._G.mu(vertex))
+                            weight=str(self._G.mu(vertex)),
+                            penwidth="%.2f" % self._G.mu(vertex)
                         )
                     )
         
@@ -84,10 +107,11 @@ class FuzzPyDot(AbstractPlugin):
                 pydot.Edge(
                     "g_%s" % edge.head, 
                     "g_%s" % edge.tail,
-                    weight=str(self._G.mu(edge))
+                    weight=str(self._G.mu(edge)),
+                    penwidth=str((self._G.mu(edge.tail, edge.head)+0.05)*2.0)
                 )
             )
         
-        return D.create()
+        return D.create(format=output_format)
 
 AbstractPlugin.register(FuzzPyDot)
