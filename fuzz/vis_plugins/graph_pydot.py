@@ -7,7 +7,7 @@ from abc_plugin import AbstractPlugin
 VIS_PLUGIN = 'FuzzPyDot'
 
 # Supported Visualization Datatypes
-VIS_TYPES = [FuzzyGraph, Graph, graph]
+VIS_TYPES = [FuzzyGraph, Graph]
 
 # Supported Output Formats
 VIS_FORMATS = ['bmp', 'canon', 'dot', 'xdot', 'eps', 'fig', 'gd', 'gd2', 
@@ -102,7 +102,7 @@ class FuzzPyDot(AbstractPlugin):
         """
         edges = []
         
-        for edge in self._G.edges:
+        for edge in self._G.edges():
             if isinstance(self._G, FuzzyGraph):
                 connector = pydot.Edge(
                     "g_%s" % edge.head, 
@@ -149,10 +149,10 @@ class FuzzPyDot(AbstractPlugin):
         D = pydot.Dot('rt', graph_type=gtype)
         
         # Convert vertices and edges to PyDot nodes/connectors
-        for vertex in self.marshall_vertices:
-            D.add_node(vertex
+        for vertex in self.marshall_vertices():
+            D.add_node(vertex)
         
-        for edge in self.marshall_edges:
+        for edge in self.marshall_edges():
             D.add_edge(edge)
         
         # Return formatted output
