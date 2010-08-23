@@ -107,7 +107,7 @@ class FuzzPyDot(AbstractPlugin):
                 connector = pydot.Edge(
                     "g_%s" % edge.head, 
                     "g_%s" % edge.tail,
-                    weight=str(self._G.mu(edge)),
+                    weight=str(self._G.mu(edge.tail, edge.head)),
                     penwidth=str((self._G.mu(edge.tail, edge.head)+0.05)*2.0)
                 )
             elif isinstance(self._G, Graph):
