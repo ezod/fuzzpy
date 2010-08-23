@@ -42,14 +42,13 @@ class FuzzyGraph(Graph):
                 raise TypeError("edge must be a GraphEdge")
         except AttributeError:
             Graph.add_edge(self, edge)
-        if not edge.index.tail in self.vertices \
-        or not edge.index.head in self.vertices:
+        if not edge.index.tail in self.vertices() \
+        or not edge.index.head in self.vertices():
             raise KeyError("tail and head must be in vertex set")
         if edge.index in self.edges():
             raise ValueError("edge already exists")
         self._E.add(edge)
 
-    @property
     def vertices(self):
         """\
         Return a set of vertices in the fuzzy graph.
@@ -70,8 +69,8 @@ class FuzzyGraph(Graph):
         @return: The fuzzy set of edges specified.
         @rtype: L{FuzzySet}
         """
-        if (tail is not None and not tail in self.vertices) \
-        or (head is not None and not head in self.vertices):
+        if (tail is not None and not tail in self.vertices()) \
+        or (head is not None and not head in self.vertices()):
             raise KeyError("specified tail/head must be in vertex set")
         eset = set([edge.index for edge in self._E \
             if (tail is None or edge.index.tail == tail) \

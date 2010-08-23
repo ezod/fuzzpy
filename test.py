@@ -215,7 +215,7 @@ class TestFuzzyGraph(unittest.TestCase):
 
     def test_vertices(self):
         exp = set([1, 2, 3, 4, 5])
-        act = self.U.vertices
+        act = self.U.vertices()
         self.assertEqual(act, exp)
 
     def test_mu(self):

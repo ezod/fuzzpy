@@ -73,7 +73,7 @@ class FuzzPyDot(AbstractPlugin):
         @return: list of pydot.Node objects
         """
         vertices = []
-        for vertex in self._G.vertices:
+        for vertex in self._G.vertices():
             if isinstance(self._G, FuzzyGraph):
                 node = pydot.Node(
                     name="g_%s" % str(vertex),
