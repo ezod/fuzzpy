@@ -18,6 +18,8 @@ For plotting fuzzy numbers (optional), one of the following: Gnuplot.py [2].
 
 Epydoc [3] is required for generating documentation (optional).
 
+The PyDot [4] module is required for crisp and fuzzy graph visualizations.
+
 --------------------------------------------------------------------------------
                             DOCUMENTATION & EXAMPLES
 --------------------------------------------------------------------------------
@@ -48,3 +50,4 @@ page.
 [1] http://www.python.org
 [2] http://gnuplot-py.sourceforge.net
 [3] http://epydoc.sourceforge.net
+[4] http://code.google.com/p/pydot/
