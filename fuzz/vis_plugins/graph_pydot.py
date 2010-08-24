@@ -156,6 +156,6 @@ class FuzzPyDot(AbstractPlugin):
             D.add_edge(edge)
         
         # Return formatted output
-        return D.create(format=output_format)
+        return (output_format, D.create(format=output_format))
 
 AbstractPlugin.register(FuzzPyDot)

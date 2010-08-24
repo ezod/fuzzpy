@@ -56,27 +56,27 @@ for CG in [CD, CU]:
 
 # Initialize the default plugin and retrieve visualization payload
 uvis = VisManager.create_backend(FU)
-uvis_data = uvis.visualize()
+(uvis_format, uvis_data) = uvis.visualize()
 
 dvis = VisManager.create_backend(FD)
-dvis_data = dvis.visualize()
+(dvis_format, dvis_data) = dvis.visualize()
 
 cuvis = VisManager.create_backend(CU)
-cuvis_data = cuvis.visualize()
+(cuvis_format, cuvis_data) = cuvis.visualize()
 
 cdvis = VisManager.create_backend(CD)
-cdvis_data = cdvis.visualize()
+(cdvis_format, cdvis_data) = cdvis.visualize()
 
 # Save the payload on the filesystem
-with open("fuzzy_graph.png", "wb") as fp:
+with open("fuzzy_graph.%s" % uvis_format, "wb") as fp:
     fp.write(uvis_data)
 
-with open("fuzzy_digraph.png", "wb") as fp:
+with open("fuzzy_digraph.%s" % dvis_format, "wb") as fp:
     fp.write(dvis_data)
 
-with open("crisp_graph.png", "wb") as fp:
+with open("crisp_graph.%s" % cuvis_format, "wb") as fp:
     fp.write(cuvis_data)
 
-with open("crisp_digraph.png", "wb") as fp:
+with open("crisp_digraph.%s" % cdvis_format, "wb") as fp:
     fp.write(cdvis_data)
 
