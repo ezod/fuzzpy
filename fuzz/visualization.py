@@ -13,6 +13,7 @@ as a visualization backend factory.
 import vis_plugins
 import warnings
 
+
 class VisManager(object):
     """\
     Visualization Plugin Factory
@@ -51,8 +52,8 @@ class VisManager(object):
                 
             # Extract plugin class name (or raise AttributeError)
             if not getattr(plugin_mod, 'VIS_PLUGIN'):
-                raise AttributeError("Plugin %s is missing VIS_PLUGIN \
-                    property" % plugin)
+                raise AttributeError(("Plugin %s is missing VIS_PLUGIN "
+                                      "property") % plugin)
             plugin_class = getattr(plugin_mod, plugin_mod.VIS_PLUGIN)
             
             if (getattr(plugin_class, 'is_supported')() == True) and \
@@ -84,8 +85,8 @@ class VisManager(object):
             try:
                 plugin = VisManager.get_supported_plugins(obj.__class__)[0]
             except IndexError:
-                raise ImportError("Unable to load any plugin to handle the\
-                specified object type")
+                raise ImportError(("Unable to load any plugin to handle the "
+                                   "specified object type"))
         
         plugin_mod = __import__("vis_plugins.%s" % plugin, globals(), locals(),
                 fromlist=[plugin])
