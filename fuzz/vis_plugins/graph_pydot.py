@@ -105,18 +105,19 @@ class FuzzPyDot(AbstractPlugin):
         for edge in self._G.edges():
             if isinstance(self._G, FuzzyGraph):
                 connector = pydot.Edge(
-                    src="g_%s" % edge.head, 
-                    dst="g_%s" % edge.tail,
+                    src="g_%s" % str(edge.head), 
+                    dst="g_%s" % str(edge.tail),
                     weight=str(self._G.mu(edge.tail, edge.head)),
-                    penwidth=str((self._G.mu(edge.tail, edge.head)+0.05)*2.0),
+                    penwidth=str((self._G.mu(edge.tail, edge.head) \
+                        + 0.05) * 2.0),
                     # For older versions of graphviz
-                    style="setlinewidth(%s)" % (self._G.mu(edge.tail, \
-                        edge.head)+0.05)*2.0
+                    style="setlinewidth(%f)" % ((self._G.mu(edge.tail, \
+                        edge.head) + 0.05) * 2.0)
                 )
             elif isinstance(self._G, Graph):
                 connector = pydot.Edge(
-                    "g_%s" % edge.head, 
-                    "g_%s" % edge.tail,
+                    "g_%s" % str(edge.head), 
+                    "g_%s" % str(edge.tail),
                 )
             edges.append(connector)
             
