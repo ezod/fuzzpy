@@ -1,5 +1,5 @@
 """\
-fuzzpy visualization plugins abstract base class.
+FuzzPy visualization plugins abstract base class.
 
 Enforce an interface that visualization plugins must follow, namely:
     - types: most provide a list of supported object types
@@ -7,20 +7,29 @@ Enforce an interface that visualization plugins must follow, namely:
     environment.
     - visualize: must return a tuple (format, payload) that contains the \
     visualization format and a string containing the visualization payload.
+
+@author: Xavier Spriet
+@contact: linkadmin@gmail.com
+@license: LGPL-3
 """
 
 from abc import ABCMeta, abstractmethod
 
+
 class AbstractPlugin:
-    """Abstract Plugins Class"""
+    """\
+    Abstract plugins class.
+    """
     __metaclass__ = ABCMeta
     
     types = []
-    """Supported datatypes for visualization"""
+    """Supported datatypes for visualization."""
     
     @abstractmethod
     def is_supported(self):
         """\
+        Return whether the plugin is supported.
+
         @rtype: C{bool}
         @return: True if the plugin can run in the current environment, False\ 
         otherwise.
@@ -30,7 +39,7 @@ class AbstractPlugin:
     @abstractmethod
     def visualize(self, *args, **kwargs):
         """\
-        Main visualization callback
+        Main visualization callback.
         
         Draws the visualization in-memory and saves the visualization data
         in a payload string to be returned.
@@ -43,4 +52,3 @@ class AbstractPlugin:
         @return: (format, payload) tuple. 
         """
         return ('', '')
-
