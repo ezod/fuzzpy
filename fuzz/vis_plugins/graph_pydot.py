@@ -146,7 +146,7 @@ class FuzzPyDot(AbstractPlugin):
         else:
             gtype = 'graph'
         
-        D = pydot.Dot('rt', graph_type=gtype)
+        D = pydot.Dot(rankdir='rt', graph_type=gtype)
         
         # Convert vertices and edges to PyDot nodes/connectors
         for vertex in self.marshall_vertices():
