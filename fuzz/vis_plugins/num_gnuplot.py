@@ -9,6 +9,7 @@ Gnuplot-py visualization plugin for FuzzPy.
 
 import os
 import tempfile
+import warnings
 from time import sleep
 
 from ..fnumber import PolygonalFuzzyNumber
@@ -45,7 +46,7 @@ class FuzzPyGnuplot(AbstractPlugin):
         try:
             import Gnuplot
         except ImportError:
-            warning.warn(("Gnuplot plugin will not run on this system. "
+            warnings.warn(("Gnuplot plugin will not run on this system. "
                           "You must install Gnuplot-py first."))
             return False
         return True
