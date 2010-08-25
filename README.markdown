@@ -21,9 +21,9 @@ For visualization (optional), one or more of the following are required:
 
 ## Documentation and Examples
 
-API documentation can be generated with Epydoc using the provided gendoc.sh
-script. This will create a subdirectory `doc` containing full API documentation
-in HTML format.
+API documentation can be generated with Epydoc using `python setup.py doc`. This
+will create a subdirectory `doc` containing full API documentation in HTML
+format.
 
 Examples demonstrating the use of FuzzPy can be found in the `examples`
 subdirectory.
