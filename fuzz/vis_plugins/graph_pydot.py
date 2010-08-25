@@ -21,7 +21,7 @@ class FuzzPyDot(AbstractPlugin):
     Pydot visualization plugin for fuzzpy
     
     This plugin converts vertices and edges to pydot elements then create
-    a rendering based on the 'format' attribute (default=ps).
+    a rendering based on the 'format' attribute (default=png).
     """
     
     # Graph instance
@@ -150,7 +150,7 @@ class FuzzPyDot(AbstractPlugin):
         else:
             gtype = 'graph'
         
-        D = pydot.Dot(rankdir='rt', graph_type=gtype)
+        D = pydot.Dot(rankdir='RT', graph_type=gtype)
         
         # Convert vertices and edges to PyDot nodes/connectors
         for vertex in self.marshall_vertices():
