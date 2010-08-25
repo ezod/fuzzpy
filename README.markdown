@@ -1,24 +1,27 @@
 # FuzzPy - Fuzzy Mathematics for Python
-Aaron Mavrinac  <mavrin1@uwindsor.ca>
+Aaron Mavrinac <mavrin1@uwindsor.ca>
+Xavier Spriet <linkadmin@gmail.com>
 
-## OVERVIEW
+
+## Overview
 
 FuzzPy is a library for fuzzy sets, fuzzy graphs, and general fuzzy mathematics
 for Python.
 
 
-## REQUIREMENTS
+## Requirements
 
-FuzzPy requires [Python 2.6 or later] [1].
+FuzzPy requires [Python] [1] 2.6 or later.
 
-For plotting fuzzy numbers (optional), one of the following:
+For visualization (optional), one or more of the following are required:
 
-* [Gnuplot.py] [2]  is required for fuzzy number visualization.
-* [Epydoc] [3]      is required for generating documentation (optional).
-* [PyDot] [4]       is required for crisp and fuzzy graph visualizations.
+* [Gnuplot-py] [2] for fuzzy number visualization.
+* [PyDot] [4] for graph and fuzzy graph visualizations.
+
+[Epydoc] [3] is required for generating API documentation (optional).
 
 
-## DOCUMENTATION AND EXAMPLES
+## Documentation and Examples
 
 API documentation can be generated with Epydoc using the provided gendoc.sh
 script. This will create a subdirectory 'doc' containing full API documentation
@@ -28,7 +31,7 @@ Examples demonstrating the use of FuzzPy can be found in the 'examples'
 subdirectory.
 
 
-## DEVELOPMENT
+## Development
 
 FuzzPy is in a relatively early stage of development, and is changing rapidly.
 Functional compatibility may be broken between releases, even revisions in some
@@ -38,11 +41,10 @@ into a policy of not breaking functional compatibility across releases with the
 same minor version.
 
 If you would like to help with development, please contact primary developer
-Aaron Mavrinac to get access to the GitHub repositories and Google Code project
-page.
+Aaron Mavrinac to get access to the GitHub repositories.
 
 
-## VISUALIZATIONS
+## Visualizations
 
 Starting with v0.4.0, FuzzPy now ships with a plugin-based visualization system
 that can produce representations of most of the data-structures supported by
@@ -69,7 +71,7 @@ well as their available output formats, supported datatypes, etc...
 
 
 
-## VISUALIZATION PLUGIN DEVELOPMENT
+## Visualization Plugin Development
 
 If none of the supplied data visualization plugins meet your specific need, you
 it might be beneficial to write your own plugin, and we encourage you 
