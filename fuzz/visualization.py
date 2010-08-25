@@ -1,13 +1,14 @@
 """\
-Visualization Manager for fuzzpy
-================================
-
-This submodule allows the dispatch of any supported fuzzpy datatypes to
-an arbitrary visualization plugin. All available visualization plugins are
-located in the L{vis_plugins} submodule.
+Visualization manager for FuzzPy. This submodule allows the dispatch of any
+supported fuzzpy datatypes to an arbitrary visualization plugin. All available
+visualization plugins are located in the L{vis_plugins} submodule.
 
 The manager provides a helper function to discover installed plugins as well
 as a visualization backend factory.
+
+@author: Xavier Spriet
+@contact: linkadmin@gmail.com
+@license: LGPL-3
 """
 
 import vis_plugins
@@ -16,10 +17,10 @@ import warnings
 
 class VisManager(object):
     """\
-    Visualization Plugin Factory
+    Visualization plugin factory class.
         
     Provides plugin management methods and a helper method to dispatch
-    a fuzzpy object to a plugin.
+    a FuzzPy object to a plugin.
     """
     
     @staticmethod
@@ -65,7 +66,7 @@ class VisManager(object):
     @staticmethod
     def create_backend(obj, plugin=None, *args, **kwargs):
         """\
-        Visualization Plugin Factory
+        Visualization plugin factory method.
         
         Returns a new instance of the appropriate visualization plugin.
         If no 'plugin' argument is specified as the preferred visualization
@@ -96,4 +97,3 @@ class VisManager(object):
         
         return getattr(plugin_mod, plugin_name)\
             (obj=obj, args=args, kwargs=kwargs)
-        

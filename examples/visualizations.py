@@ -9,7 +9,6 @@ Generates Crisp and Fuzzy Graph Visualizations.
 from common import fuzz
 from fuzz.visualization import VisManager
 from fuzz.fgraph import Graph, FuzzyGraph
-from fuzz import vis_plugins
 
 v = set([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
 
@@ -54,6 +53,11 @@ for CG in [CD, CU]:
     CG.connect(10, 6)
     CG.connect(2, 10)
 
+# Populate fuzzy number
+FN = fuzz.PolygonalFuzzyNumber( \
+    [(0.0, 0.0), (3.0, 0.5), (4.0, 0.3), (6.0, 0.8), (7.0, 0.2),
+     (8.0, 0.3), (9.0, 0.2), (10.0, 0.7), (11.0, 0.0)])
+
 # Initialize the default plugin and retrieve visualization payload
 uvis = VisManager.create_backend(FU)
 (uvis_format, uvis_data) = uvis.visualize()
@@ -66,6 +70,9 @@ cuvis = VisManager.create_backend(CU)
 
 cdvis = VisManager.create_backend(CD)
 (cdvis_format, cdvis_data) = cdvis.visualize()
+
+fnvis = VisManager.create_backend(FN)
+(fnvis_format, fnvis_data) = fnvis.visualize()
 
 # Save the payload on the filesystem
 with open("fuzzy_graph.%s" % uvis_format, "wb") as fp:
@@ -80,3 +87,5 @@ with open("crisp_graph.%s" % cuvis_format, "wb") as fp:
 with open("crisp_digraph.%s" % cdvis_format, "wb") as fp:
     fp.write(cdvis_data)
 
+with open("fuzzy_number.%s" % fnvis_format, "wb") as fp:
+    fp.write(fnvis_data)

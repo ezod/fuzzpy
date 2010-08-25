@@ -1,2 +1,2 @@
-__all__ = ['graph_pydot']
+__all__ = ['graph_pydot', 'num_gnuplot']
 __name__ = 'fuzz.vis_plugins'
