@@ -9,7 +9,7 @@ FuzzPy: Fuzzy sets for Python
 
 __version__ = (0, 3, 1)
 
-__all__ = ['iset', 'fset', 'fnumber', 'graph', 'fgraph']
+__all__ = ['iset', 'fset', 'fnumber', 'graph', 'fgraph', 'visualization']
 __name__ = 'fuzz'
 
 from iset import *
@@ -17,3 +17,4 @@ from fset import *
 from fnumber import *
 from graph import *
 from fgraph import *
+from visualization import *

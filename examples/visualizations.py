@@ -14,10 +14,10 @@ v = set([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
 
 # Now, we create and populate some graphs - C for crisp, F for fuzzy, U for
 # undirected, D for directed.
-CU = Graph(viter = v, directed = False)
-CD = Graph(viter = v, directed = True)
-FD = FuzzyGraph(viter = v, directed = True)
-FU = FuzzyGraph(viter = v, directed = False)
+CU = fuzz.Graph(viter = v, directed = False)
+CD = fuzz.Graph(viter = v, directed = True)
+FD = fuzz.FuzzyGraph(viter = v, directed = True)
+FU = fuzz.FuzzyGraph(viter = v, directed = False)
 for FG in [FU, FD]:
     FG.connect_fuzzy(1, 2, 0.08)
     FG.connect_fuzzy(2, 3, 1.0)
@@ -54,15 +54,15 @@ FN = fuzz.PolygonalFuzzyNumber( \
 
 # For each object, we initialize a plugin -- in this case, the default -- then
 # retrieve the visualization payload in string format.
-uvis = VisManager.create_backend(FU)
+uvis = fuzz.VisManager.create_backend(FU)
 (uvis_format, uvis_data) = uvis.visualize()
-dvis = VisManager.create_backend(FD)
+dvis = fuzz.VisManager.create_backend(FD)
 (dvis_format, dvis_data) = dvis.visualize()
-cuvis = VisManager.create_backend(CU)
+cuvis = fuzz.VisManager.create_backend(CU)
 (cuvis_format, cuvis_data) = cuvis.visualize()
-cdvis = VisManager.create_backend(CD)
+cdvis = fuzz.VisManager.create_backend(CD)
 (cdvis_format, cdvis_data) = cdvis.visualize()
-fnvis = VisManager.create_backend(FN)
+fnvis = fuzz.VisManager.create_backend(FN)
 (fnvis_format, fnvis_data) = fnvis.visualize()
 
 # Finally, we save the visualizations, in their proper format, to disk.
