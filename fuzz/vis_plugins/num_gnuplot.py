@@ -17,7 +17,8 @@ from abc_plugin import AbstractPlugin
 
 VIS_PLUGIN = 'FuzzPyGnuplot'
 VIS_TYPES = [PolygonalFuzzyNumber]
-VIS_FORMATS = ['png']
+VIS_FORMATS = {'png': 'png', 'jpg': 'jpeg', 'gif': 'gif', 'pbm': 'pbm',
+               'eps': 'postscript eps enhanced'}
 
 
 class FuzzPyGnuplot(AbstractPlugin):
@@ -63,10 +64,19 @@ class FuzzPyGnuplot(AbstractPlugin):
         else:
             output_format = 'png'
         plot = self.Gnuplot()
-        plot('set terminal %s' % output_format)
+        if output_format in ['eps']:
+            # scalable formats do not need size argument
+            plot('set terminal %s' % VIS_FORMATS[output_format])
+        else:
+            # parse size for raster formats
+            if kwargs.has_key('size') and len(kwargs['size']) == 2:
+                w, h = kwargs['size']
+            else:
+                w, h = (640, 480)
+            plot('set terminal %s size %d,%d' % (VIS_FORMATS[output_format], w, h))
         plot('set data style lines')
         tmpdir = tempfile.mkdtemp()
-        filename = os.path.join(tmpdir, 'gnuplot-output')
+        filename = os.path.join(tmpdir, 'gnuplot-output' + output_format)
         plot('set output \"%s\"' % filename)
         plot.plot([[p[0], p[1]] for p in self._N.points])
         # FIXME: is there a better way to know when Gnuplot output is ready?
