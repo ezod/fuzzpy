@@ -9,7 +9,6 @@ Generates Crisp and Fuzzy Graph Visualizations.
 from common import fuzz
 from fuzz.visualization import VisManager
 from fuzz.fgraph import Graph, FuzzyGraph
-from fuzz import vis_plugins
 
 v = set([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
 
