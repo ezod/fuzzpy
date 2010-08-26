@@ -96,7 +96,7 @@ class IndexedSet(set):
     """
     _itemcls = IndexedMember
 
-    def __init__(self, iterable = set()):
+    def __init__(self, iterable=set()):
         """\
         Constructor.
 

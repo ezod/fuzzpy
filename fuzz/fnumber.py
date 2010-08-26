@@ -17,7 +17,7 @@ class RealRange(tuple):
     """\
     Real range class.
     """
-    def __new__(cls, arg = (0.0, 0.0)):
+    def __new__(cls, arg=(0.0, 0.0)):
         """\
         Instatiation method. Verifies the validity of the range argument
         before returning the range object.
@@ -422,7 +422,7 @@ class PolygonalFuzzyNumber(FuzzyNumber):
         self.points = [(point[0], point[1] * (1.0 / self.height)) \
                        for point in self.points]
 
-    def to_fuzzy_set(self, samplepoints = None):
+    def to_fuzzy_set(self, samplepoints=None):
         """\
         Convert this polygonal fuzzy number to a discrete fuzzy set at the
         specified sample points. If no sample points are specified, the
@@ -445,7 +445,7 @@ class TrapezoidalFuzzyNumber(FuzzyNumber):
     """\
     Trapezoidal fuzzy number class.
     """
-    def __init__(self, kernel = (0.0, 0.0), support = (0.0, 0.0)):
+    def __init__(self, kernel=(0.0, 0.0), support=(0.0, 0.0)):
         """\
         Constructor.
 
@@ -563,7 +563,7 @@ class TriangularFuzzyNumber(TrapezoidalFuzzyNumber):
     """\
     Triangular fuzzy number class (special case of trapezoidal fuzzy number).
     """
-    def __init__(self, kernel = 0.0, support = (0.0, 0.0)):
+    def __init__(self, kernel=0.0, support=(0.0, 0.0)):
         """\
         Constructor.
 

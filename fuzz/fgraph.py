@@ -17,7 +17,7 @@ class FuzzyGraph(Graph):
     """
     _setcls = FuzzySet
 
-    def __init__(self, viter = None, eiter = None, directed = True):
+    def __init__(self, viter=None, eiter=None, directed=True):
         """\
         Construct a fuzzy graph from optional iterables.
 
@@ -57,7 +57,7 @@ class FuzzyGraph(Graph):
         """
         return set(self._V.keys())
 
-    def edges(self, tail = None, head = None):
+    def edges(self, tail=None, head=None):
         """\
         Return a fuzzy set of edges with tail and/or head optionally
         specified.
@@ -81,7 +81,7 @@ class FuzzyGraph(Graph):
                 and (head is None or edge.index.tail == head)])
         return eset
 
-    def mu(self, tail, head = None):
+    def mu(self, tail, head=None):
         """\
         Return the membership degree of a vertex or edge.
 
@@ -121,7 +121,7 @@ class FuzzyGraph(Graph):
                 
     # Convenience functions
 
-    def add_fuzzy_vertex(self, vertex, mu = 1.0):
+    def add_fuzzy_vertex(self, vertex, mu=1.0):
         """\
         Add a fuzzy vertex to the fuzzy graph (without explicitly constructing
         a FuzzyElement for it). Convenience wrapper for add_vertex().
@@ -133,7 +133,7 @@ class FuzzyGraph(Graph):
         """
         self.add_vertex(FuzzyElement(vertex, mu))
 
-    def add_fuzzy_edge(self, edge, mu = 1.0):
+    def add_fuzzy_edge(self, edge, mu=1.0):
         """\
         Add a fuzzy edge to the fuzzy graph (without explicitly constructing
         a FuzzyElement for it). Convenience wrapper for add_edge().
@@ -145,7 +145,7 @@ class FuzzyGraph(Graph):
         """
         self.add_edge(FuzzyElement(edge, mu))
 
-    def connect_fuzzy(self, tail, head, mu = 1.0):
+    def connect_fuzzy(self, tail, head, mu=1.0):
         """\
         Connect a pair of vertices with a new fuzzy edge. Convenience wrapper
         for add_edge().

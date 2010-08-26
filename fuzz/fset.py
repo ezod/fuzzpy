@@ -19,7 +19,7 @@ class FuzzyElement(IndexedMember):
     """
     __slots__ = ['_index', 'mu']
 
-    def __init__(self, index, mu = 1.0):
+    def __init__(self, index, mu=1.0):
         """\
         Constructor.
 
@@ -77,7 +77,7 @@ class FuzzySet(IndexedSet):
                 if element.mu > 0:
                     return element
 
-    def __init__(self, iterable = set()):
+    def __init__(self, iterable=set()):
         """\
         Construct a fuzzy set from an optional iterable.
 
@@ -138,7 +138,7 @@ class FuzzySet(IndexedSet):
         return ("%s([" % self.__class__.__name__) \
             + ', '.join([str(element) for element in self]) + "])"
 
-    def add_fuzzy(self, element, mu = 1.0):
+    def add_fuzzy(self, element, mu=1.0):
         """\
         Add a fuzzy element to the fuzzy set (without explicitly constructing
         a FuzzyElement for it). Convenience wrapper for add().
@@ -237,7 +237,7 @@ class FuzzySet(IndexedSet):
         self = self.efficient_union(other)
         return self
 
-    def union(self, other, norm = 0):
+    def union(self, other, norm=0):
         """\
         Return the fuzzy union of two fuzzy sets as a new fuzzy set.
 
@@ -314,7 +314,7 @@ class FuzzySet(IndexedSet):
         self = self.intersection(other)
         return self
 
-    def intersection(self, other, norm = 0):
+    def intersection(self, other, norm=0):
         """\
         Return the fuzzy intersection of two fuzzy sets as a new fuzzy set.
 

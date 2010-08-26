@@ -58,7 +58,7 @@ class Graph(object):
     """
     _setcls = set
 
-    def __init__(self, viter = None, eiter = None, directed = True):
+    def __init__(self, viter=None, eiter=None, directed=True):
         """\
         Construct a crisp graph from optional iterables.
 
@@ -171,7 +171,7 @@ class Graph(object):
         """
         return self._V
 
-    def edges(self, tail = None, head = None):
+    def edges(self, tail=None, head=None):
         """\
         Return a set of edges with tail and/or head optionally specified.
 
@@ -212,7 +212,7 @@ class Graph(object):
         else:
             return float('inf') 
 
-    def edges_by_weight(self, tail = None, head = None):
+    def edges_by_weight(self, tail=None, head=None):
         """\
         Return a list of edges, sorted in ascending order by weight, with tail
         and/or head optionally specified.
@@ -502,7 +502,7 @@ class Graph(object):
         # create a list of edges sorted by weight
         Q = self.edges_by_weight()
         # initialize the minimum spanning tree
-        T = Graph(viter = self.vertices(), directed = False)
+        T = Graph(viter=self.vertices(), directed=False)
         # construct the tree
         while len(Q) and len(T.edges()) < len(self.edges()):
             edge = Q.pop(0)
