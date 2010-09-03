@@ -59,6 +59,9 @@ class FuzzySet(IndexedSet):
     NORM_BOUNDED = 2
     NORM_DRASTIC = 3
 
+    COMP_STANDARD = 0
+    COMP_YAGER = 1
+
     class FuzzySetIterator(object):
         """\
         Discrete fuzzy set iterator class.
@@ -335,7 +338,7 @@ class FuzzySet(IndexedSet):
             raise ValueError("invalid t-norm type")
         self._binary_sanity_check(other)
         result = self.__class__()
-        [lambda: result.update([FuzzyElement(key, min(self.mu( key ), \
+        [lambda: result.update([FuzzyElement(key, min(self.mu(key), \
             other.mu(key))) for key in self.keys()]),
          lambda: result.update([FuzzyElement(key, self.mu(key) * \
             other.mu(key)) for key in self.keys()]),
@@ -486,30 +489,23 @@ class FuzzySet(IndexedSet):
 
     # Unary fuzzy set operations
 
-    def complement(self):
+    def complement(self, comp=0, **kwargs):
         """\
         Return the complement of this fuzzy set.
 
+        @param comp: The complement type (optional).
+        @type comp: C{int}
         @return: The complement of this fuzzy set.
         @rtype: L{FuzzySet}
         """
+        if not comp in range(2):
+            raise ValueError("invalid complement type")
         result = self.__class__()
-        result.update([FuzzyElement(key, 1.0 - self.mu(key)) \
-                       for key in self.keys()])
-        return result
-
-    def complement_yager(self, w):
-        """\
-        Return the Yager complement of this fuzzy set.
-
-        @param w: Yager operator exponent.
-        @type w: C{float}
-        @return: The Yager complement of this fuzzy set.
-        @rtype: L{FuzzySet}
-        """
-        result = self.__class__()
-        result.update([FuzzyElement(key, (1.0 - self.mu(key) ** w) ** \
-                       (1.0 / w)) for key in self.keys()])
+        [lambda: result.update([FuzzyElement(key, 1 - self.mu(key)) \
+            for key in self.keys()]),
+         lambda: result.update([FuzzyElement(key, (1 - self.mu(key) \
+            ** kwargs['w']) ** (1.0 / kwargs['w'])) for key in self.keys()])
+        ][comp]()
         return result
 
     def alpha(self, alpha):
