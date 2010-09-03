@@ -136,7 +136,7 @@ class IndexedSet(set):
             self.remove(key)
         set.add(self, item)
 
-    def add(self, item, **kwargs):
+    def add(self, item):
         """\
         Add an item to the set. Uses a copy since IndexedMembers have mutable
         properties.
