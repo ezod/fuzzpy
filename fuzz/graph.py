@@ -256,7 +256,7 @@ class Graph(object):
         @param head: The head vertex.
         @type head: C{object}
         """
-        self.remove_edge(GraphEdge((tail, head)))
+        self.remove_edge(tail, head)
 
     # Binary graph operations
 
