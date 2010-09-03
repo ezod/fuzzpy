@@ -205,13 +205,13 @@ class TestFuzzyGraph(unittest.TestCase):
         self.D = fuzz.FuzzyGraph(viter = v, directed = True)
         self.U = fuzz.FuzzyGraph(viter = v, directed = False)
         for G in [self.U, self.D]:
-            G.connect_fuzzy(1, 2, 0.8)
-            G.connect_fuzzy(2, 3, 1.0)
-            G.connect_fuzzy(3, 4, 0.9)
-            G.connect_fuzzy(4, 5, 0.7)
-            G.connect_fuzzy(3, 5, 0.2)
-            G.connect_fuzzy(5, 2, 0.5)
-            G.connect_fuzzy(1, 5, 0.0)
+            G.connect(1, 2, 0.8)
+            G.connect(2, 3, 1.0)
+            G.connect(3, 4, 0.9)
+            G.connect(4, 5, 0.7)
+            G.connect(3, 5, 0.2)
+            G.connect(5, 2, 0.5)
+            G.connect(1, 5, 0.0)
 
     def test_vertices(self):
         exp = set([1, 2, 3, 4, 5])
@@ -225,7 +225,7 @@ class TestFuzzyGraph(unittest.TestCase):
                self.U.mu(5, 4),
                self.D.mu(5, 4)]
         self.assertEqual(act, exp)
-        self.U.add_fuzzy_vertex(6, 0.5)
+        self.U.add_vertex(6, 0.5)
         self.assertEqual(self.U.mu(6), 0.5)
 
     def test_weight(self):
