@@ -43,7 +43,7 @@ A.add(fuzz.FuzzyElement('two', 0.1))
 
 # Fuzzy elements can be added using a convenience method. Again, if the mu
 # argument is left out, it will default to 1.0.
-A.add_fuzzy('five', 0.6)
+A.add('five', 0.6)
 
 # Elements can be removed explicitly...
 A.remove(fuzz.FuzzyElement('four', 0.1))

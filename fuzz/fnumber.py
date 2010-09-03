@@ -437,7 +437,7 @@ class PolygonalFuzzyNumber(FuzzyNumber):
             samplepoints = [point[0] for point in self.points]
         F = FuzzySet()
         for point in samplepoints:
-            F.add_fuzzy(point, self.mu(point))
+            F.add(point, self.mu(point))
         return F
 
 
