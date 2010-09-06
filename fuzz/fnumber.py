@@ -195,7 +195,7 @@ class PolygonalFuzzyNumber(FuzzyNumber):
         if not points[0][1] == 0.0 or not points[-1][1] == 0.0:
             raise ValueError("points must start and end with mu = 0")
         for i in range(1, len(points)):
-            if not points[i][0] > points[i - 1][0]:
+            if not points[i][0] >= points[i - 1][0]:
                 raise ValueError("points must be in increasing order")
         self.points = points
         FuzzyNumber.__init__(self)
