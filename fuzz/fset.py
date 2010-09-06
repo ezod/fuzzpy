@@ -472,7 +472,10 @@ class FuzzySet(IndexedSet):
         @return: The overlap in [0, 1] of this set on the other.
         @rtype: C{float}
         """
-        return self.intersection(other).cardinality / other.cardinality
+        try:
+            return self.intersection(other).cardinality / other.cardinality
+        except ZeroDivisionError:
+            return 0.0
 
     @staticmethod
     def _binary_sanity_check(other):
