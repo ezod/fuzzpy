@@ -1,5 +1,11 @@
                              FuzzPy - Release Notes
 
+FuzzPy 0.4.0
+    - new plugin-based visualization framework
+    - rework of IndexedSet class (improved correctness and performance)
+    - major usability improvements to fuzzy set and graph classes
+    - documentation generated from setup.py
+
 FuzzPy 0.3.0
     - improved polygonal fuzzy number class
     - plotting module
