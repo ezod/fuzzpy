@@ -12,14 +12,14 @@ from common import fuzz
 
 # Let's create a couple fuzzy sets.
 A = fuzz.FuzzySet()
-A.add_fuzzy('a', 1.0)
-A.add_fuzzy('b', 0.5)
-A.add_fuzzy('c', 0.8)
+A.add('a', 1.0)
+A.add('b', 0.5)
+A.add('c', 0.8)
 B = fuzz.FuzzySet()
-B.add_fuzzy('b', 0.8)
-B.add_fuzzy('c', 0.2)
-B.add_fuzzy('d', 0.6)
-B.add_fuzzy('e', 0.0)
+B.add('b', 0.8)
+B.add('c', 0.2)
+B.add('d', 0.6)
+B.add('e', 0.0)
 
 print "A = %s" % str(A)
 print "B = %s" % str(B)

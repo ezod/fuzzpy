@@ -17,7 +17,7 @@ class FuzzyGraph(Graph):
     """
     _setcls = FuzzySet
 
-    def __init__(self, viter = None, eiter = None, directed = True):
+    def __init__(self, viter=None, eiter=None, directed=True):
         """\
         Construct a fuzzy graph from optional iterables.
 
@@ -30,26 +30,43 @@ class FuzzyGraph(Graph):
         """
         Graph.__init__(self, viter, eiter, directed)
 
-    def add_edge(self, edge):
+    def add_vertex(self, vertex, mu=1.0):
+        """\
+        Add a fuzzy vertex to the fuzzy graph, optionally constructing the
+        vertex with the given membership degree.
+
+        @param vertex: The vertex to add.
+        @type vertex: C{object}
+        @param mu: The membership degree of the vertex (optional).
+        @type mu: C{float}
+        """
+        if not isinstance(vertex, FuzzyElement):
+            vertex = FuzzyElement(vertex, mu)
+        Graph.add_vertex(self, vertex)
+
+    def add_edge(self, edge, mu=1.0):
         """\
         Add an edge to the fuzzy graph.
 
         @param edge: The edge to add.
         @type edge: L{FuzzyElement} of L{GraphEdge}
+        @param mu: The membership degree of the edge (optional).
+        @type mu: C{float}
         """
+        if not isinstance(edge, FuzzyElement):
+            edge = FuzzyElement(edge, mu)
         try:
             if not isinstance(edge.index, GraphEdge):
                 raise TypeError("edge must be a GraphEdge")
         except AttributeError:
             Graph.add_edge(self, edge)
-        if not edge.index.tail in self.vertices \
-        or not edge.index.head in self.vertices:
+        if not edge.index.tail in self.vertices() \
+        or not edge.index.head in self.vertices():
             raise KeyError("tail and head must be in vertex set")
         if edge.index in self.edges():
             raise ValueError("edge already exists")
         self._E.add(edge)
 
-    @property
     def vertices(self):
         """\
         Return a set of vertices in the fuzzy graph.
@@ -58,7 +75,7 @@ class FuzzyGraph(Graph):
         """
         return set(self._V.keys())
 
-    def edges(self, tail = None, head = None):
+    def edges(self, tail=None, head=None):
         """\
         Return a fuzzy set of edges with tail and/or head optionally
         specified.
@@ -70,8 +87,8 @@ class FuzzyGraph(Graph):
         @return: The fuzzy set of edges specified.
         @rtype: L{FuzzySet}
         """
-        if (tail is not None and not tail in self.vertices) \
-        or (head is not None and not head in self.vertices):
+        if (tail is not None and not tail in self.vertices()) \
+        or (head is not None and not head in self.vertices()):
             raise KeyError("specified tail/head must be in vertex set")
         eset = set([edge.index for edge in self._E \
             if (tail is None or edge.index.tail == tail) \
@@ -82,7 +99,7 @@ class FuzzyGraph(Graph):
                 and (head is None or edge.index.tail == head)])
         return eset
 
-    def mu(self, tail, head = None):
+    def mu(self, tail, head=None):
         """\
         Return the membership degree of a vertex or edge.
 
@@ -120,36 +137,9 @@ class FuzzyGraph(Graph):
         except ZeroDivisionError:
             return float('inf')
                 
-    # Convenience functions
-
-    def add_fuzzy_vertex(self, vertex, mu = 1.0):
+    def connect(self, tail, head, mu=1.0):
         """\
-        Add a fuzzy vertex to the fuzzy graph (without explicitly constructing
-        a FuzzyElement for it). Convenience wrapper for add_vertex().
-
-        @param vertex: The vertex to add.
-        @type vertex: C{object}
-        @param mu: The membership degree of the vertex (optional).
-        @type mu: C{float}
-        """
-        self.add_vertex(FuzzyElement(vertex, mu))
-
-    def add_fuzzy_edge(self, edge, mu = 1.0):
-        """\
-        Add a fuzzy edge to the fuzzy graph (without explicitly constructing
-        a FuzzyElement for it). Convenience wrapper for add_edge().
-
-        @param edge: The edge to add.
-        @type edge: L{GraphEdge}
-        @param mu: The membership degree of the edge (optional).
-        @type mu: C{float}
-        """
-        self.add_edge(FuzzyElement(edge, mu))
-
-    def connect_fuzzy(self, tail, head, mu = 1.0):
-        """\
-        Connect a pair of vertices with a new fuzzy edge. Convenience wrapper
-        for add_edge().
+        Connect a pair of vertices with a new (fuzzy) edge.
 
         @param tail: The tail vertex.
         @type tail: C{object}

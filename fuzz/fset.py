@@ -19,7 +19,7 @@ class FuzzyElement(IndexedMember):
     """
     __slots__ = ['_index', 'mu']
 
-    def __init__(self, index, mu = 1.0):
+    def __init__(self, index, mu=1.0):
         """\
         Constructor.
 
@@ -59,7 +59,8 @@ class FuzzySet(IndexedSet):
     NORM_BOUNDED = 2
     NORM_DRASTIC = 3
 
-    _itemcls = FuzzyElement
+    COMP_STANDARD = 0
+    COMP_YAGER = 1
 
     class FuzzySetIterator(object):
         """\
@@ -77,7 +78,7 @@ class FuzzySet(IndexedSet):
                 if element.mu > 0:
                     return element
 
-    def __init__(self, iterable = set()):
+    def __init__(self, iterable=set()):
         """\
         Construct a fuzzy set from an optional iterable.
 
@@ -138,17 +139,19 @@ class FuzzySet(IndexedSet):
         return ("%s([" % self.__class__.__name__) \
             + ', '.join([str(element) for element in self]) + "])"
 
-    def add_fuzzy(self, element, mu = 1.0):
+    def add(self, element, mu=1.0):
         """\
-        Add a fuzzy element to the fuzzy set (without explicitly constructing
-        a FuzzyElement for it). Convenience wrapper for add().
+        Add a fuzzy element to the fuzzy set, optionally constructing the
+        element with the given membership degree.
 
         @param element: The object of the element to add.
         @type element: C{object}
-        @param mu: The membership degree of the element.
+        @param mu: The membership degree of the element (optional).
         @type mu: C{float}
         """
-        self.add(FuzzyElement(element, mu))
+        if not isinstance(element, FuzzyElement):
+            element = FuzzyElement(element, mu)
+        IndexedSet.add(self, element)
 
     def keys(self):
         """\
@@ -237,7 +240,7 @@ class FuzzySet(IndexedSet):
         self = self.efficient_union(other)
         return self
 
-    def union(self, other, norm = 0):
+    def union(self, other, norm=0):
         """\
         Return the fuzzy union of two fuzzy sets as a new fuzzy set.
 
@@ -314,7 +317,7 @@ class FuzzySet(IndexedSet):
         self = self.intersection(other)
         return self
 
-    def intersection(self, other, norm = 0):
+    def intersection(self, other, norm=0):
         """\
         Return the fuzzy intersection of two fuzzy sets as a new fuzzy set.
 
@@ -335,7 +338,7 @@ class FuzzySet(IndexedSet):
             raise ValueError("invalid t-norm type")
         self._binary_sanity_check(other)
         result = self.__class__()
-        [lambda: result.update([FuzzyElement(key, min(self.mu( key ), \
+        [lambda: result.update([FuzzyElement(key, min(self.mu(key), \
             other.mu(key))) for key in self.keys()]),
          lambda: result.update([FuzzyElement(key, self.mu(key) * \
             other.mu(key)) for key in self.keys()]),
@@ -469,7 +472,10 @@ class FuzzySet(IndexedSet):
         @return: The overlap in [0, 1] of this set on the other.
         @rtype: C{float}
         """
-        return self.intersection(other).cardinality / other.cardinality
+        try:
+            return self.intersection(other).cardinality / other.cardinality
+        except ZeroDivisionError:
+            return 0.0
 
     @staticmethod
     def _binary_sanity_check(other):
@@ -486,30 +492,23 @@ class FuzzySet(IndexedSet):
 
     # Unary fuzzy set operations
 
-    def complement(self):
+    def complement(self, comp=0, **kwargs):
         """\
         Return the complement of this fuzzy set.
 
+        @param comp: The complement type (optional).
+        @type comp: C{int}
         @return: The complement of this fuzzy set.
         @rtype: L{FuzzySet}
         """
+        if not comp in range(2):
+            raise ValueError("invalid complement type")
         result = self.__class__()
-        result.update([FuzzyElement(key, 1.0 - self.mu(key)) \
-                       for key in self.keys()])
-        return result
-
-    def complement_yager(self, w):
-        """\
-        Return the Yager complement of this fuzzy set.
-
-        @param w: Yager operator exponent.
-        @type w: C{float}
-        @return: The Yager complement of this fuzzy set.
-        @rtype: L{FuzzySet}
-        """
-        result = self.__class__()
-        result.update([FuzzyElement(key, (1.0 - self.mu(key) ** w) ** \
-                       (1.0 / w)) for key in self.keys()])
+        [lambda: result.update([FuzzyElement(key, 1 - self.mu(key)) \
+            for key in self.keys()]),
+         lambda: result.update([FuzzyElement(key, (1 - self.mu(key) \
+            ** kwargs['w']) ** (1.0 / kwargs['w'])) for key in self.keys()])
+        ][comp]()
         return result
 
     def alpha(self, alpha):

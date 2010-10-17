@@ -22,16 +22,16 @@ class TestFuzzySet(unittest.TestCase):
     def setUp(self):
         self.A = fuzz.FuzzySet()
         self.B = fuzz.FuzzySet()
-        self.A.add_fuzzy('a', 1.0)
-        self.A.add_fuzzy('b', 0.5)
-        self.A.add_fuzzy('c', 0.8)
-        self.B.add_fuzzy('b', 0.8)
-        self.B.add_fuzzy('c', 0.2)
-        self.B.add_fuzzy('d', 0.6)
-        self.B.add_fuzzy('e', 0.0)
+        self.A.add('a', 1.0)
+        self.A.add('b', 0.5)
+        self.A.add('c', 0.8)
+        self.B.add('b', 0.8)
+        self.B.add('c', 0.2)
+        self.B.add('d', 0.6)
+        self.B.add('e', 0.0)
 
     def test_add_update_remove(self):
-        self.A.add_fuzzy('a', 1)
+        self.A.add('a', 1)
         self.assertEqual(len(self.A), 3)
         self.A.update([fuzz.FuzzyElement('a', 1), fuzz.FuzzyElement('d', 1)])
         self.assertEqual(len(self.A), 4)
@@ -84,26 +84,26 @@ class TestFuzzySet(unittest.TestCase):
 
     def test_union(self):
         C = fuzz.FuzzySet()
-        C.add_fuzzy('a', 1.0)
-        C.add_fuzzy('b', 0.8)
-        C.add_fuzzy('c', 0.8)
-        C.add_fuzzy('d', 0.6)
+        C.add('a', 1.0)
+        C.add('b', 0.8)
+        C.add('c', 0.8)
+        C.add('d', 0.6)
         self.assertEqual(self.A | self.B, C)
         D = fuzz.FuzzySet()
-        D.add_fuzzy('a', 1.0)
-        D.add_fuzzy('b', 0.9)
-        D.add_fuzzy('c', 0.84)
-        D.add_fuzzy('d', 0.6)
+        D.add('a', 1.0)
+        D.add('b', 0.9)
+        D.add('c', 0.84)
+        D.add('d', 0.6)
         self.assertEqual(self.A.union(self.B, fuzz.FuzzySet.NORM_ALGEBRAIC), D)
 
     def test_intersection(self):
         C = fuzz.FuzzySet()
-        C.add_fuzzy('b', 0.5)
-        C.add_fuzzy('c', 0.2)
+        C.add('b', 0.5)
+        C.add('c', 0.2)
         self.assertEqual(self.A & self.B, C)
         D = fuzz.FuzzySet()
-        D.add_fuzzy('b', 0.4)
-        D.add_fuzzy('c', 0.16)
+        D.add('b', 0.4)
+        D.add('c', 0.16)
         self.assertEqual(self.A.intersection(self.B, \
                          fuzz.FuzzySet.NORM_ALGEBRAIC), D)
 
@@ -125,10 +125,10 @@ class TestFuzzySet(unittest.TestCase):
 
     def test_complement(self):
         D = fuzz.FuzzySet()
-        D.add_fuzzy('b', 0.2)
-        D.add_fuzzy('c', 0.8)
-        D.add_fuzzy('d', 0.4)
-        D.add_fuzzy('e', 1.0)
+        D.add('b', 0.2)
+        D.add('c', 0.8)
+        D.add('d', 0.4)
+        D.add('e', 1.0)
         self.assertEqual(self.B.complement(), D)
 
 
@@ -181,8 +181,8 @@ class TestFuzzyNumber(unittest.TestCase):
 
     def test_to_fuzzy_set(self):
         F = fuzz.FuzzySet()
-        F.add_fuzzy(1.5, 0.25)
-        F.add_fuzzy(6.0, 0.8)
+        F.add(1.5, 0.25)
+        F.add(6.0, 0.8)
         self.assertEqual(self.X.to_fuzzy_set([1.5, 6.0]), F)
 
     def test_union(self):
@@ -205,17 +205,17 @@ class TestFuzzyGraph(unittest.TestCase):
         self.D = fuzz.FuzzyGraph(viter = v, directed = True)
         self.U = fuzz.FuzzyGraph(viter = v, directed = False)
         for G in [self.U, self.D]:
-            G.connect_fuzzy(1, 2, 0.8)
-            G.connect_fuzzy(2, 3, 1.0)
-            G.connect_fuzzy(3, 4, 0.9)
-            G.connect_fuzzy(4, 5, 0.7)
-            G.connect_fuzzy(3, 5, 0.2)
-            G.connect_fuzzy(5, 2, 0.5)
-            G.connect_fuzzy(1, 5, 0.0)
+            G.connect(1, 2, 0.8)
+            G.connect(2, 3, 1.0)
+            G.connect(3, 4, 0.9)
+            G.connect(4, 5, 0.7)
+            G.connect(3, 5, 0.2)
+            G.connect(5, 2, 0.5)
+            G.connect(1, 5, 0.0)
 
     def test_vertices(self):
         exp = set([1, 2, 3, 4, 5])
-        act = self.U.vertices
+        act = self.U.vertices()
         self.assertEqual(act, exp)
 
     def test_mu(self):
@@ -225,7 +225,7 @@ class TestFuzzyGraph(unittest.TestCase):
                self.U.mu(5, 4),
                self.D.mu(5, 4)]
         self.assertEqual(act, exp)
-        self.U.add_fuzzy_vertex(6, 0.5)
+        self.U.add_vertex(6, 0.5)
         self.assertEqual(self.U.mu(6), 0.5)
 
     def test_weight(self):

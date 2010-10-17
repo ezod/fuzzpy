@@ -58,7 +58,7 @@ class Graph(object):
     """
     _setcls = set
 
-    def __init__(self, viter = None, eiter = None, directed = True):
+    def __init__(self, viter=None, eiter=None, directed=True):
         """\
         Construct a crisp graph from optional iterables.
 
@@ -145,7 +145,7 @@ class Graph(object):
         """
         if not isinstance(edge, GraphEdge):
             raise TypeError("edge must be a GraphEdge")
-        if not edge.tail in self.vertices or not edge.head in self.vertices:
+        if not edge.tail in self.vertices() or not edge.head in self.vertices():
             raise KeyError("tail and head must be in vertex set")
         if edge in self.edges():
             raise ValueError("edge already exists")
@@ -163,7 +163,6 @@ class Graph(object):
         for edge in self.edges(tail, head):
             self._E.remove(edge)
 
-    @property
     def vertices(self):
         """\
         Return a set of vertices in the graph.
@@ -172,7 +171,7 @@ class Graph(object):
         """
         return self._V
 
-    def edges(self, tail = None, head = None):
+    def edges(self, tail=None, head=None):
         """\
         Return a set of edges with tail and/or head optionally specified.
 
@@ -183,8 +182,8 @@ class Graph(object):
         @return: The set of edges specified.
         @rtype: C{set}
         """
-        if (tail is not None and not tail in self.vertices) \
-        or (head is not None and not head in self.vertices):
+        if (tail is not None and not tail in self.vertices()) \
+        or (head is not None and not head in self.vertices()):
             raise KeyError("specified tail/head must be in vertex set")
         eset = set([edge for edge in self._E \
             if (tail is None or edge.tail == tail) \
@@ -213,7 +212,7 @@ class Graph(object):
         else:
             return float('inf') 
 
-    def edges_by_weight(self, tail = None, head = None):
+    def edges_by_weight(self, tail=None, head=None):
         """\
         Return a list of edges, sorted in ascending order by weight, with tail
         and/or head optionally specified.
@@ -257,7 +256,7 @@ class Graph(object):
         @param head: The head vertex.
         @type head: C{object}
         """
-        self.remove_edge(GraphEdge((tail, head)))
+        self.remove_edge(tail, head)
 
     # Binary graph operations
 
@@ -384,7 +383,7 @@ class Graph(object):
         @return: The set of vertices adjacent to vertex.
         @rtype: C{set}
         """
-        return set([v for v in self.vertices if self.adjacent(vertex, v)])
+        return set([v for v in self.vertices() if self.adjacent(vertex, v)])
             
     def connected(self, tail, head):
         """\
@@ -429,8 +428,8 @@ class Graph(object):
         """
         dist = {}
         prev = {}
-        Q = set(self.vertices)
-        for vertex in self.vertices:
+        Q = set(self.vertices())
+        for vertex in self.vertices():
             dist[ vertex ] = float('inf')
             prev[ vertex ] = None
         dist[ start ] = 0.0
@@ -479,13 +478,13 @@ class Graph(object):
         @rtype: C{dict} of C{dict} of C{double}
         """
         path = {}
-        for i in self.vertices:
+        for i in self.vertices():
             path[i] = {}
-            for j in self.vertices:
+            for j in self.vertices():
                 path[i][j] = self.weight(i, j)
-        for k in self.vertices:
-            for i in self.vertices:
-                for j in self.vertices:
+        for k in self.vertices():
+            for i in self.vertices():
+                for j in self.vertices():
                     path[i][j] = min(path[i][j], path[i][k] + path[k][j])
         return path
     
@@ -503,7 +502,7 @@ class Graph(object):
         # create a list of edges sorted by weight
         Q = self.edges_by_weight()
         # initialize the minimum spanning tree
-        T = Graph(viter = self.vertices, directed = False)
+        T = Graph(viter=self.vertices(), directed=False)
         # construct the tree
         while len(Q) and len(T.edges()) < len(self.edges()):
             edge = Q.pop(0)
@@ -520,7 +519,7 @@ class Graph(object):
         @rtype: L{Graph}
         """
         # initialize the shortest path subgraph
-        G = Graph(self.vertices, self.edges(), self.directed)
+        G = Graph(self.vertices(), self.edges(), self.directed)
         # compute all-pairs shortest paths
         path = self.floyd_warshall()
         # remove all non-strong edges

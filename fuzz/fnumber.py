@@ -17,7 +17,7 @@ class RealRange(tuple):
     """\
     Real range class.
     """
-    def __new__(cls, arg = (0.0, 0.0)):
+    def __new__(cls, arg=(0.0, 0.0)):
         """\
         Instatiation method. Verifies the validity of the range argument
         before returning the range object.
@@ -195,7 +195,7 @@ class PolygonalFuzzyNumber(FuzzyNumber):
         if not points[0][1] == 0.0 or not points[-1][1] == 0.0:
             raise ValueError("points must start and end with mu = 0")
         for i in range(1, len(points)):
-            if not points[i][0] > points[i - 1][0]:
+            if not points[i][0] >= points[i - 1][0]:
                 raise ValueError("points must be in increasing order")
         self.points = points
         FuzzyNumber.__init__(self)
@@ -422,7 +422,7 @@ class PolygonalFuzzyNumber(FuzzyNumber):
         self.points = [(point[0], point[1] * (1.0 / self.height)) \
                        for point in self.points]
 
-    def to_fuzzy_set(self, samplepoints = None):
+    def to_fuzzy_set(self, samplepoints=None):
         """\
         Convert this polygonal fuzzy number to a discrete fuzzy set at the
         specified sample points. If no sample points are specified, the
@@ -437,7 +437,7 @@ class PolygonalFuzzyNumber(FuzzyNumber):
             samplepoints = [point[0] for point in self.points]
         F = FuzzySet()
         for point in samplepoints:
-            F.add_fuzzy(point, self.mu(point))
+            F.add(point, self.mu(point))
         return F
 
 
@@ -445,7 +445,7 @@ class TrapezoidalFuzzyNumber(FuzzyNumber):
     """\
     Trapezoidal fuzzy number class.
     """
-    def __init__(self, kernel = (0.0, 0.0), support = (0.0, 0.0)):
+    def __init__(self, kernel=(0.0, 0.0), support=(0.0, 0.0)):
         """\
         Constructor.
 
@@ -563,7 +563,7 @@ class TriangularFuzzyNumber(TrapezoidalFuzzyNumber):
     """\
     Triangular fuzzy number class (special case of trapezoidal fuzzy number).
     """
-    def __init__(self, kernel = 0.0, support = (0.0, 0.0)):
+    def __init__(self, kernel=0.0, support=(0.0, 0.0)):
         """\
         Constructor.
 
