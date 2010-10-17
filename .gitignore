@@ -3,3 +3,4 @@
 doc/*
 *.egg-info
 dist/*
+examples/*.png
