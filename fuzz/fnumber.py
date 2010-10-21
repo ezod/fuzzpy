@@ -601,9 +601,8 @@ class GaussianFuzzyNumber(FuzzyNumber):
         @param value: A value in the universal set.
         @type value: C{float}
         """
-        if value not in self.support:
-            return 0.0
-        return e ** -((value - self.mean) ** 2 / (2.0 * self.stddev ** 2))
+        return e ** -((value - self.mean) ** 2 / (2.0 * self.stddev ** 2)) \
+            if value in self.support else 0.0
 
     @property
     def kernel(self):
