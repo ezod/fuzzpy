@@ -100,8 +100,8 @@ class Graph(object):
         @return: Canonical representation.
         @rtype: C{str}
         """
-        return '%s(viter = %s, eiter = %s, directed = %s)' \
-            % (self.__class__.__name__, self._V, self._E, self._directed)
+        return '%s(viter=%s, eiter=%s, directed=%s)' \
+            % (self.__class__.__name__, self._V, self._E, self.directed)
 
     def __str__(self):
         """\
@@ -110,8 +110,8 @@ class Graph(object):
         @return: String representation.
         @rtype: C{str}
         """
-        return '%s: vertices: %s, edges: %s, directed: %s' \
-            % (self.__class__.__name__, self._V, self._E, self._directed)
+        return '%s (%s): vertices: %s, edges: %s' % (self.__class__.__name__,
+            'directed' if self.directed else 'undirected', self._V, self._E)
 
     @property
     def directed(self):
