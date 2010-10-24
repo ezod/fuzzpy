@@ -33,6 +33,13 @@ class GraphEdge(tuple):
         """
         return self[0]
 
+    @tail.setter
+    def tail(self, value):
+        """\
+        Set the tail of this graph edge.
+        """
+        self[0] = value
+
     @property
     def head(self):
         """\
@@ -41,6 +48,13 @@ class GraphEdge(tuple):
         @rtype: C{object}
         """
         return self[1]
+
+    @head.setter
+    def head(self, value):
+        """\
+        Set the head of this graph edge.
+        """
+        self[1] = value
 
     def reverse(self):
         """\
