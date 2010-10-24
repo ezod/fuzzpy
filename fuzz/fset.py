@@ -72,11 +72,13 @@ class FuzzySet(IndexedSet):
         def __iter__(self):
             return self
 
-        def next(self):
+        def __next__(self):
             while True:
-                element = self.setiterator.next()
+                element = next(self.setiterator)
                 if element.mu > 0:
                     return element
+        
+        next = __next__
 
     def __init__(self, iterable=set()):
         """\
