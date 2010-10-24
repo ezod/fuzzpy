@@ -13,7 +13,7 @@ as a visualization backend factory.
 
 import warnings
 
-import visplugins
+from . import visplugins
 
 class VisManager(object):
     """\
