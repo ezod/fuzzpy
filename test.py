@@ -14,7 +14,7 @@ breaking things in another.
 import unittest
 
 import fuzz
-print "FuzzPy imported from '%s'" % fuzz.__path__[0]
+print('FuzzPy imported from "%s"' % fuzz.__path__[0])
 
 
 class TestFuzzySet(unittest.TestCase):

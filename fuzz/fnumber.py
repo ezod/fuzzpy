@@ -663,5 +663,4 @@ class GaussianFuzzyNumber(FuzzyNumber):
             value = self.mean + i * increment
             points.append((value, self.mu(value)))
         points.append((end, 0.0))
-        print points
         return PolygonalFuzzyNumber(points)
