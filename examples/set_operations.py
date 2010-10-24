@@ -58,8 +58,8 @@ print('B\' = %s' % B.complement())
 
 # Standard fuzzy union and intersection are supported via the | and & operators
 # as with Python sets.
-print('A | B = %s (standard union)' % A | B)
-print('A & B = %s (standard intersection)' % A & B)
+print('A | B = %s (standard union)' % (A | B))
+print('A & B = %s (standard intersection)' % (A & B))
 
 # Other t-conorm and t-norm types are available for unions...
 print('A | B = %s (algebraic sum union)' \
