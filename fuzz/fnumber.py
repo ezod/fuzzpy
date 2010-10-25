@@ -329,10 +329,10 @@ class PolygonalFuzzyNumber(FuzzyNumber):
         points = []
         for i in range(len(self.points)):
             if self.points[i][1] >= other.mu(self.points[i][0]):
-                points.append((self.points[i], self, i))
+                points.append((self.points[i], i, self))
         for i in range(len(other.points)):
             if other.points[i][1] >= self.mu(other.points[i][0]):
-                points.append((other.points[i], other, i))
+                points.append((other.points[i], i, other))
         points.sort()
         i = 0
         while(True):
@@ -340,10 +340,10 @@ class PolygonalFuzzyNumber(FuzzyNumber):
                 if points[i][0][0] == points[i + 1][0][0]:
                     del points[i]
                     continue
-                if points[i][1] is not points[i + 1][1]:
+                if points[i][2] is not points[i + 1][2]:
                     points.insert(i + 1, (self._line_intersection(points[i][0],
-                        points[i][1].points[points[i][2] + 1], points[i + 1][0],
-                        points[i + 1][1].points[points[i + 1][2] - 1]),
+                        points[i][2].points[points[i][1] + 1], points[i + 1][0],
+                        points[i + 1][2].points[points[i + 1][1] - 1]),
                         None, None))
                     if points[i + 1][0][0] == points[i + 2][0][0]:
                         del points[i + 1]
@@ -392,10 +392,10 @@ class PolygonalFuzzyNumber(FuzzyNumber):
         points = []
         for i in range(len(self.points)):
             if self.points[i][1] <= other.mu(self.points[i][0]):
-                points.append((self.points[i], self, i))
+                points.append((self.points[i], i, self))
         for i in range(len(other.points)):
             if other.points[i][1] <= self.mu(other.points[i][0]):
-                points.append((other.points[i], other, i))
+                points.append((other.points[i], i, other))
         points.sort()
         i = 0
         while(True):
@@ -404,10 +404,10 @@ class PolygonalFuzzyNumber(FuzzyNumber):
                 or points[i][0][1] == 0.0 and points[i + 1][0][1] == 0.0:
                     del points[i]
                     continue
-                if points[i][1] is not points[i + 1][1]:
+                if points[i][2] is not points[i + 1][2]:
                     points.insert(i + 1, (self._line_intersection(points[i][0],
-                        points[i][1].points[points[i][2] + 1], points[i + 1][0],
-                        points[i + 1][1].points[points[i + 1][2] - 1]),
+                        points[i][2].points[points[i][1] + 1], points[i + 1][0],
+                        points[i + 1][2].points[points[i + 1][1] - 1]),
                         None, None))
                     i += 1
                 i += 1
