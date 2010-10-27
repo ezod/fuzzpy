@@ -13,4 +13,4 @@ import sys
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(__file__))))
 
 import fuzz
-print "FuzzPy imported from '%s'\n" % fuzz.__path__[0]
+print('FuzzPy imported from "%s"\n' % fuzz.__path__[0])

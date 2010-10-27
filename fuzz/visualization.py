@@ -11,9 +11,9 @@ as a visualization backend factory.
 @license: LGPL-3
 """
 
-import vis_plugins
 import warnings
 
+from . import visplugins
 
 class VisManager(object):
     """\
@@ -47,7 +47,7 @@ class VisManager(object):
             try:
                 plugin_mod = __import__("vis_plugins.%s" % plugin,
                         globals(), locals(), fromlist=[plugin])
-            except ImportError, ex:
+            except ImportError as ex:
                 warnings.warn(ex)
                 continue
                 
