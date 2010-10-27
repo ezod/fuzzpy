@@ -73,10 +73,8 @@ class IndexedMember(object):
         @return: True if equal, false otherwise.
         @rtype: C{bool}
         """
-        if isinstance(other, IndexedMember):
-            return self.index == other.index
-        else:
-            return self.index == other
+        return self.index == other.index if isinstance(other, IndexedMember) \
+            else self.index == other
 
     def __ne__(self, other):
         """\
