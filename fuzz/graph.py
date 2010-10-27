@@ -33,6 +33,13 @@ class GraphEdge(tuple):
         """
         return self[0]
 
+    @tail.setter
+    def tail(self, value):
+        """\
+        Set the tail of this graph edge.
+        """
+        self[0] = value
+
     @property
     def head(self):
         """\
@@ -41,6 +48,13 @@ class GraphEdge(tuple):
         @rtype: C{object}
         """
         return self[1]
+
+    @head.setter
+    def head(self, value):
+        """\
+        Set the head of this graph edge.
+        """
+        self[1] = value
 
     def reverse(self):
         """\
@@ -86,8 +100,8 @@ class Graph(object):
         @return: Canonical representation.
         @rtype: C{str}
         """
-        return '%s(viter = %s, eiter = %s, directed = %s)' \
-            % (self.__class__.__name__, self._V, self._E, self._directed)
+        return '%s(viter=%s, eiter=%s, directed=%s)' \
+            % (self.__class__.__name__, self._V, self._E, self.directed)
 
     def __str__(self):
         """\
@@ -96,8 +110,8 @@ class Graph(object):
         @return: String representation.
         @rtype: C{str}
         """
-        return '%s: vertices: %s, edges: %s, directed: %s' \
-            % (self.__class__.__name__, self._V, self._E, self._directed)
+        return '%s (%s): vertices: %s, edges: %s' % (self.__class__.__name__,
+            'directed' if self.directed else 'undirected', self._V, self._E)
 
     @property
     def directed(self):
@@ -205,12 +219,9 @@ class Graph(object):
         @return: The weight of the edge from tail to head.
         @rtype: C{float}
         """
-        if tail == head:
-            return 0.0
-        elif GraphEdge((tail, head)) in self.edges():
-            return 1.0
-        else:
-            return float('inf') 
+        return 0.0 if tail == head \
+            else 1.0 if GraphEdge((tail, head)) in self.edges() \
+            else float('inf')
 
     def edges_by_weight(self, tail=None, head=None):
         """\
@@ -296,9 +307,7 @@ class Graph(object):
         @rtype: C{bool}
         """
         self._binary_sanity_check(other)
-        if self._V <= other._V and self._E <= other._E:
-            return True
-        return False
+        return True if self._V <= other._V and self._E <= other._E else False
 
     def issupergraph(self, other):
         """\
@@ -310,9 +319,7 @@ class Graph(object):
         @rtype: C{bool}
         """
         self._binary_sanity_check(other)
-        if self._V >= other._V and self._E >= other._E:
-            return True
-        return False
+        return True if self._V >= other._V and self._E >= other._E else False
 
     __le__ = issubgraph
     __ge__ = issupergraph
@@ -326,9 +333,7 @@ class Graph(object):
         @return: True if a strict subgraph, false otherwise.
         @rtype: C{bool}
         """
-        if self.issubgraph(other) and self != other:
-            return True
-        return False
+        return True if self.issubgraph(other) and self != other else False
 
     def __gt__(self, other):
         """\
@@ -338,9 +343,7 @@ class Graph(object):
         @type other: L{Graph}
         @return: True if a strict supergraph, false otherwise.
         """
-        if self.issupergraph(other) and self != other:
-            return True
-        return False
+        return True if self.issupergraph(other) and self != other else False
 
     @staticmethod
     def _binary_sanity_check(other):
@@ -368,11 +371,9 @@ class Graph(object):
         @return: True if adjacent, false otherwise.
         @rtype: C{bool}
         """
-        if tail == head:
-            return False
-        if self.edges(tail, head):
-            return True
-        return False
+        return False if tail == head \
+            else True if self.edges(tail, head) \
+            else False
 
     def neighbors(self, vertex):
         """\
