@@ -138,8 +138,8 @@ class FuzzySet(IndexedSet):
         @return: String representation.
         @rtype: C{str}
         """
-        return ("%s([" % self.__class__.__name__) \
-            + ', '.join([str(element) for element in self]) + "])"
+        return ('%s([' % self.__class__.__name__) \
+            + ', '.join([str(element) for element in self]) + '])'
 
     def add(self, element, mu=1.0):
         """\
@@ -260,7 +260,7 @@ class FuzzySet(IndexedSet):
         @rtype: L{FuzzySet}
         """
         if not norm in range(4):
-            raise ValueError("invalid t-conorm type")
+            raise ValueError('invalid t-conorm type')
         self._binary_sanity_check(other)
         result = self.__class__()
         bothkeys = set(self.keys()) | set(other.keys())
@@ -337,7 +337,7 @@ class FuzzySet(IndexedSet):
         @rtype: L{FuzzySet}
         """
         if not norm in range(4):
-            raise ValueError("invalid t-norm type")
+            raise ValueError('invalid t-norm type')
         self._binary_sanity_check(other)
         result = self.__class__()
         [lambda: result.update([FuzzyElement(key, min(self.mu(key), \
@@ -489,8 +489,7 @@ class FuzzySet(IndexedSet):
         @type other: L{FuzzySet}
         """
         if not isinstance(other, FuzzySet):
-            raise TypeError("binary operation only permitted between fuzzy \
-                             sets")
+            raise TypeError('operation only permitted between fuzzy sets')
 
     # Unary fuzzy set operations
 
@@ -504,7 +503,7 @@ class FuzzySet(IndexedSet):
         @rtype: L{FuzzySet}
         """
         if not comp in range(2):
-            raise ValueError("invalid complement type")
+            raise ValueError('invalid complement type')
         result = self.__class__()
         [lambda: result.update([FuzzyElement(key, 1 - self.mu(key)) \
             for key in self.keys()]),

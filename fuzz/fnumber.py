@@ -23,12 +23,12 @@ class RealRange(tuple):
         before returning the range object.
         """
         if not len(arg) == 2:
-            raise ValueError("range must consist of two values")
+            raise ValueError('range must consist of two values')
         if not isinstance(arg[0], Number) \
         or not isinstance(arg[1], Number):
-            raise TypeError("range values must be numeric")
+            raise TypeError('range values must be numeric')
         if arg[0] > arg[1]:
-            raise ValueError("range may not have negative size")
+            raise ValueError('range may not have negative size')
         return tuple.__new__(cls, arg)
 
     @property
@@ -83,7 +83,7 @@ class RealRange(tuple):
         @rtype: C{bool}
         """
         if not isinstance(other, RealRange):
-            raise TypeError("argument must be a RealRange")
+            raise TypeError('argument must be a RealRange')
         if other[0] <= self[0] and other[1] >= self[1]:
             return True
         return False
@@ -98,7 +98,7 @@ class RealRange(tuple):
         @rtype: C{bool}
         """
         if not isinstance(other, RealRange):
-            raise TypeError("argument must be a RealRange")
+            raise TypeError('argument must be a RealRange')
         if self[0] <= other[0] and self[1] >= other[1]:
             return True
         return False
@@ -138,7 +138,7 @@ class FuzzyNumber(object):
         Constructor. Not to be instantiated directly.
         """
         if self.__class__ is FuzzyNumber:
-            raise NotImplementedError("please use one of the subclasses")
+            raise NotImplementedError('please use one of the subclasses')
 
     def __repr__(self):
         """\
@@ -167,14 +167,14 @@ class FuzzyNumber(object):
         @param value: A value in the universal set.
         @type value: C{float}
         """
-        raise NotImplementedError("mu method must be overridden")
+        raise NotImplementedError('mu method must be overridden')
 
     def normalize(self):
         """\
         Normalize this fuzzy number, so that its height is equal to 1.0.
         """
         if not self.height == 1.0:
-            raise NotImplementedError("normalize method must be overridden")
+            raise NotImplementedError('normalize method must be overridden')
 
     kernel = None
     support = None
@@ -193,10 +193,10 @@ class PolygonalFuzzyNumber(FuzzyNumber):
         @type points: C{list} of C{tuple}
         """
         if not points[0][1] == 0.0 or not points[-1][1] == 0.0:
-            raise ValueError("points must start and end with mu = 0")
+            raise ValueError('points must start and end with mu = 0')
         for i in range(1, len(points)):
             if not points[i][0] >= points[i - 1][0]:
-                raise ValueError("points must be in increasing order")
+                raise ValueError('points must be in increasing order')
         self.points = points
         FuzzyNumber.__init__(self)
 
@@ -210,8 +210,8 @@ class PolygonalFuzzyNumber(FuzzyNumber):
         @type other: L{PolygonalFuzzyNumber}
         """
         if not isinstance(other, PolygonalFuzzyNumber):
-            raise TypeError("binary operation only permitted between \
-                               polygonal fuzzy numbers")
+            raise TypeError('operation only permitted between polygonal '
+                            'fuzzy numbers')
 
     def mu(self, value):
         """\
@@ -456,11 +456,11 @@ class TrapezoidalFuzzyNumber(FuzzyNumber):
         """
         if not (isinstance(kernel, tuple) and len(kernel) == 2) \
         or not (isinstance(support, tuple) and len(support) == 2):
-            raise TypeError("kernel and support must be 2-tuples")
+            raise TypeError('kernel and support must be 2-tuples')
         self.kernel = RealRange(kernel)
         self.support = RealRange(support)
         if not self.kernel <= self.support:
-            raise ValueError("kernel range must be within support range")
+            raise ValueError('kernel range must be within support range')
         self.height = 1.0
         FuzzyNumber.__init__(self)
 
@@ -483,8 +483,8 @@ class TrapezoidalFuzzyNumber(FuzzyNumber):
         @type other: L{TrapezoidalFuzzyNumber}
         """
         if not isinstance(other, TrapezoidalFuzzyNumber):
-            raise TypeError("binary operation only permitted between \
-                             trapezoidal fuzzy numbers")
+            raise TypeError('operation only permitted between trapezoidal '
+                            'fuzzy numbers')
 
     def __add__(self, other):
         """\
@@ -572,9 +572,7 @@ class TriangularFuzzyNumber(TrapezoidalFuzzyNumber):
         @param support: The support of the fuzzy number.
         @type support: C{tuple}
         """
-        super(TriangularFuzzyNumber, self).__init__(
-                (kernel, kernel), support
-        )
+        super(TriangularFuzzyNumber, self).__init__((kernel, kernel), support)
 
 
 class GaussianFuzzyNumber(FuzzyNumber):
@@ -605,8 +603,8 @@ class GaussianFuzzyNumber(FuzzyNumber):
         @type other: L{GaussianFuzzyNumber}
         """
         if not isinstance(other, GaussianFuzzyNumber):
-            raise TypeError("binary operation only permitted between \
-                             gaussian fuzzy numbers")
+            raise TypeError('operation only permitted between Gaussian '
+                            'fuzzy numbers')
 
     def __add__(self, other):
         """\
@@ -623,7 +621,7 @@ class GaussianFuzzyNumber(FuzzyNumber):
 
     def __sub__(self, other):
         """\
-        Substraction Operation
+        Subtraction operation.
         
         @param other: The other gaussian fuzzy number.
         @type other: L{GaussianFuzzyNumber}
@@ -691,7 +689,7 @@ class GaussianFuzzyNumber(FuzzyNumber):
         @rtype: L{PolygonalFuzzyNumber}
         """
         if np < 0:
-            raise ValueError("number of points must be positive")
+            raise ValueError('number of points must be positive')
         points = []
         start, end = self.support
         increment = (self.mean - start) / float(np + 1)

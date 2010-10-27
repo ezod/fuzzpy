@@ -18,10 +18,10 @@ class GraphEdge(tuple):
         argument before returning the graph edge object.
         """
         if not len(arg) == 2:
-            raise ValueError("edge must consist of two vertex objects")
+            raise ValueError('edge must consist of two vertex objects')
         if not hasattr(type(arg[0]), '__hash__') \
         or not hasattr(type(arg[1]), '__hash__'):
-            raise ValueError("vertices must be immutable")
+            raise ValueError('vertices must be immutable')
         return tuple.__new__(cls, arg)
 
     @property
@@ -133,7 +133,7 @@ class Graph(object):
         try:
             hash(vertex)
         except TypeError:
-            raise TypeError("vertex must be a hashable object")
+            raise TypeError('vertex must be a hashable object')
         self._V.add(vertex)
 
     def remove_vertex(self, vertex):
@@ -158,11 +158,11 @@ class Graph(object):
         @type edge: L{GraphEdge}
         """
         if not isinstance(edge, GraphEdge):
-            raise TypeError("edge must be a GraphEdge")
+            raise TypeError('edge must be a GraphEdge')
         if not edge.tail in self.vertices() or not edge.head in self.vertices():
-            raise KeyError("tail and head must be in vertex set")
+            raise KeyError('tail and head must be in vertex set')
         if edge in self.edges():
-            raise ValueError("edge already exists")
+            raise ValueError('edge already exists')
         self._E.add(edge)
 
     def remove_edge(self, tail, head):
@@ -198,7 +198,7 @@ class Graph(object):
         """
         if (tail is not None and not tail in self.vertices()) \
         or (head is not None and not head in self.vertices()):
-            raise KeyError("specified tail/head must be in vertex set")
+            raise KeyError('specified tail/head must be in vertex set')
         eset = set([edge for edge in self._E \
             if (tail is None or edge.tail == tail) \
             and (head is None or edge.head == head)])
@@ -355,7 +355,7 @@ class Graph(object):
         @type other: L{Graph}
         """
         if not isinstance(other, Graph):
-            raise TypeError("binary operation only permitted between graphs")
+            raise TypeError('operation only permitted between graphs')
 
     # Connectivity-related functions
 
@@ -499,7 +499,7 @@ class Graph(object):
         @rtype: L{Graph}
         """
         if self.directed:
-            raise TypeError("Kruskal's algorithm is for undirected graphs only")
+            raise TypeError('Kruskal\'s algorithm is for undirected graphs only')
         # create a list of edges sorted by weight
         Q = self.edges_by_weight()
         # initialize the minimum spanning tree

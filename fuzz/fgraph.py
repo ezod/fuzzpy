@@ -57,14 +57,14 @@ class FuzzyGraph(Graph):
             edge = FuzzyElement(edge, mu)
         try:
             if not isinstance(edge.index, GraphEdge):
-                raise TypeError("edge must be a GraphEdge")
+                raise TypeError('edge must be a GraphEdge')
         except AttributeError:
             Graph.add_edge(self, edge)
         if not edge.index.tail in self.vertices() \
         or not edge.index.head in self.vertices():
-            raise KeyError("tail and head must be in vertex set")
+            raise KeyError('tail and head must be in vertex set')
         if edge.index in self.edges():
-            raise ValueError("edge already exists")
+            raise ValueError('edge already exists')
         self._E.add(edge)
 
     def vertices(self):
@@ -89,7 +89,7 @@ class FuzzyGraph(Graph):
         """
         if (tail is not None and not tail in self.vertices()) \
         or (head is not None and not head in self.vertices()):
-            raise KeyError("specified tail/head must be in vertex set")
+            raise KeyError('specified tail/head must be in vertex set')
         eset = set([edge.index for edge in self._E \
             if (tail is None or edge.index.tail == tail) \
             and (head is None or edge.index.head == head)])
@@ -162,8 +162,7 @@ class FuzzyGraph(Graph):
         @type other: L{FuzzyGraph}
         """
         if not isinstance(other, FuzzyGraph):
-            raise TypeError("binary operation only permitted between fuzzy \
-                             graphs")
+            raise TypeError('operation only permitted between fuzzy graphs')
 
     # Unary fuzzy graph operations
 

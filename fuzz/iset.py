@@ -27,7 +27,7 @@ class IndexedMember(object):
         """
         if not hasattr(type(index), '__hash__') \
         or not hasattr(type(index), '__eq__'):
-            raise TypeError("index object must be immutable")
+            raise TypeError('index object must be immutable')
         self._index = index
 
     @property
@@ -129,7 +129,7 @@ class IndexedSet(set):
         @type item: C{object}
         """
         if not item.index == key:
-            raise ValueError("key does not match item index attribute")
+            raise ValueError('key does not match item index attribute')
         if key in self:
             self.remove(key)
         set.add(self, item)
