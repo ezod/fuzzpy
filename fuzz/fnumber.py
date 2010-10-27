@@ -593,6 +593,45 @@ class GaussianFuzzyNumber(FuzzyNumber):
         self.height = 1.0
         FuzzyNumber.__init__(self)
 
+    @staticmethod
+    def _binary_sanity_check(other):
+        """\
+        Check that the other argument to a binary operation is also a
+        gaussian fuzzy number, raising a TypeError otherwise.
+
+        @param other: The other argument.
+        @type other: L{GaussianFuzzyNumber}
+        """
+        if not isinstance(other, GaussianFuzzyNumber):
+            raise TypeError("binary operation only permitted between \
+                             gaussian fuzzy numbers")
+
+    def __add__(self, other):
+        """\
+        Addition operation.
+
+        @param other: The other gaussian fuzzy number.
+        @type other: L{GaussianFuzzyNumber}
+        @return: Sum of the gaussian fuzzy numbers.
+        @rtype: L{GaussianFuzzyNumber}
+        """
+        self._binary_sanity_check(other)
+        return self.__class__(self.mean + other.mean,
+                              self.stddev + other.stddev)
+
+    def __sub__(self, other):
+        """\
+        Substraction Operation
+        
+        @param other: The other gaussian fuzzy number.
+        @type other: L{GaussianFuzzyNumber}
+        @return: Difference of the gaussian fuzzy numbers.
+        @rtype: L{GaussianFuzzyNumber}
+        """
+        self._binary_sanity_check(other)
+        return self.__class__(self.mean - other.mean,
+                              self.stddev + other.stddev)
+    
     def mu(self, value):
         """\
         Return the membership level of a value in the universal set domain of
