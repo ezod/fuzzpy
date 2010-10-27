@@ -28,7 +28,7 @@ class FuzzyGraph(Graph):
         @param directed: Defines the graph as directed or undirected.
         @type directed: C{bool}
         """
-        Graph.__init__(self, viter=viter, eiter=eiter, directed=directed)
+        Graph.__init__(self, viter, eiter, directed)
 
     def add_vertex(self, vertex, mu=1.0):
         """\
@@ -182,7 +182,7 @@ class FuzzyGraph(Graph):
         for edge in self._E.alpha(alpha):
             if edge.tail in Va and edge.head in Va:
                 Ea.add(edge)
-        return Graph(viter=Va, eiter=Ea, directed=self.directed)
+        return Graph(Va, Ea, self.directed)
 
     def salpha(self, alpha):
         """\
@@ -199,7 +199,7 @@ class FuzzyGraph(Graph):
         for edge in self._E.salpha(alpha):
             if edge.tail in Va and edge.head in Va:
                 Ea.add(edge)
-        return Graph(viter=Va, eiter=Ea, directed=self.directed)
+        return Graph(Va, Ea, self.directed)
 
     def normalize(self):
         """\
