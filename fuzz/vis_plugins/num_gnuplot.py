@@ -12,11 +12,12 @@ import tempfile
 import warnings
 from time import sleep
 
-from ..fnumber import PolygonalFuzzyNumber
+from ..fnumber import PolygonalFuzzyNumber, TriangularFuzzyNumber, TrapezoidalFuzzyNumber
 from abc_plugin import AbstractPlugin
 
 VIS_PLUGIN = 'FuzzPyGnuplot'
-VIS_TYPES = [PolygonalFuzzyNumber]
+VIS_TYPES = [PolygonalFuzzyNumber, TriangularFuzzyNumber, 
+            TrapezoidalFuzzyNumber]
 VIS_FORMATS = {'png': 'png', 'jpg': 'jpeg', 'gif': 'gif', 'pbm': 'pbm',
                'eps': 'postscript eps enhanced'}
 
@@ -74,7 +75,7 @@ class FuzzPyGnuplot(AbstractPlugin):
             else:
                 w, h = (640, 480)
             plot('set terminal %s size %d,%d' % (VIS_FORMATS[output_format], w, h))
-        plot('set data style lines')
+        plot('set style data lines')
         tmpdir = tempfile.mkdtemp()
         filename = os.path.join(tmpdir, 'gnuplot-output' + output_format)
         plot('set output \"%s\"' % filename)
