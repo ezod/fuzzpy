@@ -28,7 +28,7 @@ class FuzzyElement(IndexedMember):
         @param mu: The membership degree of this member.
         @type mu: C{float}
         """
-        IndexedMember.__init__(self, index)
+        super(FuzzyElement, self).__init__(index)
         self.mu = mu
 
     def __repr__(self):
@@ -87,7 +87,7 @@ class FuzzySet(IndexedSet):
         @param iterable: The iterable to construct from (optional).
         @type iterable: C{object}
         """
-        IndexedSet.__init__(self, iterable)
+        super(FuzzySet, self).__init__(iterable)
 
     def __iter__(self):
         """\

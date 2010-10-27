@@ -198,7 +198,7 @@ class PolygonalFuzzyNumber(FuzzyNumber):
             if not points[i][0] >= points[i - 1][0]:
                 raise ValueError('points must be in increasing order')
         self.points = points
-        FuzzyNumber.__init__(self)
+        super(PolygonalFuzzyNumber, self).__init__()
 
     @staticmethod
     def _binary_sanity_check(other):
@@ -462,7 +462,7 @@ class TrapezoidalFuzzyNumber(FuzzyNumber):
         if not self.kernel <= self.support:
             raise ValueError('kernel range must be within support range')
         self.height = 1.0
-        FuzzyNumber.__init__(self)
+        super(TrapezoidalFuzzyNumber, self).__init__()
 
     @property
     def triangular(self):
@@ -572,7 +572,8 @@ class TriangularFuzzyNumber(TrapezoidalFuzzyNumber):
         @param support: The support of the fuzzy number.
         @type support: C{tuple}
         """
-        super(TriangularFuzzyNumber, self).__init__((kernel, kernel), support)
+        super(TriangularFuzzyNumber, self).__init__(kernel=(kernel, kernel),
+            support=support)
 
 
 class GaussianFuzzyNumber(FuzzyNumber):
@@ -591,7 +592,7 @@ class GaussianFuzzyNumber(FuzzyNumber):
         self.mean = mean
         self.stddev = stddev
         self.height = 1.0
-        FuzzyNumber.__init__(self)
+        super(GaussianFuzzyNumber, self).__init__()
 
     @staticmethod
     def _binary_sanity_check(other):

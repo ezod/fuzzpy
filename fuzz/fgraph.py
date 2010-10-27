@@ -28,7 +28,8 @@ class FuzzyGraph(Graph):
         @param directed: Defines the graph as directed or undirected.
         @type directed: C{bool}
         """
-        Graph.__init__(self, viter=viter, eiter=eiter, directed=directed)
+        super(FuzzyGraph, self).__init__(viter=viter, eiter=eiter,
+            directed=directed)
 
     def add_vertex(self, vertex, mu=1.0):
         """\

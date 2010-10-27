@@ -99,7 +99,7 @@ class IndexedSet(set):
         @param iterable: The iterable to intialize the set with.
         @type iterable: C{iterable}
         """
-        set.__init__(self)
+        super(IndexedSet, self).__init__()
         for item in iterable:
             self.add(item)
 
