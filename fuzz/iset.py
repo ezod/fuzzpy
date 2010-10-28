@@ -92,6 +92,8 @@ class IndexedSet(set):
     objects with an immutable attribute. These overall-mutable members can then
     be accessed in dict style, using the index as key.
     """
+    _itemcls = IndexedMember
+
     def __init__(self, iterable=set()):
         """\
         Constructor.
@@ -134,7 +136,7 @@ class IndexedSet(set):
             self.remove(key)
         set.add(self, item)
 
-    def add(self, item):
+    def add(self, item, *args, **kwargs):
         """\
         Add an item to the set. Uses a copy since IndexedMembers have mutable
         properties.
@@ -142,8 +144,8 @@ class IndexedSet(set):
         @param item: The item to add.
         @type item: L{IndexedMember}
         """
-        if not isinstance(item, IndexedMember):
-            item = IndexedMember(item)
+        if not isinstance(item, self._itemcls):
+            item = self._itemcls(item, *args, **kwargs)
         set.add(self, copy(item))
 
     def update(self, *args):

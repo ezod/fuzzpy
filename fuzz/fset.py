@@ -83,6 +83,8 @@ class FuzzySet(IndexedSet):
     COMP_STANDARD = 0
     COMP_YAGER = 1
 
+    _itemcls = FuzzyElement
+
     class FuzzySetIterator(object):
         """\
         Discrete fuzzy set iterator class.
@@ -161,20 +163,6 @@ class FuzzySet(IndexedSet):
         """
         return ('%s([' % self.__class__.__name__) \
             + ', '.join([str(element) for element in self]) + '])'
-
-    def add(self, element, mu=1.0):
-        """\
-        Add a fuzzy element to the fuzzy set, optionally constructing the
-        element with the given membership degree.
-
-        @param element: The object of the element to add.
-        @type element: C{object}
-        @param mu: The membership degree of the element (optional).
-        @type mu: C{float}
-        """
-        if not isinstance(element, FuzzyElement):
-            element = FuzzyElement(element, mu)
-        IndexedSet.add(self, element)
 
     def keys(self):
         """\
