@@ -1,7 +1,7 @@
 """\
 Visualization manager for FuzzPy. This submodule allows the dispatch of any
 supported fuzzpy datatypes to an arbitrary visualization plugin. All available
-visualization plugins are located in the L{vis_plugins} submodule.
+visualization plugins are located in the L{visplugins} submodule.
 
 The manager provides a helper function to discover installed plugins as well
 as a visualization backend factory.
@@ -42,10 +42,10 @@ class VisManager(object):
         """
         supported = []
         
-        for plugin in vis_plugins.__all__:
+        for plugin in visplugins.__all__:
             # Try to import the plugin
             try:
-                plugin_mod = __import__("vis_plugins.%s" % plugin,
+                plugin_mod = __import__("visplugins.%s" % plugin,
                         globals(), locals(), fromlist=[plugin])
             except ImportError as ex:
                 warnings.warn(ex)
@@ -89,7 +89,7 @@ class VisManager(object):
                 raise ImportError(("Unable to load any plugin to handle the "
                                    "specified object type"))
         
-        plugin_mod = __import__("vis_plugins.%s" % plugin, globals(), locals(),
+        plugin_mod = __import__("visplugins.%s" % plugin, globals(), locals(),
                 fromlist=[plugin])
         
         # Extract plugin class name
