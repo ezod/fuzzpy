@@ -31,12 +31,14 @@ class TestFuzzySet(unittest.TestCase):
         self.B.add('e', 0.0)
 
     def test_fuzzy_element(self):
-        err = False
+        self.assertRaises(ValueError, fuzz.FuzzyElement, 'a', mu=2)
+        self.assertRaises(ValueError, fuzz.FuzzyElement, 'b', mu=-1)
         try:
-            fuzz.FuzzyElement('a', 1.1)
-        except ValueError:
-            err = True
-        self.assertTrue(err)
+            with self.assertRaises(ValueError):
+                C = fuzz.FuzzyElement('c', 0.5)
+                C.mu = 2
+        except TypeError:
+            pass
 
     def test_add_update_remove(self):
         self.A.add('a', 1)
