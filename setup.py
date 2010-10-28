@@ -42,7 +42,7 @@ setup(
     url = URL,
     download_url = "http://github.com/downloads/ezod/fuzzpy/fuzzpy-%s.tar.bz2" % VERSION,
     keywords = "fuzzy set graph math",
-    packages = [PACKAGE, PACKAGE + ".vis_plugins"],
+    packages = [PACKAGE, PACKAGE + ".visplugins"],
     test_suite = "test",
     cmdclass = {'doc': GenerateDoc},
 )
