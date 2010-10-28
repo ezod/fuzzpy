@@ -17,7 +17,7 @@ class FuzzyElement(IndexedMember):
     """\
     Fuzzy element class.
     """
-    __slots__ = ['_index', 'mu']
+    __slots__ = ['_index', '_mu']
 
     def __init__(self, index, mu=1.0):
         """\
@@ -48,6 +48,27 @@ class FuzzyElement(IndexedMember):
         @rtype: C{str}
         """
         return '%s \ %f' % (str(self.index), self.mu)
+
+    @property
+    def mu(self):
+        """\
+        The mu value of this fuzzy element.
+
+        @rtype: C{float}
+        """
+        return self._mu
+
+    @mu.setter
+    def mu(self, value):
+        """
+        Set the mu value of this fuzzy element.
+
+        @param value: The value for mu.
+        @type value: C{float}
+        """
+        if value < 0 or value > 1:
+            raise ValueError('mu value must be in [0, 1]')
+        self._mu = value
 
 
 class FuzzySet(IndexedSet):

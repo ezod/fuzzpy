@@ -30,6 +30,14 @@ class TestFuzzySet(unittest.TestCase):
         self.B.add('d', 0.6)
         self.B.add('e', 0.0)
 
+    def test_fuzzy_element(self):
+        err = False
+        try:
+            fuzz.FuzzyElement('a', 1.1)
+        except ValueError:
+            err = True
+        self.assertTrue(err)
+
     def test_add_update_remove(self):
         self.A.add('a', 1)
         self.assertEqual(len(self.A), 3)
