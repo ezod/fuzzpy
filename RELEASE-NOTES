@@ -1,5 +1,11 @@
                              FuzzPy - Release Notes
 
+FuzzPy 0.4.1
+    - support for Python 3
+    - fuzzy number addition/subtraction
+    - visualization support for all classes of fuzzy numbers
+    - numerous internal improvements
+
 FuzzPy 0.4.0
     - new plugin-based visualization framework
     - rework of IndexedSet class (improved correctness and performance)
