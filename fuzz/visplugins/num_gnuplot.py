@@ -36,6 +36,9 @@ class FuzzPyGnuplot(AbstractPlugin):
         from Gnuplot import Gnuplot
         self.Gnuplot = Gnuplot
         self._N = obj
+        
+        if hasattr(self._N, 'to_polygonal'):
+            self._N = self._N.to_polygonal()
 
     @staticmethod
     def is_supported():
