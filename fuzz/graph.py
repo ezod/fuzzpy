@@ -499,7 +499,7 @@ class Graph(object):
         @rtype: L{Graph}
         """
         if self.directed:
-            raise TypeError('Kruskal\'s algorithm is for undirected graphs only')
+            raise TypeError('MST cannot be found for directed graphs')
         # create a list of edges sorted by weight
         Q = self.edges_by_weight()
         # initialize the minimum spanning tree
