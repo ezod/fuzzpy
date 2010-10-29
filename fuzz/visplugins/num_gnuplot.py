@@ -10,14 +10,16 @@ Gnuplot-py visualization plugin for FuzzPy.
 import os
 import tempfile
 import warnings
+import functools
 from time import sleep
 
-from ..fnumber import PolygonalFuzzyNumber, TriangularFuzzyNumber, TrapezoidalFuzzyNumber
+from ..fnumber import PolygonalFuzzyNumber, TriangularFuzzyNumber, \
+        TrapezoidalFuzzyNumber, GaussianFuzzyNumber
 from abc_plugin import AbstractPlugin
 
 VIS_PLUGIN = 'FuzzPyGnuplot'
 VIS_TYPES = [PolygonalFuzzyNumber, TriangularFuzzyNumber, 
-            TrapezoidalFuzzyNumber]
+            TrapezoidalFuzzyNumber, GaussianFuzzyNumber]
 VIS_FORMATS = {'png': 'png', 'jpg': 'jpeg', 'gif': 'gif', 'pbm': 'pbm',
                'eps': 'postscript eps enhanced'}
 
@@ -38,7 +40,11 @@ class FuzzPyGnuplot(AbstractPlugin):
         self._N = obj
         
         if hasattr(self._N, 'to_polygonal'):
-            self._N = self._N.to_polygonal()
+            # Is there a more pythonic way to do that kind of introspection?
+            if 'np' in self._N.to_polygonal.__code__.co_varnames:
+                self._N = self._N.to_polygonal(np=50)
+            else:
+                self._N = self._N.to_polygonal()
 
     @staticmethod
     def is_supported():
