@@ -48,9 +48,11 @@ for CG in [CD, CU]:
     CG.connect(2, 10)
 
 # We'll also create a polygonal fuzzy number.
-FN = fuzz.PolygonalFuzzyNumber( \
+trapezoidal = fuzz.PolygonalFuzzyNumber( \
     [(0.0, 0.0), (3.0, 0.5), (4.0, 0.3), (6.0, 0.8), (7.0, 0.2),
      (8.0, 0.3), (9.0, 0.2), (10.0, 0.7), (11.0, 0.0)])
+     
+triangular = fuzz.TriangularFuzzyNumber(1.0, (0.0, 3.0))
 
 # For each object, we initialize a plugin -- in this case, the default -- then
 # retrieve the visualization payload in string format.
@@ -62,8 +64,10 @@ cuvis = fuzz.VisManager.create_backend(CU)
 (cuvis_format, cuvis_data) = cuvis.visualize()
 cdvis = fuzz.VisManager.create_backend(CD)
 (cdvis_format, cdvis_data) = cdvis.visualize()
-fnvis = fuzz.VisManager.create_backend(FN)
-(fnvis_format, fnvis_data) = fnvis.visualize()
+trapvis = fuzz.VisManager.create_backend(trapezoidal)
+(trapvis_format, trapvis_data) = trapvis.visualize()
+trivis = fuzz.VisManager.create_backend(triangular)
+(trivis_format, trivis_data) = trivis.visualize()
 
 # Finally, we save the visualizations, in their proper format, to disk.
 with open("fuzzy_graph.%s" % uvis_format, "wb") as fp:
@@ -74,5 +78,7 @@ with open("crisp_graph.%s" % cuvis_format, "wb") as fp:
     fp.write(cuvis_data)
 with open("crisp_digraph.%s" % cdvis_format, "wb") as fp:
     fp.write(cdvis_data)
-with open("fuzzy_number.%s" % fnvis_format, "wb") as fp:
-    fp.write(fnvis_data)
+with open("trapezoidal_fuzzy_number.%s" % trapvis_format, "wb") as fp:
+    fp.write(trapvis_data)
+with open("triangular_fuzzy_number.%s" % trivis_format, "wb") as fp:
+    fp.write(trivis_data)
