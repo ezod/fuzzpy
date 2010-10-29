@@ -10,7 +10,6 @@ Gnuplot-py visualization plugin for FuzzPy.
 import os
 import tempfile
 import warnings
-import functools
 from time import sleep
 
 from ..fnumber import PolygonalFuzzyNumber, TriangularFuzzyNumber, \
