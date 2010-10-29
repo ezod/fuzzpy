@@ -54,6 +54,9 @@ trapezoidal = fuzz.PolygonalFuzzyNumber( \
      
 triangular = fuzz.TriangularFuzzyNumber(1.0, (0.0, 3.0))
 
+gaussian = fuzz.GaussianFuzzyNumber(1.0, 0.2)
+
+
 # For each object, we initialize a plugin -- in this case, the default -- then
 # retrieve the visualization payload in string format.
 uvis = fuzz.VisManager.create_backend(FU)
@@ -68,6 +71,8 @@ trapvis = fuzz.VisManager.create_backend(trapezoidal)
 (trapvis_format, trapvis_data) = trapvis.visualize()
 trivis = fuzz.VisManager.create_backend(triangular)
 (trivis_format, trivis_data) = trivis.visualize()
+gausvis = fuzz.VisManager.create_backend(gaussian)
+(gausvis_format, gausvis_data) = gausvis.visualize()
 
 # Finally, we save the visualizations, in their proper format, to disk.
 with open("fuzzy_graph.%s" % uvis_format, "wb") as fp:
@@ -82,3 +87,6 @@ with open("trapezoidal_fuzzy_number.%s" % trapvis_format, "wb") as fp:
     fp.write(trapvis_data)
 with open("triangular_fuzzy_number.%s" % trivis_format, "wb") as fp:
     fp.write(trivis_data)
+with open("gaussian_fuzzy_number.%s" % gausvis_format, "wb") as fp:
+    fp.write(gausvis_data)
+    
