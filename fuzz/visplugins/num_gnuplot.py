@@ -10,6 +10,7 @@ Gnuplot-py visualization plugin for FuzzPy.
 import os
 import tempfile
 import warnings
+import inspect
 from time import sleep
 
 from ..fnumber import PolygonalFuzzyNumber, TriangularFuzzyNumber, \
@@ -39,8 +40,7 @@ class FuzzPyGnuplot(AbstractPlugin):
         self._N = obj
         
         if hasattr(self._N, 'to_polygonal'):
-            # Is there a more pythonic way to do that kind of introspection?
-            if 'np' in self._N.to_polygonal.__code__.co_varnames:
+            if 'np' in inspect.getargspec(self._N.to_polygonal).args:
                 self._N = self._N.to_polygonal(np=50)
             else:
                 self._N = self._N.to_polygonal()
