@@ -63,7 +63,6 @@ sets['triangular'] = fuzz.TriangularFuzzyNumber(1.0, (0.0, 3.0))
 sets['gaussian'] = fuzz.GaussianFuzzyNumber(1.0, 0.2)
 
 for (name, obj) in sets.items():
-    print name
     vis = fuzz.VisManager.create_backend(obj)
     (vis_format, data) = vis.visualize()
     
