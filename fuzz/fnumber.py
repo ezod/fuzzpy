@@ -408,31 +408,54 @@ class PolygonalFuzzyNumber(FuzzyNumber):
         @return: The fuzzy union.
         @rtype: L{PolygonalFuzzyNumber}
         """
-        # FIXME: this probably needs a rewrite
         other = other.to_polygonal()
-        points = []
-        for i in range(len(self.points)):
-            if self.points[i][1] >= other.mu(self.points[i][0]):
-                points.append((self.points[i], i, self))
-        for i in range(len(other.points)):
-            if other.points[i][1] >= self.mu(other.points[i][0]):
-                points.append((other.points[i], i, other))
+        # collect and sort all the existing points
+        points = [[point, i, self] for i, point in enumerate(self.points)] \
+               + [[point, i, other] for i, point in enumerate(other.points)]
         points.sort()
+        # take the maximum of duplicates
         i = 0
-        while(True):
+        while True:
             try:
                 if points[i][0][0] == points[i + 1][0][0]:
+                    if points[i][0][1] < points[i + 1][0][1]:
+                        del points[i]
+                    else:
+                        del points[i + 1]
+                    continue
+                i += 1
+            except IndexError:
+                break
+        # add intersection points
+        i = 0
+        while True:
+            try:
+                if points[i][2] is not points[i + 1][2]:
+                    int = self._line_intersection(points[i][0],
+                        points[i][2].points[points[i][1] + 1], points[i + 1][0],
+                        points[i + 1][2].points[points[i + 1][1] - 1])
+                    if int and int[1] > 0 and int[0] > points[i][0][0] \
+                       and int[0] < points[i + 1][0][0]:
+                        points.insert(i + 1, [int, None, None])
+                        i += 1
+                i += 1
+            except IndexError:
+                break
+        # take the maximum mu value for all points
+        for point in points:
+            point[0] = (point[0][0], max(self.mu(point[0][0]), other.mu(point[0][0])))
+        # remove redundant points
+        while points[1][0][1] == 0.0:
+            del points[0]
+        while points[-2][0][1] == 0.0:
+            del points[-1]
+        i = 1
+        while True:
+            try:
+                if points[i][0][1] == points[i - 1][0][1] \
+                   and points[i][0][1] == points[i + 1][0][1]:
                     del points[i]
                     continue
-                if points[i][2] is not points[i + 1][2]:
-                    points.insert(i + 1, (self._line_intersection(points[i][0],
-                        points[i][2].points[points[i][1] + 1], points[i + 1][0],
-                        points[i + 1][2].points[points[i + 1][1] - 1]),
-                        None, None))
-                    if points[i + 1][0][0] == points[i + 2][0][0]:
-                        del points[i + 1]
-                    else:
-                        i += 1
                 i += 1
             except IndexError:
                 break
@@ -448,11 +471,25 @@ class PolygonalFuzzyNumber(FuzzyNumber):
         @return: The fuzzy intersection.
         @rtype: L{PolygonalFuzzyNumber}
         """
-        # FIXME: this is totally broken and needs a rewrite
         other = other.to_polygonal()
+        # collect and sort all the existing points
         points = [[point, i, self] for i, point in enumerate(self.points)] \
                + [[point, i, other] for i, point in enumerate(other.points)]
         points.sort()
+        # take the minimum of duplicates
+        i = 0
+        while True:
+            try:
+                if points[i][0][0] == points[i + 1][0][0]:
+                    if points[i][0][1] > points[i + 1][0][1]:
+                        del points[i]
+                    else:
+                        del points[i + 1]
+                    continue
+                i += 1
+            except IndexError:
+                break
+        # add intersection points
         i = 0
         while True:
             try:
@@ -460,26 +497,27 @@ class PolygonalFuzzyNumber(FuzzyNumber):
                     int = self._line_intersection(points[i][0],
                         points[i][2].points[points[i][1] + 1], points[i + 1][0],
                         points[i + 1][2].points[points[i + 1][1] - 1])
-                    if int and int[0] > points[i][0][0] \
-                           and int[0] < points[i + 1][0][0]:
+                    if int and int[1] > 0 and int[0] > points[i][0][0] \
+                       and int[0] < points[i + 1][0][0]:
                         points.insert(i + 1, [int, None, None])
                         i += 1
                 i += 1
             except IndexError:
                 break
+        # take the minimum mu value for all points
         for point in points:
             point[0] = (point[0][0], min(self.mu(point[0][0]), other.mu(point[0][0])))
-        i = 0
+        # remove redundant points
+        while points[1][0][1] == 0.0:
+            del points[0]
+        while points[-2][0][1] == 0.0:
+            del points[-1]
+        i = 1
         while True:
             try:
-                if points[i][0][1] == 0.0 and points[i + 1][0][1] == 0.0:
+                if points[i][0][1] == points[i - 1][0][1] \
+                   and points[i][0][1] == points[i + 1][0][1]:
                     del points[i]
-                    continue
-                if points[i][0][0] == points[i + 1][0][0]:
-                    if points[i][0][1] > points[i + 1][0][1]:
-                        del points[i]
-                    else:
-                        del points[i + 1]
                     continue
                 i += 1
             except IndexError:
