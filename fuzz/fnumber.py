@@ -159,6 +159,18 @@ class FuzzyNumber(object):
         return '%s: kernel %s, support %s' % \
                (self.__class__.__name__, str(self.kernel), str(self.support))
 
+    @staticmethod
+    def _binary_sanity_check(other):
+        """\
+        Check that the other argument to a binary operation is also a
+        fuzzy number, raising a TypeError otherwise.
+
+        @param other: The other argument.
+        @type other: L{FuzzyNumber}
+        """
+        if not isinstance(other, FuzzyNumber):
+            raise TypeError('operation only permitted between fuzzy numbers')
+
     def mu(self, value):
         """\
         Return the membership level of a value in the universal set domain of
@@ -176,9 +188,90 @@ class FuzzyNumber(object):
         if not self.height == 1.0:
             raise NotImplementedError('normalize method must be overridden')
 
+    def to_polygonal(self):
+        """\
+        Convert this fuzzy number into a polygonal fuzzy number.
+
+        @return: Result polygonal fuzzy number.
+        @rtype: L{PolygonalFuzzyNumber}
+        """
+        raise NotImplementedError('to_polygonal method must be overridden')
+
     kernel = None
     support = None
     height = None
+
+    def __or__(self, other):
+        """\
+        Return the standard fuzzy union of two polygonal fuzzy numbers.
+
+        @param other: The other fuzzy number.
+        @type other: L{FuzzyNumber}
+        @return: The fuzzy union.
+        @rtype: L{FuzzyNumber}
+        """
+        return self.union(other)
+
+    def __ior__(self, other):
+        """\
+        In-place standard fuzzy union.
+
+        @param other: The other fuzzy number.
+        @type other: L{FuzzyNumber}
+        @return: The fuzzy union (self).
+        @rtype: L{FuzzyNumber}
+        """
+        self = self.union(other)
+        return self
+
+    def union(self, other):
+        """\
+        Return the standard fuzzy union of two fuzzy numbers as a new polygonal
+        fuzzy number.
+
+        @param other: The other fuzzy number.
+        @type other: L{FuzzyNumber}
+        @return: The fuzzy union.
+        @rtype: L{PolygonalFuzzyNumber}
+        """
+        self._binary_sanity_check(other)
+        return self.to_polygonal() | other.to_polygonal()
+
+    def __and__(self, other):
+        """\
+        Return the standard fuzzy intersection of two fuzzy numbers.
+
+        @param other: The other fuzzy number.
+        @type other: L{FuzzyNumber}
+        @return: The fuzzy intersection.
+        @rtype: L{FuzzyNumber}
+        """
+        return self.intersection(other)
+
+    def __iand__(self, other):
+        """\
+        In-place standard fuzzy intersection.
+
+        @param other: The other fuzzy number.
+        @type other: L{FuzzyNumber}
+        @return: The fuzzy intersection (self).
+        @rtype: L{FuzzyNumber}
+        """
+        self = self.intersection(other)
+        return self
+
+    def intersection(self, other):
+        """\
+        Return the standard fuzzy intersection of two fuzzy numbers as a new
+        polygonal fuzzy number.
+
+        @param other: The other fuzzy number.
+        @type other: L{FuzzyNumber}
+        @return: The fuzzy union.
+        @rtype: L{PolygonalFuzzyNumber}
+        """
+        self._binary_sanity_check(other)
+        return self.to_polygonal() & other.to_polygonal()
 
 
 class PolygonalFuzzyNumber(FuzzyNumber):
@@ -200,18 +293,27 @@ class PolygonalFuzzyNumber(FuzzyNumber):
         self.points = points
         super(PolygonalFuzzyNumber, self).__init__()
 
-    @staticmethod
-    def _binary_sanity_check(other):
+    def __repr__(self):
         """\
-        Check that the other argument to a binary operation is also a
-        polygonal fuzzy number, raising a TypeError otherwise.
+        Return the canonical string representation of this polygonal fuzzy
+        number.
 
-        @param other: The other argument.
-        @type other: L{PolygonalFuzzyNumber}
+        @return: Canonical string representation.
+        @rtype: C{str}
         """
-        if not isinstance(other, PolygonalFuzzyNumber):
-            raise TypeError('operation only permitted between polygonal '
-                            'fuzzy numbers')
+        return 'PolygonalFuzzyNumber(%s)' % self.points
+
+    def __eq__(self, other):
+        """\
+        Return whether this polygonal fuzzy number is equal to another fuzzy
+        number.
+
+        @param other: The other fuzzy number.
+        @type other: L{FuzzyNumber}
+        @return: True if equal.
+        @rtype: C{bool}
+        """
+        return self.points == other.to_polygonal().points
 
     def mu(self, value):
         """\
@@ -287,33 +389,14 @@ class PolygonalFuzzyNumber(FuzzyNumber):
         @return: The point of intersection.
         @rtype: C{tuple} of C{float}
         """
-        ua = ((s[0] - r[0]) * (p[1] - r[1]) - (s[1] - r[1]) * (p[0] - r[0])) / \
-             ((s[1] - r[1]) * (q[0] - p[0]) - (s[0] - r[0]) * (q[1] - p[1]))
+        try:
+            ua = ((s[0] - r[0]) * (p[1] - r[1]) - \
+                 (s[1] - r[1]) * (p[0] - r[0])) / \
+                 ((s[1] - r[1]) * (q[0] - p[0]) - \
+                 (s[0] - r[0]) * (q[1] - p[1]))
+        except ZeroDivisionError:
+            return None
         return(p[0] + ua * (q[0] - p[0]), p[1] + ua * (q[1] - p[1]))
-
-    def __or__(self, other):
-        """\
-        Return the standard fuzzy union of two polygonal fuzzy numbers as a new
-        polygonal fuzzy number.
-
-        @param other: The other fuzzy number.
-        @type other: L{PolygonalFuzzyNumber}
-        @return: The fuzzy union.
-        @rtype: L{PolygonalFuzzyNumber}
-        """
-        return self.union(other)
-
-    def __ior__(self, other):
-        """\
-        In-place standard fuzzy union.
-
-        @param other: The other fuzzy number.
-        @type other: L{PolygonalFuzzyNumber}
-        @return: The fuzzy union (self).
-        @rtype: L{PolygonalFuzzyNumber}
-        """
-        self = self.union(other)
-        return self
 
     def union(self, other):
         """\
@@ -321,11 +404,12 @@ class PolygonalFuzzyNumber(FuzzyNumber):
         polygonal fuzzy number.
 
         @param other: The other fuzzy number.
-        @type other: L{PolygonalFuzzyNumber}
+        @type other: L{FuzzyNumber}
         @return: The fuzzy union.
         @rtype: L{PolygonalFuzzyNumber}
         """
-        self._binary_sanity_check(other)
+        # FIXME: this probably needs a rewrite
+        other = other.to_polygonal()
         points = []
         for i in range(len(self.points)):
             if self.points[i][1] >= other.mu(self.points[i][0]):
@@ -354,62 +438,49 @@ class PolygonalFuzzyNumber(FuzzyNumber):
                 break
         return PolygonalFuzzyNumber([point[0] for point in points])
 
-    def __and__(self, other):
-        """\
-        Return the standard fuzzy intersection of two polygonal fuzzy numbers
-        as a new polygonal fuzzy number.
-
-        @param other: The other fuzzy number.
-        @type other: L{PolygonalFuzzyNumber}
-        @return: The fuzzy intersection.
-        @rtype: L{PolygonalFuzzyNumber}
-        """
-        return self.intersection(other)
-
-    def __iand__(self, other):
-        """\
-        In-place standard fuzzy intersection.
-
-        @param other: The other fuzzy number.
-        @type other: L{PolygonalFuzzyNumber}
-        @return: The fuzzy intersection (self).
-        @rtype: L{PolygonalFuzzyNumber}
-        """
-        self = self.intersection(other)
-        return self
-
     def intersection(self, other):
         """\
         Return the standard fuzzy intersection of two polygonal fuzzy numbers
         as a new polygonal fuzzy number.
 
         @param other: The other fuzzy number.
-        @type other: L{PolygonalFuzzyNumber}
+        @type other: L{FuzzyNumber}
         @return: The fuzzy intersection.
         @rtype: L{PolygonalFuzzyNumber}
         """
-        self._binary_sanity_check(other)
-        points = []
-        for i in range(len(self.points)):
-            if self.points[i][1] <= other.mu(self.points[i][0]):
-                points.append((self.points[i], i, self))
-        for i in range(len(other.points)):
-            if other.points[i][1] <= self.mu(other.points[i][0]):
-                points.append((other.points[i], i, other))
+        # FIXME: this is totally broken and needs a rewrite
+        other = other.to_polygonal()
+        points = [[point, i, self] for i, point in enumerate(self.points)] \
+               + [[point, i, other] for i, point in enumerate(other.points)]
         points.sort()
         i = 0
-        while(True):
+        while True:
             try:
-                if points[i][0][0] == points[i + 1][0][0] \
-                or points[i][0][1] == 0.0 and points[i + 1][0][1] == 0.0:
+                if points[i][2] is not points[i + 1][2]:
+                    int = self._line_intersection(points[i][0],
+                        points[i][2].points[points[i][1] + 1], points[i + 1][0],
+                        points[i + 1][2].points[points[i + 1][1] - 1])
+                    if int and int[0] > points[i][0][0] \
+                           and int[0] < points[i + 1][0][0]:
+                        points.insert(i + 1, [int, None, None])
+                        i += 1
+                i += 1
+            except IndexError:
+                break
+        for point in points:
+            point[0] = (point[0][0], min(self.mu(point[0][0]), other.mu(point[0][0])))
+        i = 0
+        while True:
+            try:
+                if points[i][0][1] == 0.0 and points[i + 1][0][1] == 0.0:
                     del points[i]
                     continue
-                if points[i][2] is not points[i + 1][2]:
-                    points.insert(i + 1, (self._line_intersection(points[i][0],
-                        points[i][2].points[points[i][1] + 1], points[i + 1][0],
-                        points[i + 1][2].points[points[i + 1][1] - 1]),
-                        None, None))
-                    i += 1
+                if points[i][0][0] == points[i + 1][0][0]:
+                    if points[i][0][1] > points[i + 1][0][1]:
+                        del points[i]
+                    else:
+                        del points[i + 1]
+                    continue
                 i += 1
             except IndexError:
                 break
@@ -421,6 +492,15 @@ class PolygonalFuzzyNumber(FuzzyNumber):
         """
         self.points = [(point[0], point[1] * (1.0 / self.height)) \
                        for point in self.points]
+
+    def to_polygonal(self):
+        """\
+        Return this polygonal fuzzy number.
+
+        @return: This polygonal fuzzy number.
+        @rtype: L{PolygonalFuzzyNumber}
+        """
+        return self
 
     def to_fuzzy_set(self, samplepoints=None):
         """\
@@ -473,19 +553,6 @@ class TrapezoidalFuzzyNumber(FuzzyNumber):
         """
         return self.kernel.size == 0
 
-    @staticmethod
-    def _binary_sanity_check(other):
-        """\
-        Check that the other argument to a binary operation is also a
-        trapezoidal fuzzy number, raising a TypeError otherwise.
-
-        @param other: The other argument.
-        @type other: L{TrapezoidalFuzzyNumber}
-        """
-        if not isinstance(other, TrapezoidalFuzzyNumber):
-            raise TypeError('operation only permitted between trapezoidal '
-                            'fuzzy numbers')
-
     def __add__(self, other):
         """\
         Addition operation.
@@ -495,7 +562,9 @@ class TrapezoidalFuzzyNumber(FuzzyNumber):
         @return: Sum of the trapezoidal fuzzy numbers.
         @rtype: L{TrapezoidalFuzzyNumber}
         """
-        self._binary_sanity_check(other)
+        if not isinstance(other, TrapezoidalFuzzyNumber):
+            raise TypeError('operation only permitted between trapezoidal '
+                            'fuzzy numbers')
         return self.__class__(self.kernel + other.kernel,
                               self.support + other.support)
 
@@ -508,7 +577,9 @@ class TrapezoidalFuzzyNumber(FuzzyNumber):
         @return: Difference of the trapezoidal fuzzy numbers.
         @rtype: L{TrapezoidalFuzzyNumber}
         """
-        self._binary_sanity_check(other)
+        if not isinstance(other, TrapezoidalFuzzyNumber):
+            raise TypeError('operation only permitted between trapezoidal '
+                            'fuzzy numbers')
         return self.__class__(self.kernel - other.kernel,
                               self.support - other.support)
 
@@ -594,19 +665,6 @@ class GaussianFuzzyNumber(FuzzyNumber):
         self.height = 1.0
         super(GaussianFuzzyNumber, self).__init__()
 
-    @staticmethod
-    def _binary_sanity_check(other):
-        """\
-        Check that the other argument to a binary operation is also a
-        gaussian fuzzy number, raising a TypeError otherwise.
-
-        @param other: The other argument.
-        @type other: L{GaussianFuzzyNumber}
-        """
-        if not isinstance(other, GaussianFuzzyNumber):
-            raise TypeError('operation only permitted between Gaussian '
-                            'fuzzy numbers')
-
     def __add__(self, other):
         """\
         Addition operation.
@@ -616,7 +674,9 @@ class GaussianFuzzyNumber(FuzzyNumber):
         @return: Sum of the gaussian fuzzy numbers.
         @rtype: L{GaussianFuzzyNumber}
         """
-        self._binary_sanity_check(other)
+        if not isinstance(other, GaussianFuzzyNumber):
+            raise TypeError('operation only permitted between Gaussian '
+                            'fuzzy numbers')
         return self.__class__(self.mean + other.mean,
                               self.stddev + other.stddev)
 
@@ -629,7 +689,9 @@ class GaussianFuzzyNumber(FuzzyNumber):
         @return: Difference of the gaussian fuzzy numbers.
         @rtype: L{GaussianFuzzyNumber}
         """
-        self._binary_sanity_check(other)
+        if not isinstance(other, GaussianFuzzyNumber):
+            raise TypeError('operation only permitted between Gaussian '
+                            'fuzzy numbers')
         return self.__class__(self.mean - other.mean,
                               self.stddev + other.stddev)
     
@@ -679,12 +741,12 @@ class GaussianFuzzyNumber(FuzzyNumber):
         edge = sqrt(-2.0 * (self.stddev ** 2) * log(alpha))
         return RealRange((self.mean - edge, self.mean + edge))
 
-    def to_polygonal(self, np):
+    def to_polygonal(self, np=20):
         """\
         Convert this Gaussian fuzzy number into a polygonal fuzzy number
         (approximate).
 
-        @param np: The number of points to interpolate per side.
+        @param np: The number of points to interpolate per side (optional).
         @type np: C{int}
         @return: Result polygonal fuzzy number.
         @rtype: L{PolygonalFuzzyNumber}

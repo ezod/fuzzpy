@@ -207,12 +207,25 @@ class TestFuzzyNumber(unittest.TestCase):
         for value in [0.5, 1.5, 3.5, 5.0, 6.2, 6.7, 8.3, 10.5]:
             self.assertTrue(abs(Z.mu(value) - max(self.X.mu(value),
                                 self.Y.mu(value))) < 10e-1)
+        points = [(0.0, 0.0), (3.0, 1.0), (5.5, 1.0), (6.0, 0.5), (6.5, 1.0),
+                  (8.0, 1.0), (9.0, 0.0)]
+        K = fuzz.RealRange((6.5, 8.0))
+        S = fuzz.RealRange((5.5, 9.0))
+        P = fuzz.PolygonalFuzzyNumber(points)
+        Q = fuzz.TrapezoidalFuzzyNumber(K, S)
+        self.assertEqual(self.N | Q, P)
 
     def test_intersection(self):
         Z = self.X & self.Y
         for value in [1.5, 3.5, 4.5, 5.5, 6.2, 6.7, 8.3, 10.5]:
             self.assertTrue(abs(Z.mu(value) - min(self.X.mu(value),
                                 self.Y.mu(value))) < 10e-1)
+        points = [(5.5, 0.0), (6.0, 0.5), (6.5, 0.0)]
+        K = fuzz.RealRange((6.5, 8.0))
+        S = fuzz.RealRange((5.5, 9.0))
+        P = fuzz.PolygonalFuzzyNumber(points)
+        Q = fuzz.TrapezoidalFuzzyNumber(K, S)
+        self.assertEqual(self.N & Q, P)
 
 
 class TestFuzzyGraph(unittest.TestCase):
