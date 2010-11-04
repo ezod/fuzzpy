@@ -166,6 +166,14 @@ class IndexedSet(set):
             if item not in common:
                 self.remove(item)
 
+    def difference(self, *args):
+        """\
+        Return the difference of the set with other iterables.
+        """
+        result = copy(self)
+        result.difference_update(*args)
+        return result
+
     def difference_update(self, *args):
         """\
         Update the set with the difference of itself and other iterables.
@@ -174,6 +182,14 @@ class IndexedSet(set):
         common.update(args)
         for item in common:
             self.discard(item)
+
+    def symmetric_difference(self, *args):
+        """\
+        Return the symmetric difference of the set with other iterables.
+        """
+        result = copy(self)
+        result.symmetric_difference_update(*args)
+        return result
 
     def symmetric_difference_update(self, *args):
         """\
