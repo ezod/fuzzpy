@@ -170,7 +170,7 @@ class IndexedSet(set):
         """\
         Return the difference of the set with other iterables.
         """
-        result = copy(self)
+        result = self.copy()
         result.difference_update(*args)
         return result
 
@@ -187,7 +187,7 @@ class IndexedSet(set):
         """\
         Return the symmetric difference of the set with other iterables.
         """
-        result = copy(self)
+        result = self.copy()
         result.symmetric_difference_update(*args)
         return result
 
