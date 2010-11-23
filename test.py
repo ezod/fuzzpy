@@ -172,6 +172,9 @@ class TestFuzzyNumber(unittest.TestCase):
         self.assertEqual(self.T.mu(2.0), 0.5)
         self.assertEqual(self.G.mu(12.0), 1.0)
         self.assertEqual(self.G.mu(self.G.support[1] + 1.0), 0.0)
+        M = fuzz.TrapezoidalFuzzyNumber((1, 2), (1, 2))
+        self.assertEqual(M.mu(1), 1.0)
+        self.assertEqual(M.mu(2), 1.0)
 
     def test_height(self):
         self.assertEqual(self.N.height, 1.0)
