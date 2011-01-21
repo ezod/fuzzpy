@@ -9,7 +9,7 @@ for Python.
 
 ## Requirements
 
-FuzzPy requires [Python] [1] 2.6 or later.
+FuzzPy requires [Python] [1] 2.6 or later (and supports Python 3.x).
 
 For visualization (optional), one or more of the following are required:
 

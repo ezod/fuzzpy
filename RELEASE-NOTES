@@ -1,5 +1,9 @@
                              FuzzPy - Release Notes
 
+FuzzPy 0.4.2
+    - improved intersection and union for fuzzy numbers
+    - some bug fixes in graphs and fuzzy graphs
+
 FuzzPy 0.4.1
     - support for Python 3
     - fuzzy number addition/subtraction
