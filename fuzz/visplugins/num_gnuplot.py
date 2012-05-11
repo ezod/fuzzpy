@@ -85,7 +85,7 @@ class FuzzPyGnuplot(AbstractPlugin):
             plot('set terminal %s size %d,%d' % (VIS_FORMATS[output_format], w, h))
         plot('set style data lines')
         tmpdir = tempfile.mkdtemp()
-        filename = os.path.join(tmpdir, 'gnuplot-output' + output_format)
+        filename = os.path.join(tmpdir, 'gnuplot-output.' + output_format)
         plot('set output \"%s\"' % filename)
         plot.plot([[p[0], p[1]] for p in self._N.points])
         # FIXME: is there a better way to know when Gnuplot output is ready?
